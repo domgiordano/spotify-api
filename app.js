@@ -7,6 +7,9 @@ const cors = require('cors');
 const debug = require('debug');
 const bearerToken = require('express-bearer-token');
 require('dotenv').config();
+var access_token = "";
+var refresh_token = "";
+
 
 // Loggers used. Environment variables used to limit output
 const debugAutoWire = debug('auto-wire');
@@ -30,6 +33,11 @@ app.use('/api', express.static(path.join(__dirname, 'js')));
 app.use('/api', express.static(path.join(__dirname, 'html')));
 app.use('/api', express.static(__dirname));
 app.use('/api', cors(), AuthRoutes);
+
+
+app.set('access_token', access_token);
+app.set('refresh_token', refresh_token);
+
 
 // Call the listen() method on the server object
 app.listen(PORT, () => {

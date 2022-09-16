@@ -1,6 +1,10 @@
-
+global.access_token = "";
+global.refresh_token = "";
 const express = require('express');
+const { access } = require('fs');
+const { token } = require('morgan');
 const router = express.Router();
+const app = express();
 //const fetch = require('node-fetch');
 const path = require('path');
 const querystring = require('querystring');
@@ -58,8 +62,13 @@ router.get('/login', async (req, res) => {
     .then(response => response.json())
     .then(data => {
       const query = querystring.stringify(data);
-      global.access_token = data['access_token'];
-      global.refresh_token = data['refresh_token'];
+      const access_token = data['access_token'];
+      const refresh_token = data['refresh_token'];
+
+      app.set('access_token', access_token);
+      app.set('refresh_token', refresh_token);
+      console.log(app.get('access_token'));
+
       res.sendFile(path.join(__dirname, '..', 'html', 'home.html'));
       //res.redirect(`${process.env.CLIENT_REDIRECTURI}?${query}`);
     });
