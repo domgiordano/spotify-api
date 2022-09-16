@@ -1,37 +1,5 @@
 
-const express = require('express');
-const cors = require('cors');
-
-var jsdom = require("jsdom");
-const { JSDOM } = jsdom;
-const { window } = new JSDOM();
-const { document } = (new JSDOM('')).window;
-global.document = document;
-
-var $ = jQuery = require('jquery')(window);
-
-
-require('dotenv').config();
-const PORT = process.env.PORT || 8888;
-const application = express();
-
-application.use(express.json());
-application.use(express.urlencoded({ extended: true}));
-application.use(cors());
-
-const AuthRoutes = require('./routes/authRoutes.js');
-application.use('/api', cors(), AuthRoutes);
-
-application.get('', function(req, res) {
-  res.sendFile(__dirname + '/index.html');
-});
-
-
-application.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}`);
-});
-
-const renderPage = function() {
+export const renderPage = function() {
   console.log("render")
   return `<section class="hero is-success is-fullheight">
   <div class="hero-head has-background-black-bis">
@@ -42,7 +10,7 @@ const renderPage = function() {
             <a class="navbar-item is-active">
               Home
             </a>
-            <a class="navbar-item">
+            <a class="navbar-item" onclick="window.open('home.html', '_self')">
               Top Songs
             </a>
             <a class="navbar-item">
@@ -63,9 +31,9 @@ const renderPage = function() {
   <div class="hero-body">
     <div class="container has-text-centered">
       <p class="title is-1">
-        XOMINICK'S SPOTIFY
+        SPOTIFY
       </p>
-      <button id="loginBtn" class="button is-link is-light is-large is-outlined is-rounded">
+      <button id="loginBtn" onclick="loginSpotify()" class="button is-link is-light is-large is-outlined is-rounded">
           LOGIN
       </button>
     </div>
@@ -77,7 +45,7 @@ const renderPage = function() {
 </section>`;
 };
 
-const loadPage = function() {
+export const loadPage = function() {
 
   console.log("load")
   const $root = $('#root');
@@ -86,13 +54,18 @@ const loadPage = function() {
   $root.append(renderPage());
 };
 
-function loginSpotify() {
+export function loginSpotify() {
   console.log('click')
-  application.get('/api', function(req, res) {
+  app.get('/api', function(req, res) {
     res.redirect(process.env.LOGINURI)
   })
 }
 
+export async function buttonClick() {
+  const pubRoot = new axios.create({
+    baseURL: "http://localhost:3000/public"
+  });
+}
 
 $(function() {
   console.log("function");

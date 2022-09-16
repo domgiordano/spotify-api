@@ -1,33 +1,46 @@
 {
   "name": "spotify-api",
-  "version": "1.0.0",
-  "description": "Spotify",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev-live-reload": "cross-env DEBUG=server,auto-wire,auto-wire-warning,auto-data nodemon --ignore 'data/' -r esm bin/server.js",
+    "dev-static": "cross-env DEBUG=server,auto-wire,auto-wire-warning,auto-data node -r esm bin/server.js",
+    "prod": "cross-env DEBUG=server node -r esm bin/server.js",
     "start": "http-server"
   },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "bcryptjs": "^2.4.3",
+    "browser-sync": "^2.27.10",
+    "bulma": "^0.8.2",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "cross-env": "^6.0.3",
+    "data-store": "^3.1.0",
+    "debug": "~2.6.9",
+    "dotenv": "^8.6.0",
+    "escape-string-regexp": "^2.0.0",
+    "esm": "^3.2.25",
+    "express": "~4.16.1",
+    "express-bearer-token": "^2.4.0",
+    "jquery": "^3.6.1",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "~1.9.1",
+    "nodemon": "^2.0.19"
+  },
+  "description": "This template is a simple out of the box solution for a backend server that uses [Express](https://www.npmjs.com/package/express) and [data-store](https://www.npmjs.com/package/data-store) to act as a somewhat \"restful\" API. You should fork this into your own repository so you can a team can work together using Git.",
+  "main": "app.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/domjgiordano/spotify-api.git"
   },
-  "author": "Dom",
+  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/domjgiordano/spotify-api/issues"
   },
   "homepage": "https://github.com/domjgiordano/spotify-api#readme",
-  "dependencies": {
-    "bulma": "^0.9.4",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.2",
-    "express": "^4.18.1",
-    "http-server": "^14.1.1",
-    "jquery": "^3.6.1",
-    "jsdom": "^20.0.0",
-    "node-fetch": "^2.6.7",
-    "path": "^0.12.7",
-    "querystring": "^0.2.1",
-    "react-native-action-button": "^2.8.5",
-    "spotify-login": "^0.2.0"
+  "devDependencies": {
+    "http-server": "^14.1.1"
   }
 }
