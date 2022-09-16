@@ -1,6 +1,8 @@
+
 const express = require('express');
 const router = express.Router();
 const fetch = require('node-fetch');
+const path = require('path');
 const querystring = require('querystring');
 
 // this can be used as a seperate module
@@ -53,6 +55,9 @@ router.get('/login', async (req, res) => {
     .then(response => response.json())
     .then(data => {
       const query = querystring.stringify(data);
-      res.redirect(`${process.env.CLIENT_REDIRECTURI}?${query}`);
+      global.access_token = data['access_token'];
+      global.refresh_token = data['refresh_token'];
+      res.sendFile(path.join(__dirname, '..', 'home.html'));
+      //res.redirect(`${process.env.CLIENT_REDIRECTURI}?${query}`);
     });
   });

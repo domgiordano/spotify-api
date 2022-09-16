@@ -2,7 +2,6 @@
   "name": "spotify-api",
   "version": "1.0.0",
   "description": "Spotify",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "http-server"
@@ -23,7 +22,10 @@
     "dotenv": "^16.0.2",
     "express": "^4.18.1",
     "http-server": "^14.1.1",
+    "jquery": "^3.6.1",
+    "jsdom": "^20.0.0",
     "node-fetch": "^2.6.7",
+    "path": "^0.12.7",
     "querystring": "^0.2.1",
     "react-native-action-button": "^2.8.5",
     "spotify-login": "^0.2.0"
