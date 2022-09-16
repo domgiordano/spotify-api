@@ -26,6 +26,7 @@
     "jquery": "^3.6.1",
     "jsonwebtoken": "^8.5.1",
     "morgan": "~1.9.1",
+    "node-fetch": "^3.2.10",
     "nodemon": "^2.0.19"
   },
   "description": "This template is a simple out of the box solution for a backend server that uses [Express](https://www.npmjs.com/package/express) and [data-store](https://www.npmjs.com/package/data-store) to act as a somewhat \"restful\" API. You should fork this into your own repository so you can a team can work together using Git.",

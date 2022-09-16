@@ -1,7 +1,7 @@
 
 const express = require('express');
 const router = express.Router();
-const fetch = require('node-fetch');
+//const fetch = require('node-fetch');
 const path = require('path');
 const querystring = require('querystring');
 
@@ -14,6 +14,9 @@ const encodeFormData = (data) => {
 
 module.exports = router;
 
+router.get('/home', async (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'html', 'index.html'));
+});
 router.get('/login', async (req, res) => {
     const scope =
       `user-modify-playback-state
@@ -57,7 +60,7 @@ router.get('/login', async (req, res) => {
       const query = querystring.stringify(data);
       global.access_token = data['access_token'];
       global.refresh_token = data['refresh_token'];
-      res.sendFile(path.join(__dirname, '..', 'home.html'));
+      res.sendFile(path.join(__dirname, '..', 'html', 'home.html'));
       //res.redirect(`${process.env.CLIENT_REDIRECTURI}?${query}`);
     });
   });

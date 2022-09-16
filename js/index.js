@@ -10,7 +10,7 @@ export const renderPage = function() {
             <a class="navbar-item is-active">
               Home
             </a>
-            <a class="navbar-item" onclick="window.open('home.html', '_self')">
+            <a class="navbar-item">
               Top Songs
             </a>
             <a class="navbar-item">
@@ -33,7 +33,7 @@ export const renderPage = function() {
       <p class="title is-1">
         SPOTIFY
       </p>
-      <button id="loginBtn" onclick="loginSpotify()" class="button is-link is-light is-large is-outlined is-rounded">
+      <button id="loginBtn" class="button is-link is-light is-large is-outlined is-rounded">
           LOGIN
       </button>
     </div>
@@ -56,19 +56,17 @@ export const loadPage = function() {
 
 export function loginSpotify() {
   console.log('click')
-  app.get('/api', function(req, res) {
+  window.open('http://localhost:8080/api/login', '_self')
+  /* router.get('/api', function(req, res) {
     res.redirect(process.env.LOGINURI)
-  })
+  }) */
 }
 
-export async function buttonClick() {
-  const pubRoot = new axios.create({
-    baseURL: "http://localhost:3000/public"
-  });
-}
 
 $(function() {
   console.log("function");
   loadPage();
   $(document).on("click", "#loginBtn", loginSpotify);
+  var loginButton = document.getElementById('loginBtn');
+
 });
