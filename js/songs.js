@@ -9,10 +9,10 @@ export const renderPage = function() {
         <div class="container has-background-black-bis">
           <div id="navbarMenuHeroC" class="navbar-menu has-background-black-bis">
             <div class="navbar-start">
-            <a class="navbar-item is-active" onclick="location.href='http://localhost:8080/api/user?access_token=${access_token}&refresh_token=${refresh_token}'">
+            <a class="navbar-item" onclick="location.href='http://localhost:8080/api/user?access_token=${access_token}&refresh_token=${refresh_token}'">
               Home
             </a>
-            <a class="navbar-item" onclick="location.href='http://localhost:8080/api/songs?access_token=${access_token}&refresh_token=${refresh_token}'">
+            <a class="navbar-item is-active" onclick="location.href='http://localhost:8080/api/songs?access_token=${access_token}&refresh_token=${refresh_token}'">
               Top Songs
             </a>
             <a class="navbar-item" onclick="location.href='http://localhost:8080/api/artists?access_token=${access_token}&refresh_token=${refresh_token}'">
@@ -30,7 +30,6 @@ export const renderPage = function() {
       </header>
     </div>
 
-    <!-- Hero content: will be in the middle -->
     <div class="hero-body">
       <div id="main" class="container has-text-centered">
         <p class="title is-1">
@@ -53,20 +52,19 @@ export const renderPage = function() {
     return;
   }
 
-  async function getSongs() {
+  async function getSongs(maxSongs = 50) {
     let songInfo = '<p class="title" style="text-align: center"> YOUR TOP SPOTIFY SONGS: </p>'
-    const url = 'https://api.spotify.com/v1/me/top/tracks';
+    const url = 'https://api.spotify.com/v1/me/top/tracks?limit='+ maxSongs;
     const headers = {
       Authorization: 'Bearer ' + access_token
     }
 
-
-
     const response = await fetch(url, { headers });
 
     const data = await response.json();
-    console.log(data);
-    for(let i = 1; i < 11; i++){
+
+    songInfo+='<div class="columns is-multiline" style="margin-left: 0.025%">';
+    for(let i = 1; i < maxSongs + 1; i++){
         let songName = data.items[i-1].name;
         let songArtists = "";
         for(let j = 0; j < data.items[i-1].artists.length; j++){
@@ -80,10 +78,26 @@ export const renderPage = function() {
             songArtists += " & " + data.items[i-1].artists[j].name;
           }
         }
-        songInfo += '<p class="subtitle style="text-align: center">'+ i + ': ' + songName + ' by ' + songArtists + ' </p>';
+        songInfo+='<div class="column is-one-quarter" style="margin: 1%; width: 31%">';
+        songInfo+='<div class="card-content" style="text-align: center">';
+        songInfo+='<div class="card-image"  style="background: white">';
+        songInfo+='<figure class="image"><img src="' + data.items[i-1].album.images[0].url + '" alt="Placeholder image"></figure>';
+        songInfo+='</div>';
+        songInfo+='<div class="media">';
+        songInfo+='<div class="media-content" ><p class="title is-4" style=" text-align: center">'+ i + ': ' + songName + '</p>';
+        songInfo+='<p class="subtitle is-6" style="text-align: center">' + songArtists + '</p>';
+        songInfo+='</div></div></div></div>';
+
+
+        /* songInfo += '<div class="tile is-parent>';
+        songInfo += '<article class="tile is-child box"><img src="' + data.items[i-1].album.images[0].url + '" width="100" height="100" alt="Placeholder image">'
+        songInfo += '<p class="subtitle style="text-align: center">'+ i + ': ' + songName + ' by ' + songArtists + ' </p></article>';
+        songInfo += '</div>'; */
+
     }
 
-    console.log(songInfo)
+    songInfo+='</div>';
+
     $('#main').append(songInfo);
   }
 

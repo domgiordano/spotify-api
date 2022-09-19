@@ -58,6 +58,7 @@ export const renderPage = function() {
     const response = await fetch(url, { headers });
 
     const data = await response.json();
+    userInfo+= '<div><img src="' + data.images[0].url + '" width="300" height="300" alt="Placeholder image"></div>'
     userInfo+= '<p class="subtitle style="text-align: center"> Username: ' + data.display_name + ' </p>';
     userInfo+= '<p class="subtitle style="text-align: center"> Id: ' + data.id + ' </p>';
     userInfo+= '<p class="subtitle style="text-align: center"> Followers: ' + data.followers.total + ' </p>';
