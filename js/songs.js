@@ -32,9 +32,8 @@ export const renderPage = function() {
 
     <!-- Hero content: will be in the middle -->
     <div class="hero-body">
-      <div class="container has-text-centered">
+      <div id="main" class="container has-text-centered">
         <p class="title is-1">
-          ${getSongs()}
         </p>
       </div>
     </div>
@@ -54,32 +53,50 @@ export const renderPage = function() {
     return;
   }
 
-  export const getSongs = async () => {
-      const limit = 25;
-      console.log("access" + access_token)
-      /* return fetch(`https://api.spotify.com/v1/me/top/tracks`, {
-          headers: {
-              Authorization: `Bearer ${token}`,
-          },
-      }) */
-      /* const result = await fetch(`https://api.spotify.com/v1/me/top/tracks`, {
-          method: 'GET',
-          headers: { 'Authorization' : ' Bearer ' + token}
-      });
+  async function getSongs() {
+    let songInfo = '<p class="title" style="text-align: center"> YOUR TOP SPOTIFY SONGS: </p>'
+    const url = 'https://api.spotify.com/v1/me/top/tracks';
+    const headers = {
+      Authorization: 'Bearer ' + access_token
+    }
 
-      const data = await result.json();
-      return data.items; */
+
+
+    const response = await fetch(url, { headers });
+
+    const data = await response.json();
+    console.log(data);
+    for(let i = 1; i < 11; i++){
+        let songName = data.items[i-1].name;
+        let songArtists = "";
+        for(let j = 0; j < data.items[i-1].artists.length; j++){
+          if (j == 0) {
+            songArtists += data.items[i-1].artists[j].name;
+          }
+          else if (j == 1) {
+            songArtists += " ft. " + data.items[i-1].artists[j].name;
+          }
+          else {
+            songArtists += " & " + data.items[i-1].artists[j].name;
+          }
+        }
+        songInfo += '<p class="subtitle style="text-align: center">'+ i + ': ' + songName + ' by ' + songArtists + ' </p>';
+    }
+
+    console.log(songInfo)
+    $('#main').append(songInfo);
   }
 
   export const loadPage = function() {
 
     const $root = $('#root');
-    getToken();
 
     $root.append(renderPage());
   };
 
 
   $(function() {
+    getToken();
     loadPage();
+    getSongs();
   });

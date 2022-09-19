@@ -32,11 +32,10 @@ export const renderPage = function() {
 
     <!-- Hero content: will be in the middle -->
     <div class="hero-body">
-      <div class="container has-text-centered">
+      <div id="main" class="container has-text-centered">
         <p class="title is-1">
           YOU GOT IN WUTS GUD
         </p>
-        ${getUser()}
       </div>
 
     </div>
@@ -63,10 +62,10 @@ export const renderPage = function() {
     userInfo+= '<p class="subtitle style="text-align: center"> Id: ' + data.id + ' </p>';
     userInfo+= '<p class="subtitle style="text-align: center"> Followers: ' + data.followers.total + ' </p>';
     console.log(userInfo)
-    return userInfo;
+    $('#main').append(userInfo);
   }
 
-  export const get_token = function(){
+  export const getToken = function(){
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     access_token = urlParams.get('access_token');
@@ -77,12 +76,13 @@ export const renderPage = function() {
   export const loadPage = function() {
 
     const $root = $('#root');
-    get_token();
 
     $root.append(renderPage());
   };
 
 
   $(function() {
+    getToken();
     loadPage();
+    getUser();
   });
