@@ -21,6 +21,26 @@ module.exports = router;
 router.get('/home', async (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'html', 'index.html'));
 });
+
+router.get('/user', async (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'html', 'user.html'));
+});
+
+router.get('/songs', async (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'html', 'songs.html'));
+});
+
+router.get('/artists', async (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'html', 'artists.html'));
+});
+
+router.get('/genres', async (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'html', 'genres.html'));
+});
+
+router.get('/playlist', async (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'html', 'playlist.html'));
+});
 router.get('/login', async (req, res) => {
     const scope =
       `user-modify-playback-state
@@ -65,11 +85,15 @@ router.get('/login', async (req, res) => {
       const access_token = data['access_token'];
       const refresh_token = data['refresh_token'];
 
+      module.exports.access_token = data['access_token'];
+      module.exports.refresh_token = data['refresh_token'];
       app.set('access_token', access_token);
       app.set('refresh_token', refresh_token);
       console.log(app.get('access_token'));
 
-      res.sendFile(path.join(__dirname, '..', 'html', 'home.html'));
       //res.redirect(`${process.env.CLIENT_REDIRECTURI}?${query}`);
+
+      //res.sendFile(path.join(__dirname, '..', 'html', 'home.html'));
+      res.redirect(`${process.env.USERURI}?access_token=${access_token}&refresh_token=${refresh_token}`);
     });
   });
