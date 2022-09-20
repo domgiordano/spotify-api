@@ -87,7 +87,7 @@ export const renderPage = function() {
     return;
   }
 
-  async function getSongs(filterVals) {
+  async function getSongs(filterVals, offset) {
 
     //Check filter values
     if(filterVals['energyMin'] >= filterVals['energyMax']){
@@ -118,8 +118,11 @@ export const renderPage = function() {
     const maxSongs = 50;
     let playlistSongCount=0;
     let songInfo = ''
+    if(offset == 0) {
+        songInfo+='<div id="cardGroup" class="columns is-multiline" style="margin-left: 0.025%">';
+    }
     let songIds = [];
-    const url = 'https://api.spotify.com/v1/me/tracks?limit='+ maxSongs;
+    const url = 'https://api.spotify.com/v1/me/tracks?limit='+ maxSongs + '&offset=' + (offset * maxSongs);
     const headers = {
       Authorization: 'Bearer ' + access_token
     }
@@ -127,8 +130,7 @@ export const renderPage = function() {
     const response = await fetch(url, { headers });
 
     const data = await response.json();
-    console.log(data)
-    songInfo+='<div id="playlistSongs" class="columns is-multiline" style="margin-left: 0.025%">';
+    console.log(data);
     for(let i = 1; i < maxSongs + 1; i++){
         let songName = data.items[i-1].track.name;
         let songArtists = "";
@@ -163,7 +165,7 @@ export const renderPage = function() {
             songInfo+='<figure class="image"><img src="' + data.items[i-1].track.album.images[0].url + '" alt="Placeholder image"></figure>';
             songInfo+='</div>';
             songInfo+='<div class="media">';
-            songInfo+='<div class="media-content" ><p class="title is-4" style=" text-align: center">'+ playlistSongCount + ': ' + songName + '</p>';
+            songInfo+='<div class="media-content" ><p class="title is-4" style=" text-align: center">'+ (playlistSongCount + (offset * maxSongs)) + ': ' + songName + '</p>';
             songInfo+='<p class="subtitle is-6" style="text-align: center">' + songArtists + '</p>';
             songInfo+='<p class="subtitle is-6" style="text-align: center"> ENERGY: ' + songData.energy + '</p>';
             songInfo+='<p class="subtitle is-6" style="text-align: center"> DANCEABILITY: ' + songData.danceability + '</p>';
@@ -176,21 +178,32 @@ export const renderPage = function() {
         songIds[i-1] = data.items[i-1].track.id
 
 
-        /* songInfo += '<div class="tile is-parent>';
-        songInfo += '<article class="tile is-child box"><img src="' + data.items[i-1].album.images[0].url + '" width="100" height="100" alt="Placeholder image">'
-        songInfo += '<p class="subtitle style="text-align: center">'+ i + ': ' + songName + ' by ' + songArtists + ' </p></article>';
-        songInfo += '</div>'; */
-
     }
 
     songInfo+='</div>';
     console.log(songIds)
-    let playlist = document.getElementById("playlistSongs");
+    let moreButton = document.getElementById("moreBtn");
+    let resetButton = document.getElementById("resetBtn");
+    let buttonInfo ='<div><button id="moreBtn" class="button is-link is-light is-large is-outlined is-rounded"> Gimme more my guy </button><button id="resetBtn" class="button is-warning is-light is-large is-outlined is-rounded"> Reset Page pls. </button></div>';
+    if (offset != 0){
+        //playlist.innerHTML = '';
+        moreButton.remove();
+        resetButton.remove();
+        $('#cardGroup').append(songInfo);
+    }
+    else{
+      songInfo+='</div>';
+      $('#main').append(songInfo);
+    }
+
+    $('#main').append(buttonInfo);
+
+    /* let playlist = document.getElementById("playlistSongs");
     if (playlist){
         //playlist.innerHTML = '';
         playlist.remove();
-    }
-    $('#main').append(songInfo);
+    } */
+
   }
 
   export const loadPage = function() {
@@ -277,6 +290,11 @@ export const renderPage = function() {
 
     $(document).ready(function() {
         $("#playlistBtn").click(function(){
+            let cardGroup = document.getElementById("cardGroup");
+            if(cardGroup){
+                cardGroup.remove();
+                document.getElementById("moreBtn").remove();
+            }
             var filterVals = {
                 danceMin: danceSlider.value,
                 danceMax: danceSliderMax.value,
@@ -291,9 +309,37 @@ export const renderPage = function() {
                 valenceMin: valenceSlider.value,
                 valenceMax: valenceSliderMax.value,
             };
-            getSongs(filterVals);
+            getSongs(filterVals, 0);
         });
     });
+
+    let offset = 1;
+
+    $(document).on("click", "#moreBtn", function() {
+        var filterVals = {
+            danceMin: danceSlider.value,
+            danceMax: danceSliderMax.value,
+            tempoMin: tempoSlider.value,
+            tempoMax: tempoSliderMax.value,
+            loudMin: loudSlider.value,
+            loudMax: loudSliderMax.value,
+            energyMin: energySlider.value,
+            energyMax: energySliderMax.value,
+            speechMin: speechSlider.value,
+            speechMax: speechSliderMax.value,
+            valenceMin: valenceSlider.value,
+            valenceMax: valenceSliderMax.value,
+        };
+      getSongs(filterVals, offset);
+      offset+=1;
+      console.log("more click");
+    });
+
+    $(document).on("click", "#resetBtn", function(){
+        document.getElementById("cardGroup").remove();
+        document.getElementById("moreBtn").remove();
+        document.getElementById("resetBtn").remove();
+    })
 
   };
 

@@ -55,7 +55,7 @@ export const renderPage = function() {
   async function getSongs(offset) {
     let songInfo = '';
     if(offset == 0) {
-      songInfo+='<p class="title" style="text-align: center"> YOUR TOP SPOTIFY SONGS: </p>'
+      songInfo+='<p id="songsHeader" class="title" style="text-align: center"> YOUR TOP SPOTIFY SONGS: </p>'
       songInfo+='<div id="cardGroup" class="columns is-multiline" style="margin-left: 0.025%">';
     }
     let maxSongs = 10;
@@ -105,10 +105,12 @@ export const renderPage = function() {
 
 
     let moreButton = document.getElementById("moreBtn");
-    let buttonInfo ='<div><button id="moreBtn" class="button is-link is-light is-large is-outlined is-rounded"> Gimme more my guy </button></div>';
+    let resetButton = document.getElementById("resetBtn");
+    let buttonInfo ='<div><button id="moreBtn" class="button is-link is-light is-large is-outlined is-rounded"> Gimme more my guy </button><button id="resetBtn" class="button is-warning is-light is-large is-outlined is-rounded"> Reset Page pls. </button></div>';
     if (offset != 0){
         //playlist.innerHTML = '';
         moreButton.remove();
+        resetButton.remove();
         $('#cardGroup').append(songInfo);
     }
     else{
@@ -146,4 +148,13 @@ export const renderPage = function() {
       offset+=1;
       console.log("more click");
     });
+
+    $(document).on("click", "#resetBtn", function(){
+      document.getElementById("cardGroup").remove();
+      document.getElementById("moreBtn").remove();
+      document.getElementById("resetBtn").remove();
+      document.getElementById("songsHeader").remove();
+      getSongs(0);
+      offset = 0;
+  })
   });
