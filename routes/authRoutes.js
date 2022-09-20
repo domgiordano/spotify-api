@@ -1,13 +1,18 @@
 global.access_token = "";
 global.refresh_token = "";
-const express = require('express');
-const { access } = require('fs');
-const { token } = require('morgan');
+import express from 'express';
+import { access } from 'fs';
+import { token } from 'morgan';
+import * as url from 'url';
 const router = express.Router();
 const app = express();
+
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+
 //const fetch = require('node-fetch');
-const path = require('path');
-const querystring = require('querystring');
+import path from 'path';
+
+import querystring from 'querystring';
 
 // this can be used as a seperate module
 const encodeFormData = (data) => {
@@ -16,10 +21,11 @@ const encodeFormData = (data) => {
     .join('&');
 }
 
-module.exports = router;
+export default router;
 
 router.get('/home', async (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'html', 'index.html'));
+
 });
 
 router.get('/user', async (req, res) => {
@@ -62,38 +68,38 @@ router.get('/login', async (req, res) => {
     );
   });
 
-  router.get('/logged', async (req, res) => {
-    const body = {
-      grant_type: 'authorization_code',
-      code: req.query.code,
-      redirect_uri: process.env.REDIRECTURI,
-      client_id: process.env.CLIENT_ID,
-      client_secret: process.env.CLIENT_SECRET,
-    }
+router.get('/logged', async (req, res) => {
+  const body = {
+    grant_type: 'authorization_code',
+    code: req.query.code,
+    redirect_uri: process.env.REDIRECTURI,
+    client_id: process.env.CLIENT_ID,
+    client_secret: process.env.CLIENT_SECRET,
+  }
 
-    await fetch('https://accounts.spotify.com/api/token', {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Accept": "application/json"
-      },
-      body: encodeFormData(body)
-    })
-    .then(response => response.json())
-    .then(data => {
-      const query = querystring.stringify(data);
-      const access_token = data['access_token'];
-      const refresh_token = data['refresh_token'];
+  await fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Accept": "application/json"
+    },
+    body: encodeFormData(body)
+  })
+  .then(response => response.json())
+  .then(data => {
+    const query = querystring.stringify(data);
+    const access_token = data['access_token'];
+    const refresh_token = data['refresh_token'];
 
-      module.exports.access_token = data['access_token'];
-      module.exports.refresh_token = data['refresh_token'];
-      app.set('access_token', access_token);
-      app.set('refresh_token', refresh_token);
-      console.log(app.get('access_token'));
+    //export const access_token = data['access_token'];
+    //export const refresh_token = data['refresh_token'];
+    app.set('access_token', access_token);
+    app.set('refresh_token', refresh_token);
+    console.log(app.get('access_token'));
 
-      //res.redirect(`${process.env.CLIENT_REDIRECTURI}?${query}`);
+    //res.redirect(`${process.env.CLIENT_REDIRECTURI}?${query}`);
 
-      //res.sendFile(path.join(__dirname, '..', 'html', 'home.html'));
-      res.redirect(`${process.env.USERURI}?access_token=${access_token}&refresh_token=${refresh_token}`);
-    });
+    //res.sendFile(path.join(__dirname, '..', 'html', 'home.html'));
+    res.redirect(`${process.env.USERURI}?access_token=${access_token}&refresh_token=${refresh_token}`);
   });
+});

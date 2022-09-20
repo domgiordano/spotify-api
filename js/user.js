@@ -1,6 +1,8 @@
-
+import {fileReader} from './app.js';
 let access_token = "";
 let refresh_token = "";
+
+
 export const renderPage = function() {
     return `<section class="hero is-success is-fullheight">
     <!-- Hero head: will stick at the top -->
@@ -62,8 +64,40 @@ export const renderPage = function() {
     userInfo+= '<p class="subtitle style="text-align: center"> Username: ' + data.display_name + ' </p>';
     userInfo+= '<p class="subtitle style="text-align: center"> Id: ' + data.id + ' </p>';
     userInfo+= '<p class="subtitle style="text-align: center"> Followers: ' + data.followers.total + ' </p>';
+    userInfo+= '<button id="loadBtn" class="button is-link is-light is-large is-outlined is-rounded">Load User Liked Songs</button>';
     console.log(userInfo)
     $('#main').append(userInfo);
+  }
+
+  async function loadUserSongs(offset) {
+
+    console.log("load user songs");
+    let songInfo = '';
+    let maxSongs = 50;
+    let url = 'https://api.spotify.com/v1/me/tracks?limit='+ maxSongs + '&offset=' + offset * maxSongs;
+    console.log(url)
+    const headers = {
+      Authorization: 'Bearer ' + access_token
+    }
+
+    const response = await fetch(url, { headers });
+
+    const data = await response.json();
+
+    fileReader.writeFile('../json/userSongs.json', data, err=> {
+      if(err){
+        console.log("Error writing file", err);
+      } else {
+        console.log("Successfully wrote file.")
+      }
+    });
+    //for(let i = 1; i < maxSongs + 1; i++){
+
+    //}
+
+
+
+
   }
 
   export const getToken = function(){
@@ -86,4 +120,8 @@ export const renderPage = function() {
     getToken();
     loadPage();
     getUser();
+
+    $(document).on("click", "#loadBtn", function(){
+      loadUserSongs();
+  })
   });
