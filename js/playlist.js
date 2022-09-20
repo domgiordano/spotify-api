@@ -119,7 +119,20 @@ export const renderPage = function() {
     let playlistSongCount=0;
     let songInfo = ''
     if(offset == 0) {
-        songInfo+='<div id="cardGroup" class="columns is-multiline" style="margin-left: 0.025%">';
+        //ongInfo+='<div id="cardGroup" class="columns is-multiline" style="margin-left: 0.025%">';
+        songInfo+= '<table id="playlistTable" class="table is-hoverable">';
+        songInfo+= '<thead><tr><th><abbr title="Number">Num</abbr></th>';
+        songInfo+='<th> Cover Art </th>'
+        songInfo+= '<th>Song Title</th>';
+        songInfo+='<th>Artist</th>';
+        songInfo+='<th><abbr title="Danceability">DNC</abbr></th>';
+        songInfo+='<th><abbr title="Energy">ENG</abbr></th>';
+        songInfo+='<th><abbr title="Loudness">db</abbr></th>';
+        songInfo+='<th><abbr title="Tempo">BPM</abbr></th>';
+        songInfo+='<th><abbr title="Speechiness">SPCH</abbr></th>';
+        songInfo+='<th><abbr title="Valence">VAL</abbr></th>';
+        songInfo+='</tr></thead>';
+        songInfo+='<tbody id="playlistTableBody">'
     }
     let songIds = [];
     const url = 'https://api.spotify.com/v1/me/tracks?limit='+ maxSongs + '&offset=' + (offset * maxSongs);
@@ -146,6 +159,8 @@ export const renderPage = function() {
           }
         }
 
+        let songImage = data.items[i-1].track.album.images[0].url;
+
         const songURL = 'https://api.spotify.com/v1/audio-features/' + data.items[i-1].track.id;
         const songResponse = await fetch(songURL, { headers });
         const songData = await songResponse.json();
@@ -159,28 +174,27 @@ export const renderPage = function() {
                 songData.valence > filterVals['valenceMin'] && songData.valence < filterVals['valenceMax']){
 
             playlistSongCount++;
-            songInfo+='<div class="column is-one-quarter" style="margin: 1%; width: 31%">';
-            songInfo+='<div class="card-content" style="text-align: center">';
-            songInfo+='<div class="card-image"  style="background: white">';
-            songInfo+='<figure class="image"><img src="' + data.items[i-1].track.album.images[0].url + '" alt="Placeholder image"></figure>';
-            songInfo+='</div>';
-            songInfo+='<div class="media">';
-            songInfo+='<div class="media-content" ><p class="title is-4" style=" text-align: center">'+ (playlistSongCount + (offset * maxSongs)) + ': ' + songName + '</p>';
-            songInfo+='<p class="subtitle is-6" style="text-align: center">' + songArtists + '</p>';
-            songInfo+='<p class="subtitle is-6" style="text-align: center"> ENERGY: ' + songData.energy + '</p>';
-            songInfo+='<p class="subtitle is-6" style="text-align: center"> DANCEABILITY: ' + songData.danceability + '</p>';
-            songInfo+='<p class="subtitle is-6" style="text-align: center"> TEMPO: ' + songData.tempo + '</p>';
-            songInfo+='<p class="subtitle is-6" style="text-align: center"> LOUDNESS: ' + songData.loudness + '</p>';
-            songInfo+='<p class="subtitle is-6" style="text-align: center"> TEMPO: ' + songData.speechiness + '</p>';
-            songInfo+='<p class="subtitle is-6" style="text-align: center"> LOUDNESS: ' + songData.valence + '</p>';
-            songInfo+='</div></div></div></div>';
+
+            songInfo+='<tr><th>' + (playlistSongCount + (offset * maxSongs)) + '</th>';
+            songInfo+='<td><img src="' + songImage + '"/></td>';
+            songInfo+='<td>' + songName + '</td>';
+            songInfo+='<td>' + songArtists + '</td>';
+            songInfo+='<td>' + songData.danceability + '</td>';
+            songInfo+='<td>' + songData.energy + '</td>';
+            songInfo+='<td>' + songData.loudness + '</td>';
+            songInfo+='<td>' + songData.tempo + '</td>';
+            songInfo+='<td>' + songData.speechiness + '</td>';
+            songInfo+='<td>' + songData.valence + '</td>';
+            songInfo+='</tr>';
+
+
         }
         songIds[i-1] = data.items[i-1].track.id
 
 
     }
 
-    songInfo+='</div>';
+    songInfo+='</tbody>';
     console.log(songIds)
     let moreButton = document.getElementById("moreBtn");
     let resetButton = document.getElementById("resetBtn");
@@ -189,10 +203,10 @@ export const renderPage = function() {
         //playlist.innerHTML = '';
         moreButton.remove();
         resetButton.remove();
-        $('#cardGroup').append(songInfo);
+        $('#playlistTable').append(songInfo);
     }
     else{
-      songInfo+='</div>';
+      songInfo+='</table>';
       $('#main').append(songInfo);
     }
 
@@ -336,7 +350,7 @@ export const renderPage = function() {
     });
 
     $(document).on("click", "#resetBtn", function(){
-        document.getElementById("cardGroup").remove();
+        document.getElementById("playlistTable").remove();
         document.getElementById("moreBtn").remove();
         document.getElementById("resetBtn").remove();
     })
