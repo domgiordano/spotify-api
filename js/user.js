@@ -66,6 +66,7 @@ export const renderPage = function() {
     $('#main').append(userInfo);
   }
 
+
   export const getToken = function(){
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
