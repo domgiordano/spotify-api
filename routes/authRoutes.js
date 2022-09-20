@@ -1,7 +1,8 @@
-global.access_token = "";
-global.refresh_token = "";
+let access_token = "";
+let refresh_token = "";
 const express = require('express');
-const { access } = require('fs');
+const fs = require('fs');
+//const { access } = require('fs');
 const { token } = require('morgan');
 const router = express.Router();
 const app = express();
@@ -19,6 +20,7 @@ const encodeFormData = (data) => {
 module.exports = router;
 
 router.get('/home', async (req, res) => {
+  loadUserSongs(0);
   res.sendFile(path.join(__dirname, '..', 'html', 'index.html'));
 });
 
@@ -82,8 +84,8 @@ router.get('/login', async (req, res) => {
     .then(response => response.json())
     .then(data => {
       const query = querystring.stringify(data);
-      const access_token = data['access_token'];
-      const refresh_token = data['refresh_token'];
+      access_token = data['access_token'];
+      refresh_token = data['refresh_token'];
 
       module.exports.access_token = data['access_token'];
       module.exports.refresh_token = data['refresh_token'];
