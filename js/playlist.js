@@ -304,10 +304,11 @@ export const renderPage = function() {
 
     $(document).ready(function() {
         $("#playlistBtn").click(function(){
-            let cardGroup = document.getElementById("cardGroup");
-            if(cardGroup){
-                cardGroup.remove();
+            let playlistTable = document.getElementById("playlistTable");
+            if(playlistTable){
+                playlistTable.remove();
                 document.getElementById("moreBtn").remove();
+                document.getElementById("resetBtn").remove();
             }
             var filterVals = {
                 danceMin: danceSlider.value,
