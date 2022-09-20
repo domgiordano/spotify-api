@@ -53,9 +53,15 @@ export const renderPage = function() {
     return;
   }
 
-  async function getArtists(maxArtists=25) {
-    let artistInfo = '<p class="title" style="text-align: center"> YOUR TOP SPOTIFY ARTISTS: </p>'
-    const url = 'https://api.spotify.com/v1/me/top/artists?limit=' + maxArtists;
+  async function getArtists(offset) {
+    let maxArtists = 10;
+    let artistInfo = '';
+    if(offset == 0) {
+        artistInfo += '<p class="title" style="text-align: center"> YOUR TOP SPOTIFY ARTISTS: </p>'
+        artistInfo+='<div id="cardGroup" class="columns is-multiline" style="margin-left: 0.025%">';
+    }
+
+    const url = 'https://api.spotify.com/v1/me/top/artists?limit=' + maxArtists + '&offset=' + (offset * maxArtists);
     const headers = {
       Authorization: 'Bearer ' + access_token
     }
@@ -64,7 +70,6 @@ export const renderPage = function() {
 
     const data = await response.json();
 
-    artistInfo+='<div class="columns is-multiline" style="margin-left: 0.025%">';
     for(let i = 1; i < maxArtists + 1; i++){
 
         let artistGenres = "";
@@ -78,20 +83,35 @@ export const renderPage = function() {
 
         }
 
-        artistInfo+='<div class="column is-one-quarter" style="margin: 1%; width: 31%">';
+        artistInfo+='<div id="card_' + (i + (offset * maxArtists)) + '" class="column is-one-quarter" style="margin: 1%; width: 31%">';
         artistInfo+='<div class="card-content" style="text-align: center">';
         artistInfo+='<div class="card-image"  style="background: white">';
         artistInfo+='<figure class="image is-square"><img src="' + data.items[i-1].images[0].url + '" alt="Placeholder image"></figure>';
         artistInfo+='</div>';
         artistInfo+='<div class="media">';
-        artistInfo+='<div class="media-content" ><p class="title is-4" style=" text-align: center">'+ i + ': ' + data.items[i-1].name + '</p>';
+        artistInfo+='<div class="media-content" ><p class="title is-4" style=" text-align: center">'+ (i + (offset * maxArtists)) + ': ' + data.items[i-1].name + '</p>';
         artistInfo+='<p class="subtitle is-6" style="text-align: center"> Genres: ' + artistGenres + ' </p>';
         artistInfo+='<p class="subtitle is-6" style="text-align: center"> Popularity: ' + data.items[i-1].popularity + ' </p>';
         artistInfo+='</div></div></div></div>';
     }
 
-    artistInfo+='</div>';
-    $('#main').append(artistInfo);
+    let moreButton = document.getElementById("moreBtn");
+    let buttonInfo ='<div><button id="moreBtn" class="button is-link is-light is-large is-outlined is-rounded"> Gimme more my guy </button></div>';
+    if (offset != 0){
+        //playlist.innerHTML = '';
+        moreButton.remove();
+        $('#cardGroup').append(artistInfo);
+    }
+    else{
+      artistInfo+='</div>';
+      $('#main').append(artistInfo);
+    }
+
+    $('#main').append(buttonInfo);
+
+    if(offset == 4){
+      $('#moreBtn').attr('disabled','disabled');
+    }
   }
 
   export const loadPage = function() {
@@ -105,5 +125,13 @@ export const renderPage = function() {
   $(function() {
     getToken();
     loadPage();
-    getArtists();
+    getArtists(0);
+
+    let offset = 1;
+
+    $(document).on("click", "#moreBtn", function() {
+      getArtists(offset);
+      offset+=1;
+      console.log("more click");
+    });
   });
