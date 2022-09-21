@@ -1,5 +1,7 @@
 let access_token = "";
 let refresh_token = "";
+let songJson = {};
+let songAttrJson = {};
 
 export const renderPage = function() {
     return `<section class="hero is-success is-fullheight">
@@ -149,7 +151,7 @@ export const renderPage = function() {
     </div>
 
     <!-- Hero footer: will stick at the bottom -->
-    <div class="hero-foot has-background-black-bis">
+    <div id="footer" class="hero-foot has-background-black-bis">
     </div>
   </section>`
   };
@@ -168,41 +170,50 @@ export const renderPage = function() {
     //Check filter values
     if(filterVals['energyMin'] >= filterVals['energyMax']){
         alert("Invalid Energy Values. Try again.")
+        document.getElementById("playlistBtn").classList.remove('is-loading')
         return;
     }
     if(filterVals['danceMin'] >= filterVals['danceMax']){
         alert("Invalid Dancability Values. Try again.")
+        document.getElementById("playlistBtn").classList.remove('is-loading')
         return;
     }
     if(filterVals['tempoMin'] >= filterVals['tempoMax']){
         alert("Invalid Tempo Values. Try again.")
+        document.getElementById("playlistBtn").classList.remove('is-loading')
         return;
     }
     if(filterVals['loudMin'] >= filterVals['loudMax']){
         alert("Invalid Loudness Values. Try again.")
+        document.getElementById("playlistBtn").classList.remove('is-loading')
         return;
     }
     if(filterVals['speechMin'] >= filterVals['speechMax']){
         alert("Invalid Speechiness Values. Try again.")
+        document.getElementById("playlistBtn").classList.remove('is-loading')
         return;
     }
     if(filterVals['valenceMin'] >= filterVals['valenceMax']){
         alert("Invalid Valence Values. Try again.")
+        document.getElementById("playlistBtn").classList.remove('is-loading')
         return;
     }
 
     if(filterVals['minYear'] > filterVals ['maxYear']){
       alert("Invalid Date Range, doofus")
+      document.getElementById("playlistBtn").classList.remove('is-loading')
       return;
     }
 
     if(filterVals['minYear'] == filterVals['maxYear'] && filterVals['minMonth'] > filterVals['maxMonth']){
       alert("Invalid Date Range, nerd")
+      document.getElementById("playlistBtn").classList.remove('is-loading')
       return;
     }
 
     if(filterVals['minMonth'] == 'Month' || filterVals['maxMonth'] == 'Month' || filterVals['minYear'] == 'Year' || filterVals['maxYear'] == 'Year'){
       alert("Invalid Date Range, dweeb")
+      document.getElementById("playlistBtn").classList.remove('is-loading')
       return;
     }
 
@@ -260,6 +271,7 @@ export const renderPage = function() {
       offset++;
     }while(true);
 
+    let songAttrJson = {};
     console.log(Object.keys(songJson).length)
     for(let i = 1; i < songIds.length + 1; i++){
 
@@ -312,6 +324,8 @@ export const renderPage = function() {
             songInfo+='<td>' + month + '/' + day + '/' + year + '</td>';
             songInfo+='</tr>';
 
+            songAttrJson[songIds[i-1]] = songData;
+
 
         }
         else{
@@ -325,31 +339,29 @@ export const renderPage = function() {
 
     songInfo+='</tbody>';
     console.log(songIds)
-    let moreButton = document.getElementById("moreBtn");
+
     let resetButton = document.getElementById("resetBtn");
-    let buttonInfo ='<div><button id="moreBtn" class="button is-link is-light is-large is-outlined is-rounded"> Gimme more my guy </button><button id="resetBtn" class="button is-warning is-light is-large is-outlined is-rounded"> Reset Page pls. </button></div>';
-    /* if (offset != 0){
-        //playlist.innerHTML = '';
-        moreButton.remove();
-        resetButton.remove();
-        $('#playlistTable').append(songInfo);
-    }
-    else{
-      songInfo+='</table>';
-      $('#main').append(songInfo);
-    } */
+    let buttonInfo ='<div><button id="resetBtn" class="button is-warning is-light is-large is-outlined is-rounded"> Reset Page pls. </button></div>';
+    let sortInfo ='<div id="sortRB" class="control"><label class="radio"><input type="radio" name="sort" checked>Danceability</label>';
+    sortInfo +='<label class="radio"><input type="radio" name="sort">Loudness</label>';
+    sortInfo +='<label class="radio"><input type="radio" name="sort">Tempo</label>';
+    sortInfo +='<label class="radio"><input type="radio" name="sort">Energy</label>';
+    sortInfo +='<label class="radio"><input type="radio" name="sort">Speechiness</label>';
+    sortInfo +='<label class="radio"><input type="radio" name="sort">Valence</label>';
+    sortInfo +='<label class="radio"><input type="radio" name="sort">Date</label></div>';
+    let orderInfo = '<div id="orderRB" class="control"><label class="radio"><input type="radio" name="order" checked>ASC</label>';
+    orderInfo+='<label class="radio"><input type="radio" name="order">DESC</label></div>';
+    let sortButtonInfo = '<div><button id="sortBtn" class="button is-danger is-light is-large is-outlined is-rounded"> Sort that shiiii </button></div>';
 
 
     songInfo+='</table>';
     $('#main').append(songInfo);
     $('#main').append(buttonInfo);
-
-    /* let playlist = document.getElementById("playlistSongs");
-    if (playlist){
-        //playlist.innerHTML = '';
-        playlist.remove();
-    } */
-
+    $('#main').append(sortInfo);
+    $('#main').append(orderInfo);
+    $('#main').append(sortButtonInfo);
+    document.getElementById("playlistBtn").classList.remove('is-loading')
+    return Promise.resolve([songJson, songAttrJson]);
   }
 
   export const loadPage = function() {
@@ -441,10 +453,10 @@ export const renderPage = function() {
 
     $(document).ready(function() {
         $("#playlistBtn").click(function(){
+            document.getElementById("playlistBtn").classList.add('is-loading')
             let playlistTable = document.getElementById("playlistTable");
             if(playlistTable){
                 playlistTable.remove();
-                document.getElementById("moreBtn").remove();
                 document.getElementById("resetBtn").remove();
             }
             var filterVals = {
@@ -465,36 +477,22 @@ export const renderPage = function() {
                 maxMonth: maxMonthVal.value,
                 maxYear: maxYearVal.value,
             };
-            getSongs(filterVals, 0);
+            let songResults = getSongs(filterVals, 0);
+            let songJson = songResults[0];
+            let songAttrJson = songResults[1];
+            console.log(songJson);
+            console.log(songAttrJson);
         });
     });
 
-    let offset = 1;
-
-    $(document).on("click", "#moreBtn", function() {
-        var filterVals = {
-            danceMin: danceSlider.value,
-            danceMax: danceSliderMax.value,
-            tempoMin: tempoSlider.value,
-            tempoMax: tempoSliderMax.value,
-            loudMin: loudSlider.value,
-            loudMax: loudSliderMax.value,
-            energyMin: energySlider.value,
-            energyMax: energySliderMax.value,
-            speechMin: speechSlider.value,
-            speechMax: speechSliderMax.value,
-            valenceMin: valenceSlider.value,
-            valenceMax: valenceSliderMax.value,
-        };
-      getSongs(filterVals, offset);
-      offset+=1;
-      console.log("more click");
-    });
 
     $(document).on("click", "#resetBtn", function(){
         document.getElementById("playlistTable").remove();
-        document.getElementById("moreBtn").remove();
         document.getElementById("resetBtn").remove();
+        document.getElementById("sortBtn").remove();
+        document.getElementById("orderRB").remove();
+        document.getElementById("sortRB").remove();
+
     })
 
   };
