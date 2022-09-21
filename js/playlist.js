@@ -224,16 +224,16 @@ export const renderPage = function() {
         //ongInfo+='<div id="cardGroup" class="columns is-multiline" style="margin-left: 0.025%">';
         songInfo+= '<table id="playlistTable" class="table is-hoverable">';
         songInfo+= '<thead><tr><th><abbr title="Number">Num</abbr></th>';
-        songInfo+='<th> Cover Art </th>'
-        songInfo+= '<th>Song Title</th>';
-        songInfo+='<th>Artist</th>';
-        songInfo+='<th><abbr title="Danceability">DNC</abbr></th>';
-        songInfo+='<th><abbr title="Energy">ENG</abbr></th>';
-        songInfo+='<th><abbr title="Loudness">db</abbr></th>';
-        songInfo+='<th><abbr title="Tempo">BPM</abbr></th>';
-        songInfo+='<th><abbr title="Speechiness">SPCH</abbr></th>';
-        songInfo+='<th><abbr title="Valence">VAL</abbr></th>';
-        songInfo+='<th>Date Added</th>';
+        songInfo+='<th class="has-text-centered"> Cover Art </th>'
+        songInfo+= '<th id= "pTableSong" class="has-text-centered">Song Title</th>';
+        songInfo+='<th id="pTableArtist" class="has-text-centered">Artist</th>';
+        songInfo+='<th id="pTableDance" class="has-text-centered"><abbr title="Danceability">DNC</abbr></th>';
+        songInfo+='<th id="pTableEnergy" class="has-text-centered"><abbr title="Energy">ENG</abbr></th>';
+        songInfo+='<th id="pTableLoud" class="has-text-centered"><abbr title="Loudness">db</abbr></th>';
+        songInfo+='<th id="pTableTempo" class="has-text-centered"><abbr title="Tempo">BPM</abbr></th>';
+        songInfo+='<th id="pTableSpeech" class="has-text-centered"><abbr title="Speechiness">SPCH</abbr></th>';
+        songInfo+='<th id="pTableValence" class="has-text-centered"><abbr title="Valence">VAL</abbr></th>';
+        songInfo+='<th id="pTableDate" class="has-text-centered">Date Added</th>';
         songInfo+='</tr></thead>';
         songInfo+='<tbody id="playlistTableBody">'
     }
@@ -324,6 +324,8 @@ export const renderPage = function() {
             songInfo+='<td>' + month + '/' + day + '/' + year + '</td>';
             songInfo+='</tr>';
             songData.added_at = tempSongJson[songIds[i-1]].added_at;
+            songData.name = songName;
+            songData.artist = tempSongJson[songIds[i-1]].track.artists[0].name;
             tempSongAttrJson[songIds[i-1]] = songData;
 
 
@@ -373,9 +375,9 @@ export const renderPage = function() {
     return Promise.resolve([tempSongJson, tempSongAttrJson]);
   }
 
-  async function sortPlaylist(songs, songAttrs, sortVal, orderVal) {
+  async function sortPlaylist(songs, songAttrs, sortVal, isASC) {
     console.log(sortVal);
-    console.log(orderVal);
+    console.log(isASC);
     console.log(songs);
     console.log(songAttrs);
 
@@ -392,17 +394,28 @@ export const renderPage = function() {
 
     let sortable = [];
     for(var id in sortValCount){
-      sortable.push([id, sortValCount[id]])
+        sortable.push([id, sortValCount[id]])
     }
-    if(orderVal == 'ASC'){
-      sortable.sort(function(a, b) {
-        return a[1] - b[1];
-      });
+
+    if(isASC){
+      if(sortVal == 'name' || sortVal == 'artist'){
+        sortable.sort((a,b) => a[1].localeCompare(b[1]));
+      }
+      else{
+        sortable.sort(function(a, b) {
+          return a[1] - b[1];
+        });
+      }
     }
-    if(orderVal == 'DESC'){
-      sortable.sort(function(a, b) {
-        return b[1] - a[1];
-      });
+    if(!isASC){
+      if(sortVal == 'name' || sortVal == 'artist'){
+        sortable.sort((a,b) => b[1].localeCompare(a[1]));
+      }
+      else{
+        sortable.sort(function(a, b) {
+          return b[1] - a[1];
+        });
+      }
     }
 
 
@@ -420,16 +433,16 @@ export const renderPage = function() {
     let songInfo = '';
     songInfo+= '<table id="playlistTable" class="table is-hoverable">';
     songInfo+= '<thead><tr><th><abbr title="Number">Num</abbr></th>';
-    songInfo+='<th> Cover Art </th>'
-    songInfo+= '<th>Song Title</th>';
-    songInfo+='<th>Artist</th>';
-    songInfo+='<th><abbr title="Danceability">DNC</abbr></th>';
-    songInfo+='<th><abbr title="Energy">ENG</abbr></th>';
-    songInfo+='<th><abbr title="Loudness">db</abbr></th>';
-    songInfo+='<th><abbr title="Tempo">BPM</abbr></th>';
-    songInfo+='<th><abbr title="Speechiness">SPCH</abbr></th>';
-    songInfo+='<th><abbr title="Valence">VAL</abbr></th>';
-    songInfo+='<th>Date Added</th>';
+    songInfo+='<th class="has-text-centered"> Cover Art </th>'
+    songInfo+= '<th id= "pTableSong" class="has-text-centered">Song Title</th>';
+    songInfo+='<th id="pTableArtist" class="has-text-centered">Artist</th>';
+    songInfo+='<th id="pTableDance" class="has-text-centered"><abbr title="Danceability">DNC</abbr></th>';
+    songInfo+='<th id="pTableEnergy" class="has-text-centered"><abbr title="Energy">ENG</abbr></th>';
+    songInfo+='<th id="pTableLoud" class="has-text-centered"><abbr title="Loudness">db</abbr></th>';
+    songInfo+='<th id="pTableTempo" class="has-text-centered"><abbr title="Tempo">BPM</abbr></th>';
+    songInfo+='<th id="pTableSpeech" class="has-text-centered"><abbr title="Speechiness">SPCH</abbr></th>';
+    songInfo+='<th id="pTableValence" class="has-text-centered"><abbr title="Valence">VAL</abbr></th>';
+    songInfo+='<th id="pTableDate" class="has-text-centered">Date Added</th>';
     songInfo+='</tr></thead>';
     songInfo+='<tbody id="playlistTableBody">'
 
@@ -644,6 +657,71 @@ export const renderPage = function() {
       let sortVal = $("input[type='radio'][name='sort']:checked").val();
       let orderVal = $("input[type='radio'][name='order']:checked").val();
       sortPlaylist(songJson, songAttrJson, sortVal, orderVal);
+    });
+    let pTableSong= true;
+    let pTableArtist= true;
+    let pTableDance= true;
+    let pTableEnergy= true;
+    let pTableLoud= true;
+    let pTableTempo= true;
+    let pTableSpeech= true;
+    let pTableValence= true;
+    let pTableDate = true;
+
+
+    $(document).on("click", "#pTableSong", function(){
+      console.log("click table song");
+      console.log(pTableSong)
+      sortPlaylist(songJson, songAttrJson, "name", pTableSong)
+      pTableSong = !pTableSong;
+    });
+    $(document).on("click", "#pTableArtist", function(){
+      console.log("click table artist");
+      console.log(pTableArtist)
+      sortPlaylist(songJson, songAttrJson, "artist", pTableArtist)
+      pTableArtist = !pTableArtist;
+    });
+    $(document).on("click", "#pTableDance", function(){
+      console.log("click table dance");
+      console.log(pTableDance)
+      sortPlaylist(songJson, songAttrJson, "danceability", pTableDance)
+      pTableDance = !pTableDance;
+    });
+    $(document).on("click", "#pTableEnergy", function(){
+      console.log("click table energy");
+      console.log(pTableEnergy)
+      sortPlaylist(songJson, songAttrJson, "energy", pTableEnergy)
+      pTableEnergy = !pTableEnergy;
+    });
+    $(document).on("click", "#pTableLoud", function(){
+      console.log("click table loud");
+      console.log(pTableLoud)
+      sortPlaylist(songJson, songAttrJson, "loudness", pTableLoud)
+      pTableLoud = !pTableLoud;
+    });
+    $(document).on("click", "#pTableTempo", function(){
+      console.log("click table tempo");
+      console.log(pTableTempo)
+      sortPlaylist(songJson, songAttrJson, "tempo", pTableTempo)
+      pTableTempo = !pTableTempo;
+    });
+    $(document).on("click", "#pTableSpeech", function(){
+      console.log("click table speech");
+      console.log(pTableSpeech)
+      sortPlaylist(songJson, songAttrJson, "speechiness", pTableSpeech)
+      pTableSpeech = !pTableSpeech;
+    });
+    $(document).on("click", "#pTableValence", function(){
+      console.log("click table valence");
+      console.log(pTableValence)
+      sortPlaylist(songJson, songAttrJson, "valence", pTableValence)
+      pTableValence = !pTableValence;
+    });
+    $(document).on("click", "#pTableDate", function(){
+      console.log("click table date");
+      console.log(pTableDate)
+      sortPlaylist(songJson, songAttrJson, "added_at", pTableDate)
+      pTableDate = !pTableDate;
     });
 
   };
