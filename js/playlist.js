@@ -342,15 +342,15 @@ export const renderPage = function() {
 
     let resetButton = document.getElementById("resetBtn");
     let buttonInfo ='<div><button id="resetBtn" class="button is-warning is-light is-large is-outlined is-rounded"> Reset Page pls. </button></div>';
-    let sortInfo ='<div id="sortRB" class="control"><label class="radio"><input type="radio" name="sort" checked>Danceability</label>';
+    let sortInfo ='<form id="sortRB" class="control"><label class="radio"><input type="radio" name="sort" checked>Danceability</label>';
     sortInfo +='<label class="radio"><input type="radio" name="sort">Loudness</label>';
     sortInfo +='<label class="radio"><input type="radio" name="sort">Tempo</label>';
     sortInfo +='<label class="radio"><input type="radio" name="sort">Energy</label>';
     sortInfo +='<label class="radio"><input type="radio" name="sort">Speechiness</label>';
     sortInfo +='<label class="radio"><input type="radio" name="sort">Valence</label>';
-    sortInfo +='<label class="radio"><input type="radio" name="sort">Date</label></div>';
-    let orderInfo = '<div id="orderRB" class="control"><label class="radio"><input type="radio" name="order" checked>ASC</label>';
-    orderInfo+='<label class="radio"><input type="radio" name="order">DESC</label></div>';
+    sortInfo +='<label class="radio"><input type="radio" name="sort">Date</label></form>';
+    let orderInfo = '<form id="orderRB" class="radio"><label class="radio"><input val="ASC" type="radio" name="order" checked>ASC</label>';
+    orderInfo+='<label class="radio"><input val="DESC" type="radio" name="order">DESC</label></form>';
     let sortButtonInfo = '<div><button id="sortBtn" class="button is-danger is-light is-large is-outlined is-rounded"> Sort that shiiii </button></div>';
 
 
@@ -362,6 +362,13 @@ export const renderPage = function() {
     $('#main').append(sortButtonInfo);
     document.getElementById("playlistBtn").classList.remove('is-loading')
     return Promise.resolve([songJson, songAttrJson]);
+  }
+
+  async function sortPlaylist(songs, songAttrs, sortVal, orderVal) {
+    console.log(sortVal);
+    console.log(orderVal);
+    console.log(songs);
+    console.log(songAttrs);
   }
 
   export const loadPage = function() {
@@ -494,6 +501,13 @@ export const renderPage = function() {
         document.getElementById("sortRB").remove();
 
     })
+
+    $(document).on("click", "#sortBtn", function(){
+      console.log("sort it")
+      let sortVal = $("input[name=sort]:checked", "#sortRB").val();
+      let orderVal = $("input[name=order]:checked", "#orderRB").val();
+      sortPlaylist(songJson, songAttrJson, sortVal, orderVal);
+    });
 
   };
 
