@@ -53,23 +53,69 @@ export const renderPage = function() {
     return;
   }
 
-  async function getGenres() {
+  async function getGenres(maxGenres) {
+    let maxArtists = 50;
     let genreInfo = '<p class="title" style="text-align: center"> YOUR TOP SPOTIFY GENRES: </p>'
-    const url = 'https://api.spotify.com/v1/me/top/available-genre-seeds';
+    const url = 'https://api.spotify.com/v1/me/top/artists?limit=' + maxArtists;
     const headers = {
       Authorization: 'Bearer ' + access_token
     }
 
-
-
     const response = await fetch(url, { headers });
 
     const data = await response.json();
-    console.log(data);
-    for(let i = 1; i < 11; i++){
+
+    genreInfo+= '<table id="genreTable" class="table is-fullwidth is-hoverable">';
+    genreInfo+= '<thead><tr><th class="has-text-left">Rank</th>';
+    genreInfo+='<th class="has-text-centered"> Genre </th>'
+    genreInfo+= '<th class="has-text-centered"> Count</th>';
+    genreInfo+='<th class="has-text-centered">Your Top Artist for Genre</th>';
+    genreInfo+='</tr></thead>';
+    genreInfo+='<tbody id="genreTableBody">'
+
+    let genreCount = {};
+    let genreTopArtist = {};
+
+    for(let i = 1; i < maxArtists + 1; i++){
+      for(let j = 0; j < data.items[i-1].genres.length; j++){
+        if(!(data.items[i-1].genres[j] in genreCount)){
+          genreCount[data.items[i-1].genres[j]] = 1;
+          genreTopArtist[data.items[i-1].genres[j]] = data.items[i-1].name;
+        }
+        else{
+          genreCount[data.items[i-1].genres[j]]++;
+        }
+      }
     }
 
-    console.log(genreInfo)
+    let sortable = [];
+    for (var genre in genreCount) {
+      sortable.push([genre, genreCount[genre]]);
+    }
+
+    sortable.sort(function(a, b) {
+      return b[1] - a[1];
+    });
+
+    let genreSorted = {};
+    sortable.forEach(function(item){
+        genreSorted[item[0]]=item[1]
+    });
+
+    let count = 1;
+    for(var genre in genreSorted){
+      genreInfo+='<tr><th>' + count + '</th>';
+      genreInfo+='<td>' + genre + '</td>';
+      genreInfo+='<td>' + genreSorted[genre] + '</td>';
+      genreInfo+='<td>' + genreTopArtist[genre] + '</td>';
+      genreInfo+='</tr>';
+      count++;
+      if(count > maxGenres){break;};
+    }
+
+    genreInfo+='</tbody>';
+    genreInfo+='</table>';
+
     $('#main').append(genreInfo);
   }
 
@@ -84,5 +130,5 @@ export const renderPage = function() {
   $(function() {
     getToken();
     loadPage();
-    getGenres();
+    getGenres(25);
   });
