@@ -36,34 +36,110 @@ export const renderPage = function() {
         <p class="title is-1">Select Filters</p>
         <div class="columns is-multiline">
             <div class="column is-one-quarter">
-                <p class="subtitle is-6" style="text-align: center"> Dancability Value: <span id="danceVal"> 0 </span> to <span id="danceValMax"> 1.00 </span></p>
+                <p class="subtitle is-5" style="text-align: center"> Dancability <span id="danceVal"> 0 </span> to <span id="danceValMax"> 1.00 </span></p>
                 MIN: <input id="danceSlider" class="slider has-output-tooltip is-fullwidth" step=".01" min="0.00" max="1.00" value="0" type="range"><br>
                 MAX: <input id="danceSliderMax" class="slider has-output-tooltip is-fullwidth" step=".01" min="0.00" max="1.00" value="1.00" type="range">
             </div>
             <div class="column is-one-quarter">
-                <p class="subtitle is-6" style="text-align: center"> Loudness Value: <span id="loudVal"> -60 </span> to <span id="loudValMax"> 0.00 </span></p>
+                <p class="subtitle is-5" style="text-align: center"> Loudness <span id="loudVal"> -60 </span> to <span id="loudValMax"> 0.00 </span></p>
                 MIN: <input id="loudSlider" class="slider has-output-tooltip is-fullwidth" step=".01" min="-60.00" max="0.00" value="-60.00" type="range"><br>
                 MAX: <input id="loudSliderMax" class="slider has-output-tooltip is-fullwidth" step=".01" min="-60.00" max="0.00" value="0.00" type="range">
             </div>
             <div class="column is-one-quarter">
-                <p class="subtitle is-6" style="text-align: center"> Tempo Value: <span id="tempoVal"> 0 </span> to <span id="tempoValMax"> 200 </span></p>
+                <p class="subtitle is-5" style="text-align: center"> Tempo <span id="tempoVal"> 0 </span> to <span id="tempoValMax"> 200 </span></p>
                 MIN: <input id="tempoSlider" class="slider has-output-tooltip is-fullwidth" step="1" min="0" max="200" value="0" type="range"><br>
                 MAX: <input id="tempoSliderMax" class="slider has-output-tooltip is-fullwidth" step="1" min="0" max="200" value="200" type="range">
             </div>
             <div class="column is-one-quarter">
-                <p class="subtitle is-6" style="text-align: center"> Energy Value: <span id="energyVal"> 0 </span> to <span id="energyValMax"> 1.00 </span></p>
+                <p class="subtitle is-5" style="text-align: center"> Energy <span id="energyVal"> 0 </span> to <span id="energyValMax"> 1.00 </span></p>
                 MIN <input id="energySlider" class="slider has-output-tooltip is-fullwidth" step=".01" min="0.00" max="1.00" value="0" type="range"><br>
                 MAX <input id="energySliderMax" class="slider has-output-tooltip is-fullwidth" step=".01" min="0.00" max="1.00" value="1.00" type="range">
             </div>
             <div class="column is-one-quarter">
-                <p class="subtitle is-6" style="text-align: center"> Speechiness Value: <span id="speechVal"> 0 </span> to <span id="speechValMax"> 1.00 </span></p>
+                <p class="subtitle is-5" style="text-align: center"> Speechiness <span id="speechVal"> 0 </span> to <span id="speechValMax"> 1.00 </span></p>
                 MIN: <input id="speechSlider" class="slider has-output-tooltip is-fullwidth" step=".01" min="0.00" max="1.00" value="0" type="range"><br>
                 MAX: <input id="speechSliderMax" class="slider has-output-tooltip is-fullwidth" step=".01" min="0.00" max="1.00" value="1.00" type="range">
             </div>
             <div class="column is-one-quarter">
-                <p class="subtitle is-6" style="text-align: center"> Valence Value: <span id="valenceVal"> 0 </span> to <span id="valenceValMax"> 1.00 </span></p>
+                <p class="subtitle is-5" style="text-align: center"> Valence <span id="valenceVal"> 0 </span> to <span id="valenceValMax"> 1.00 </span></p>
                 MIN: <input id="valenceSlider" class="slider has-output-tooltip is-fullwidth" step=".01" min="0.00" max="1.00" value="0" type="range"><br>
                 MAX: <input id="valenceSliderMax" class="slider has-output-tooltip is-fullwidth" step=".01" min="0.00" max="1.00" value="1.00" type="range">
+            </div>
+            <div class="column is-one-quarter">
+              <p class="subtitle is-5" style="text-align: center"> Min Date </p>
+              <div class="select is-link is-rounded">
+                <select id="minMonth">
+                  <option>Month</option>
+                  <option>01</option>
+                  <option>02</option>
+                  <option>03</option>
+                  <option>04</option>
+                  <option>05</option>
+                  <option>06</option>
+                  <option>07</option>
+                  <option>08</option>
+                  <option>09</option>
+                  <option>10</option>
+                  <option>11</option>
+                  <option>12</option>
+                </select>
+              </div>
+              <div class="select is-link is-rounded">
+                <select id="minYear">
+                  <option>Year</option>
+                  <option>2022</option>
+                  <option>2021</option>
+                  <option>2020</option>
+                  <option>2019</option>
+                  <option>2018</option>
+                  <option>2017</option>
+                  <option>2016</option>
+                  <option>2015</option>
+                  <option>2014</option>
+                  <option>2013</option>
+                  <option>2012</option>
+                  <option>2011</option>
+                  <option>2010</option>
+                </select>
+              </div>
+            </div>
+            <div class="column is-one-quarter">
+              <p class="subtitle is-5" style="text-align: center"> Max Date </p>
+              <div class="select is-link is-rounded">
+                <select id="maxMonth">
+                  <option>Month</option>
+                  <option>01</option>
+                  <option>02</option>
+                  <option>03</option>
+                  <option>04</option>
+                  <option>05</option>
+                  <option>06</option>
+                  <option>07</option>
+                  <option>08</option>
+                  <option>09</option>
+                  <option>10</option>
+                  <option>11</option>
+                  <option>12</option>
+                </select>
+              </div>
+              <div class="select is-link is-rounded">
+                <select id="maxYear">
+                  <option>Year</option>
+                  <option>2022</option>
+                  <option>2021</option>
+                  <option>2020</option>
+                  <option>2019</option>
+                  <option>2018</option>
+                  <option>2017</option>
+                  <option>2016</option>
+                  <option>2015</option>
+                  <option>2014</option>
+                  <option>2013</option>
+                  <option>2012</option>
+                  <option>2011</option>
+                  <option>2010</option>
+                </select>
+              </div>
             </div>
         </div>
         <button id="playlistBtn" class="button is-link is-light is-large is-outlined is-rounded">
@@ -88,7 +164,7 @@ export const renderPage = function() {
   }
 
   async function getSongs(filterVals, offset) {
-
+    console.log(filterVals['minMonth']);
     //Check filter values
     if(filterVals['energyMin'] >= filterVals['energyMax']){
         alert("Invalid Energy Values. Try again.")
@@ -115,9 +191,24 @@ export const renderPage = function() {
         return;
     }
 
+    if(filterVals['minYear'] > filterVals ['maxYear']){
+      alert("Invalid Date Range, doofus")
+      return;
+    }
+
+    if(filterVals['minYear'] == filterVals['maxYear'] && filterVals['minMonth'] > filterVals['maxMonth']){
+      alert("Invalid Date Range, nerd")
+      return;
+    }
+
+    if(filterVals['minMonth'] == 'Month' || filterVals['maxMonth'] == 'Month' || filterVals['minYear'] == 'Year' || filterVals['maxYear'] == 'Year'){
+      alert("Invalid Date Range, dweeb")
+      return;
+    }
+
     const maxSongs = 50;
     let playlistSongCount=0;
-    let songInfo = ''
+    let songInfo = '';
     if(offset == 0) {
         //ongInfo+='<div id="cardGroup" class="columns is-multiline" style="margin-left: 0.025%">';
         songInfo+= '<table id="playlistTable" class="table is-hoverable">';
@@ -131,37 +222,68 @@ export const renderPage = function() {
         songInfo+='<th><abbr title="Tempo">BPM</abbr></th>';
         songInfo+='<th><abbr title="Speechiness">SPCH</abbr></th>';
         songInfo+='<th><abbr title="Valence">VAL</abbr></th>';
+        songInfo+='<th>Date Added</th>';
         songInfo+='</tr></thead>';
         songInfo+='<tbody id="playlistTableBody">'
     }
     let songIds = [];
-    const url = 'https://api.spotify.com/v1/me/tracks?limit='+ maxSongs + '&offset=' + (offset * maxSongs);
-    const headers = {
-      Authorization: 'Bearer ' + access_token
-    }
+    let songJson = {};
+    do{
+      const url = 'https://api.spotify.com/v1/me/tracks?limit='+ maxSongs + '&offset=' + (offset * maxSongs);
+      const headers = {
+        Authorization: 'Bearer ' + access_token
+      }
 
-    const response = await fetch(url, { headers });
+      const response = await fetch(url, { headers });
 
-    const data = await response.json();
-    console.log(data);
-    for(let i = 1; i < maxSongs + 1; i++){
-        let songName = data.items[i-1].track.name;
+      const data = await response.json();
+
+      if(data.items.length === 0){
+        console.log("no more songs");
+        break;
+      }
+
+      for(let i = 1; i < maxSongs + 1; i++){
+        if(data.items[i-1] == null){
+          console.log("donezo");
+          break;
+        }
+        let month = data.items[i-1].added_at.slice(5,7);
+        let year = data.items[i-1].added_at.slice(0,4);
+
+        if( month <= filterVals['maxMonth'] && month >= filterVals['minMonth'] && year <= filterVals['maxYear'] && year >= filterVals['minYear']){
+          songJson[data.items[i-1].track.id] = data.items[i-1];
+          songIds.push(data.items[i-1].track.id);
+        }
+      }
+
+      offset++;
+    }while(true);
+
+    console.log(Object.keys(songJson).length)
+    for(let i = 1; i < songIds.length + 1; i++){
+
+        let songName = songJson[songIds[i-1]].track.name;
         let songArtists = "";
-        for(let j = 0; j < data.items[i-1].track.artists.length; j++){
+        for(let j = 0; j < songJson[songIds[i-1]].track.artists.length; j++){
           if (j == 0) {
-            songArtists += data.items[i-1].track.artists[j].name;
+            songArtists += songJson[songIds[i-1]].track.artists[j].name;
           }
           else if (j == 1) {
-            songArtists += " ft. " + data.items[i-1].track.artists[j].name;
+            songArtists += " ft. " + songJson[songIds[i-1]].track.artists[j].name;
           }
           else {
-            songArtists += " & " + data.items[i-1].track.artists[j].name;
+            songArtists += " & " + songJson[songIds[i-1]].track.artists[j].name;
           }
         }
 
-        let songImage = data.items[i-1].track.album.images[0].url;
+        let songImage = songJson[songIds[i-1]].track.album.images[0].url;
 
-        const songURL = 'https://api.spotify.com/v1/audio-features/' + data.items[i-1].track.id;
+        const headers = {
+          Authorization: 'Bearer ' + access_token
+        }
+
+        const songURL = 'https://api.spotify.com/v1/audio-features/' + songIds[i-1];
         const songResponse = await fetch(songURL, { headers });
         const songData = await songResponse.json();
 
@@ -174,8 +296,10 @@ export const renderPage = function() {
                 songData.valence > filterVals['valenceMin'] && songData.valence < filterVals['valenceMax']){
 
             playlistSongCount++;
-
-            songInfo+='<tr><th>' + (playlistSongCount + (offset * maxSongs)) + '</th>';
+            let month = songJson[songIds[i-1]].added_at.slice(5,7);
+            let year = songJson[songIds[i-1]].added_at.slice(0,4);
+            let day = songJson[songIds[i-1]].added_at.slice(8,10);
+            songInfo+='<tr><th>' + i + '</th>';
             songInfo+='<td><img src="' + songImage + '"/></td>';
             songInfo+='<td>' + songName + '</td>';
             songInfo+='<td>' + songArtists + '</td>';
@@ -185,21 +309,26 @@ export const renderPage = function() {
             songInfo+='<td>' + songData.tempo + '</td>';
             songInfo+='<td>' + songData.speechiness + '</td>';
             songInfo+='<td>' + songData.valence + '</td>';
+            songInfo+='<td>' + month + '/' + day + '/' + year + '</td>';
             songInfo+='</tr>';
 
 
         }
-        songIds[i-1] = data.items[i-1].track.id
+        else{
+          delete songJson[songIds[i-1]];
+        }
 
 
     }
+
+    console.log(Object.keys(songJson).length)
 
     songInfo+='</tbody>';
     console.log(songIds)
     let moreButton = document.getElementById("moreBtn");
     let resetButton = document.getElementById("resetBtn");
     let buttonInfo ='<div><button id="moreBtn" class="button is-link is-light is-large is-outlined is-rounded"> Gimme more my guy </button><button id="resetBtn" class="button is-warning is-light is-large is-outlined is-rounded"> Reset Page pls. </button></div>';
-    if (offset != 0){
+    /* if (offset != 0){
         //playlist.innerHTML = '';
         moreButton.remove();
         resetButton.remove();
@@ -208,8 +337,11 @@ export const renderPage = function() {
     else{
       songInfo+='</table>';
       $('#main').append(songInfo);
-    }
+    } */
 
+
+    songInfo+='</table>';
+    $('#main').append(songInfo);
     $('#main').append(buttonInfo);
 
     /* let playlist = document.getElementById("playlistSongs");
@@ -302,6 +434,11 @@ export const renderPage = function() {
         valenceValMax.innerHTML = this.value;
     }
 
+    var minMonthVal = document.getElementById("minMonth");
+    var minYearVal = document.getElementById("minYear");
+    var maxMonthVal = document.getElementById("maxMonth");
+    var maxYearVal = document.getElementById("maxYear");
+
     $(document).ready(function() {
         $("#playlistBtn").click(function(){
             let playlistTable = document.getElementById("playlistTable");
@@ -323,6 +460,10 @@ export const renderPage = function() {
                 speechMax: speechSliderMax.value,
                 valenceMin: valenceSlider.value,
                 valenceMax: valenceSliderMax.value,
+                minMonth: minMonthVal.value,
+                minYear: minYearVal.value,
+                maxMonth: maxMonthVal.value,
+                maxYear: maxYearVal.value,
             };
             getSongs(filterVals, 0);
         });
