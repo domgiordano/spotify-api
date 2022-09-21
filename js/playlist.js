@@ -394,7 +394,13 @@ export const renderPage = function() {
 
     let sortable = [];
     for(var id in sortValCount){
-        sortable.push([id, sortValCount[id]])
+        if(sortVal == 'added_at'){
+          sortable.push([id, new Date(sortValCount[id])]);
+        }
+        else{
+          sortable.push([id, sortValCount[id]])
+        }
+
     }
 
     if(isASC){
