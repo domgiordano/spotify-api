@@ -238,7 +238,7 @@ export const renderPage = function() {
         songInfo+='<tbody id="playlistTableBody">'
     }
     let songIds = [];
-    let songJson = {};
+    let tempSongJson = {};
     do{
       const url = 'https://api.spotify.com/v1/me/tracks?limit='+ maxSongs + '&offset=' + (offset * maxSongs);
       const headers = {
@@ -263,7 +263,7 @@ export const renderPage = function() {
         let year = data.items[i-1].added_at.slice(0,4);
 
         if( month <= filterVals['maxMonth'] && month >= filterVals['minMonth'] && year <= filterVals['maxYear'] && year >= filterVals['minYear']){
-          songJson[data.items[i-1].track.id] = data.items[i-1];
+          tempSongJson[data.items[i-1].track.id] = data.items[i-1];
           songIds.push(data.items[i-1].track.id);
         }
       }
@@ -271,25 +271,25 @@ export const renderPage = function() {
       offset++;
     }while(true);
 
-    let songAttrJson = {};
-    console.log(Object.keys(songJson).length)
+    let tempSongAttrJson = {};
+    console.log(Object.keys(tempSongJson).length)
     for(let i = 1; i < songIds.length + 1; i++){
 
-        let songName = songJson[songIds[i-1]].track.name;
+        let songName = tempSongJson[songIds[i-1]].track.name;
         let songArtists = "";
-        for(let j = 0; j < songJson[songIds[i-1]].track.artists.length; j++){
+        for(let j = 0; j < tempSongJson[songIds[i-1]].track.artists.length; j++){
           if (j == 0) {
-            songArtists += songJson[songIds[i-1]].track.artists[j].name;
+            songArtists += tempSongJson[songIds[i-1]].track.artists[j].name;
           }
           else if (j == 1) {
-            songArtists += " ft. " + songJson[songIds[i-1]].track.artists[j].name;
+            songArtists += " ft. " + tempSongJson[songIds[i-1]].track.artists[j].name;
           }
           else {
-            songArtists += " & " + songJson[songIds[i-1]].track.artists[j].name;
+            songArtists += " & " + tempSongJson[songIds[i-1]].track.artists[j].name;
           }
         }
 
-        let songImage = songJson[songIds[i-1]].track.album.images[0].url;
+        let songImage = tempSongJson[songIds[i-1]].track.album.images[0].url;
 
         const headers = {
           Authorization: 'Bearer ' + access_token
@@ -308,9 +308,9 @@ export const renderPage = function() {
                 songData.valence > filterVals['valenceMin'] && songData.valence < filterVals['valenceMax']){
 
             playlistSongCount++;
-            let month = songJson[songIds[i-1]].added_at.slice(5,7);
-            let year = songJson[songIds[i-1]].added_at.slice(0,4);
-            let day = songJson[songIds[i-1]].added_at.slice(8,10);
+            let month = tempSongJson[songIds[i-1]].added_at.slice(5,7);
+            let year = tempSongJson[songIds[i-1]].added_at.slice(0,4);
+            let day = tempSongJson[songIds[i-1]].added_at.slice(8,10);
             songInfo+='<tr><th>' + i + '</th>';
             songInfo+='<td><img src="' + songImage + '"/></td>';
             songInfo+='<td>' + songName + '</td>';
@@ -324,44 +324,53 @@ export const renderPage = function() {
             songInfo+='<td>' + month + '/' + day + '/' + year + '</td>';
             songInfo+='</tr>';
 
-            songAttrJson[songIds[i-1]] = songData;
+            tempSongAttrJson[songIds[i-1]] = songData;
 
 
         }
         else{
-          delete songJson[songIds[i-1]];
+          delete tempSongJson[songIds[i-1]];
         }
 
 
     }
 
-    console.log(Object.keys(songJson).length)
+    console.log(Object.keys(tempSongJson).length)
 
     songInfo+='</tbody>';
     console.log(songIds)
 
     let resetButton = document.getElementById("resetBtn");
     let buttonInfo ='<div><button id="resetBtn" class="button is-warning is-light is-large is-outlined is-rounded"> Reset Page pls. </button></div>';
-    let sortInfo ='<form id="sortRB" class="control"><label class="radio"><input type="radio" name="sort" checked>Danceability</label>';
-    sortInfo +='<label class="radio"><input type="radio" name="sort">Loudness</label>';
-    sortInfo +='<label class="radio"><input type="radio" name="sort">Tempo</label>';
-    sortInfo +='<label class="radio"><input type="radio" name="sort">Energy</label>';
-    sortInfo +='<label class="radio"><input type="radio" name="sort">Speechiness</label>';
-    sortInfo +='<label class="radio"><input type="radio" name="sort">Valence</label>';
-    sortInfo +='<label class="radio"><input type="radio" name="sort">Date</label></form>';
-    let orderInfo = '<form id="orderRB" class="radio"><label class="radio"><input val="ASC" type="radio" name="order" checked>ASC</label>';
-    orderInfo+='<label class="radio"><input val="DESC" type="radio" name="order">DESC</label></form>';
+    let sortInfo ='<form id="sortRB" class="control">';
+    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Danceability" checked>Danceability</label>';
+    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Loudness">Loudness</label>';
+    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Tempo">Tempo</label>';
+    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Energy">Energy</label>';
+    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Speechiness">Speechiness</label>';
+    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Valence">Valence</label>';
+    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Date">Date</label>';
+    sortInfo    +='</form>';
+    let orderInfo  ='<form id="orderRB" class="radio">';
+    orderInfo     +='<label class="radio"><input value="ASC" type="radio" name="order" checked>ASC</label>';
+    orderInfo     +='<label class="radio"><input value="DESC" type="radio" name="order">DESC</label>';
+    orderInfo     +='</form>';
     let sortButtonInfo = '<div><button id="sortBtn" class="button is-danger is-light is-large is-outlined is-rounded"> Sort that shiiii </button></div>';
 
-
+    let songNumberInfo='<div><p class="title is-3">Number of Songs Selected: ' + Object.keys(tempSongJson).length + '</p>';
     songInfo+='</table>';
+    $('#main').append(songNumberInfo);
     $('#main').append(songInfo);
     $('#main').append(buttonInfo);
     $('#main').append(sortInfo);
     $('#main').append(orderInfo);
     $('#main').append(sortButtonInfo);
     document.getElementById("playlistBtn").classList.remove('is-loading')
-    return Promise.resolve([songJson, songAttrJson]);
+
+    songJson = tempSongJson;
+    songAttrJson = tempSongAttrJson;
+
+    return Promise.resolve([tempSongJson, tempSongAttrJson]);
   }
 
   async function sortPlaylist(songs, songAttrs, sortVal, orderVal) {
@@ -369,6 +378,10 @@ export const renderPage = function() {
     console.log(orderVal);
     console.log(songs);
     console.log(songAttrs);
+
+    if(sortVal == 'Danceability'){
+
+    }
   }
 
   export const loadPage = function() {
@@ -485,10 +498,10 @@ export const renderPage = function() {
                 maxYear: maxYearVal.value,
             };
             let songResults = getSongs(filterVals, 0);
-            let songJson = songResults[0];
-            let songAttrJson = songResults[1];
-            console.log(songJson);
-            console.log(songAttrJson);
+            //let songJson = songResults[0];
+            //let songAttrJson = songResults[1];
+            //console.log(songJson);
+            //console.log(songAttrJson);
         });
     });
 
@@ -504,8 +517,8 @@ export const renderPage = function() {
 
     $(document).on("click", "#sortBtn", function(){
       console.log("sort it")
-      let sortVal = $("input[name=sort]:checked", "#sortRB").val();
-      let orderVal = $("input[name=order]:checked", "#orderRB").val();
+      let sortVal = $("input[type='radio'][name='sort']:checked").val();
+      let orderVal = $("input[type='radio'][name='order']:checked").val();
       sortPlaylist(songJson, songAttrJson, sortVal, orderVal);
     });
 
