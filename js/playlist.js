@@ -344,29 +344,11 @@ export const renderPage = function() {
 
     let resetButton = document.getElementById("resetBtn");
     let buttonInfo ='<div><button id="resetBtn" class="button is-warning is-light is-large is-outlined is-rounded"> Reset Page pls. </button></div>';
-    let sortInfo ='<form id="sortRB" class="control">';
-    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Danceability" checked>Danceability</label>';
-    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Loudness">Loudness</label>';
-    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Tempo">Tempo</label>';
-    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Energy">Energy</label>';
-    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Speechiness">Speechiness</label>';
-    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Valence">Valence</label>';
-    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Date">Date</label>';
-    sortInfo    +='</form>';
-    let orderInfo  ='<form id="orderRB" class="radio">';
-    orderInfo     +='<label class="radio"><input value="ASC" type="radio" name="order" checked>ASC</label>';
-    orderInfo     +='<label class="radio"><input value="DESC" type="radio" name="order">DESC</label>';
-    orderInfo     +='</form>';
-    let sortButtonInfo = '<div><button id="sortBtn" class="button is-danger is-light is-large is-outlined is-rounded"> Sort that shiiii </button></div>';
-
     let songNumberInfo='<div id="pTotal"><p class="title is-3">Number of Songs Selected: ' + Object.keys(tempSongJson).length + '</p>';
     songInfo+='</table>';
     $('#main').append(songNumberInfo);
     $('#main').append(songInfo);
     $('#main').append(buttonInfo);
-    $('#main').append(sortInfo);
-    $('#main').append(orderInfo);
-    $('#main').append(sortButtonInfo);
     document.getElementById("playlistBtn").classList.remove('is-loading')
 
     songJson = tempSongJson;
@@ -494,29 +476,11 @@ export const renderPage = function() {
 
     let resetButton = document.getElementById("resetBtn");
     let buttonInfo ='<div><button id="resetBtn" class="button is-warning is-light is-large is-outlined is-rounded"> Reset Page pls. </button></div>';
-    let sortInfo ='<form id="sortRB" class="control">';
-    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Danceability" checked>Danceability</label>';
-    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Loudness">Loudness</label>';
-    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Tempo">Tempo</label>';
-    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Energy">Energy</label>';
-    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Speechiness">Speechiness</label>';
-    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Valence">Valence</label>';
-    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Date">Date</label>';
-    sortInfo    +='</form>';
-    let orderInfo  ='<form id="orderRB" class="radio">';
-    orderInfo     +='<label class="radio"><input value="ASC" type="radio" name="order" checked>ASC</label>';
-    orderInfo     +='<label class="radio"><input value="DESC" type="radio" name="order">DESC</label>';
-    orderInfo     +='</form>';
-    let sortButtonInfo = '<div><button id="sortBtn" class="button is-danger is-light is-large is-outlined is-rounded"> Sort that shiiii </button></div>';
-
     let songNumberInfo='<div id="pTotal"><p class="title is-3">Number of Songs Selected: ' + Object.keys(songs).length + '</p>';
     songInfo+='</table>';
     $('#main').append(songNumberInfo);
     $('#main').append(songInfo);
     $('#main').append(buttonInfo);
-    $('#main').append(sortInfo);
-    $('#main').append(orderInfo);
-    $('#main').append(sortButtonInfo);
     document.getElementById("playlistBtn").classList.remove('is-loading')
 
     songJson = songs;
@@ -651,19 +615,11 @@ export const renderPage = function() {
     $(document).on("click", "#resetBtn", function(){
         document.getElementById("playlistTable").remove();
         document.getElementById("resetBtn").remove();
-        document.getElementById("sortBtn").remove();
-        document.getElementById("orderRB").remove();
-        document.getElementById("sortRB").remove();
         document.getElementById("pTotal").remove();
 
     })
 
-    $(document).on("click", "#sortBtn", function(){
-      console.log("sort it")
-      let sortVal = $("input[type='radio'][name='sort']:checked").val();
-      let orderVal = $("input[type='radio'][name='order']:checked").val();
-      sortPlaylist(songJson, songAttrJson, sortVal, orderVal);
-    });
+
     let pTableSong= true;
     let pTableArtist= true;
     let pTableDance= true;
