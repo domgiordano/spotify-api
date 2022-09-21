@@ -312,7 +312,7 @@ export const renderPage = function() {
             let year = tempSongJson[songIds[i-1]].added_at.slice(0,4);
             let day = tempSongJson[songIds[i-1]].added_at.slice(8,10);
             songInfo+='<tr><th>' + i + '</th>';
-            songInfo+='<td><img src="' + songImage + '"/></td>';
+            songInfo+='<td><img src="' + songImage + '" height="100" width="100"></td>';
             songInfo+='<td>' + songName + '</td>';
             songInfo+='<td>' + songArtists + '</td>';
             songInfo+='<td>' + songData.danceability + '</td>';
@@ -323,7 +323,7 @@ export const renderPage = function() {
             songInfo+='<td>' + songData.valence + '</td>';
             songInfo+='<td>' + month + '/' + day + '/' + year + '</td>';
             songInfo+='</tr>';
-
+            songData.added_at = tempSongJson[songIds[i-1]].added_at;
             tempSongAttrJson[songIds[i-1]] = songData;
 
 
@@ -357,7 +357,7 @@ export const renderPage = function() {
     orderInfo     +='</form>';
     let sortButtonInfo = '<div><button id="sortBtn" class="button is-danger is-light is-large is-outlined is-rounded"> Sort that shiiii </button></div>';
 
-    let songNumberInfo='<div><p class="title is-3">Number of Songs Selected: ' + Object.keys(tempSongJson).length + '</p>';
+    let songNumberInfo='<div id="pTotal"><p class="title is-3">Number of Songs Selected: ' + Object.keys(tempSongJson).length + '</p>';
     songInfo+='</table>';
     $('#main').append(songNumberInfo);
     $('#main').append(songInfo);
@@ -379,9 +379,132 @@ export const renderPage = function() {
     console.log(songs);
     console.log(songAttrs);
 
-    if(sortVal == 'Danceability'){
+    sortVal = sortVal.toLowerCase();
+    let tempVals = Object.values(songAttrs);
+    let tempKeys = Object.keys(songAttrs);
+    let sortValCount = {};
 
+    //makes obj with Key: SongID - Value: SortVal
+    for(let i = 0; i < tempVals.length; i++){
+      let key = tempKeys[i]
+      sortValCount[key] = (tempVals[i])[sortVal];
     }
+
+    let sortable = [];
+    for(var id in sortValCount){
+      sortable.push([id, sortValCount[id]])
+    }
+    if(orderVal == 'ASC'){
+      sortable.sort(function(a, b) {
+        return a[1] - b[1];
+      });
+    }
+    if(orderVal == 'DESC'){
+      sortable.sort(function(a, b) {
+        return b[1] - a[1];
+      });
+    }
+
+
+    let valueSorted = {};
+    sortable.forEach(function(item){
+      valueSorted[item[0]]=item[1]
+    });
+    console.log(valueSorted);
+
+    //Reload data sorted
+    $('#resetBtn').trigger('click');
+    let playlistSongCount=1;
+
+    //Construct Table Header
+    let songInfo = '';
+    songInfo+= '<table id="playlistTable" class="table is-hoverable">';
+    songInfo+= '<thead><tr><th><abbr title="Number">Num</abbr></th>';
+    songInfo+='<th> Cover Art </th>'
+    songInfo+= '<th>Song Title</th>';
+    songInfo+='<th>Artist</th>';
+    songInfo+='<th><abbr title="Danceability">DNC</abbr></th>';
+    songInfo+='<th><abbr title="Energy">ENG</abbr></th>';
+    songInfo+='<th><abbr title="Loudness">db</abbr></th>';
+    songInfo+='<th><abbr title="Tempo">BPM</abbr></th>';
+    songInfo+='<th><abbr title="Speechiness">SPCH</abbr></th>';
+    songInfo+='<th><abbr title="Valence">VAL</abbr></th>';
+    songInfo+='<th>Date Added</th>';
+    songInfo+='</tr></thead>';
+    songInfo+='<tbody id="playlistTableBody">'
+
+    //Construct Table Rows
+    for(var id in valueSorted){
+      let song = songs[id].track;
+      let songAttr = songAttrs[id];
+      let songName = song.name;
+      let songArtists = "";
+      for(let j = 0; j < song.artists.length; j++){
+        if (j == 0) {
+          songArtists += song.artists[j].name;
+        }
+        else if (j == 1) {
+          songArtists += " ft. " + song.artists[j].name;
+        }
+        else {
+          songArtists += " & " + song.artists[j].name;
+        }
+      }
+
+      let songImage = song.album.images[0].url;
+
+      let month = songAttr.added_at.slice(5,7);
+      let year = songAttr.added_at.slice(0,4);
+      let day = songAttr.added_at.slice(8,10);
+      songInfo+='<tr><th>' + playlistSongCount + '</th>';
+      songInfo+='<td><img src="' + songImage + '" height="100" width="100"></td>';
+      songInfo+='<td>' + songName + '</td>';
+      songInfo+='<td>' + songArtists + '</td>';
+      songInfo+='<td>' + songAttr.danceability + '</td>';
+      songInfo+='<td>' + songAttr.energy + '</td>';
+      songInfo+='<td>' + songAttr.loudness + '</td>';
+      songInfo+='<td>' + songAttr.tempo + '</td>';
+      songInfo+='<td>' + songAttr.speechiness + '</td>';
+      songInfo+='<td>' + songAttr.valence + '</td>';
+      songInfo+='<td>' + month + '/' + day + '/' + year + '</td>';
+      songInfo+='</tr>';
+      playlistSongCount++;
+    }
+
+    songInfo+='</tbody>';
+
+    let resetButton = document.getElementById("resetBtn");
+    let buttonInfo ='<div><button id="resetBtn" class="button is-warning is-light is-large is-outlined is-rounded"> Reset Page pls. </button></div>';
+    let sortInfo ='<form id="sortRB" class="control">';
+    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Danceability" checked>Danceability</label>';
+    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Loudness">Loudness</label>';
+    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Tempo">Tempo</label>';
+    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Energy">Energy</label>';
+    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Speechiness">Speechiness</label>';
+    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Valence">Valence</label>';
+    sortInfo    +='<label class="radio"><input type="radio" name="sort" value="Date">Date</label>';
+    sortInfo    +='</form>';
+    let orderInfo  ='<form id="orderRB" class="radio">';
+    orderInfo     +='<label class="radio"><input value="ASC" type="radio" name="order" checked>ASC</label>';
+    orderInfo     +='<label class="radio"><input value="DESC" type="radio" name="order">DESC</label>';
+    orderInfo     +='</form>';
+    let sortButtonInfo = '<div><button id="sortBtn" class="button is-danger is-light is-large is-outlined is-rounded"> Sort that shiiii </button></div>';
+
+    let songNumberInfo='<div id="pTotal"><p class="title is-3">Number of Songs Selected: ' + Object.keys(songs).length + '</p>';
+    songInfo+='</table>';
+    $('#main').append(songNumberInfo);
+    $('#main').append(songInfo);
+    $('#main').append(buttonInfo);
+    $('#main').append(sortInfo);
+    $('#main').append(orderInfo);
+    $('#main').append(sortButtonInfo);
+    document.getElementById("playlistBtn").classList.remove('is-loading')
+
+    songJson = songs;
+    songAttrJson = songAttrs;
+
+    return;
+
   }
 
   export const loadPage = function() {
@@ -512,6 +635,7 @@ export const renderPage = function() {
         document.getElementById("sortBtn").remove();
         document.getElementById("orderRB").remove();
         document.getElementById("sortRB").remove();
+        document.getElementById("pTotal").remove();
 
     })
 
