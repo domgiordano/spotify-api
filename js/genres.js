@@ -1,5 +1,6 @@
 let access_token = "";
 let refresh_token = "";
+let topGenres = {};
 
 export const renderPage = function() {
     return `<section class="hero is-success is-fullheight">
@@ -53,7 +54,133 @@ export const renderPage = function() {
     return;
   }
 
-  async function getGenres(maxGenres) {
+  async function getGenres(maxGenres, offset) {
+    let maxSongs = 50;
+    let maxArtists = 50;
+    let artistIds = [];
+    let genreCount = {};
+    let genreInfo = '<p class="title" style="text-align: center"> <span id="genreTitle"> Loading your top genres... </span></p>';
+    $('#main').append(genreInfo);
+    genreInfo='';
+    genreInfo+= '<table id="genreTable" class="table is-fullwidth is-hoverable">';
+    genreInfo+= '<thead><tr><th class="has-text-left">Rank</th>';
+    genreInfo+='<th class="has-text-centered"> Genre </th>'
+    genreInfo+= '<th class="has-text-centered"> Count</th>';
+    genreInfo+='</tr></thead>';
+    genreInfo+='<tbody id="genreTableBody">'
+
+    do{
+      const url = 'https://api.spotify.com/v1/me/tracks?limit='+ maxSongs + '&offset=' + (offset * maxSongs);
+      const headers = {
+        Authorization: 'Bearer ' + access_token
+      }
+
+      const response = await fetch(url, { headers });
+
+      const data = await response.json();
+      console.log(data)
+
+      if(data.items.length === 0){
+        console.log("no more songs");
+        break;
+      }
+
+      for(let i = 1; i < maxSongs + 1; i++){
+        if(data.items[i-1] == null){
+          console.log("donezo");
+          break;
+        }
+        artistIds.push(data.items[i-1].track.artists[0].id)
+      }
+      if(offset == 40){
+        document.getElementById('genreTitle').textContent= "Dang b you got a lot of songs.."
+      }
+      if(offset == 80){
+        document.getElementById('genreTitle').textContent= "Get sum friends or sumthin.."
+      }
+      offset++;
+    }while(true);
+
+
+    offset=0;
+    for(let i = 1; i < artistIds.length; i+= maxArtists){
+      let idGroup='';
+      for(let j = offset; j < offset + maxArtists; j++){
+        if(offset == 2000){
+          document.getElementById('genreTitle').textContent= "Dont fret, they are coming.."
+        }
+        if(offset == 4000){
+          document.getElementById('genreTitle').textContent= "Pretty close now.."
+        }
+        idGroup+= artistIds[j];
+        if(j+1 < offset + maxArtists){
+          idGroup+=',';
+        }
+        else{
+          break;
+        }
+      }
+      offset+=maxArtists;
+      const url = 'https://api.spotify.com/v1/artists?ids='+ idGroup;
+      const headers = {
+        Authorization: 'Bearer ' + access_token
+      }
+
+      const response = await fetch(url, { headers });
+
+      const data = await response.json();
+
+      console.log("artists");
+      console.log(data);
+      for(let k = 0; k < Object.keys(data.artists).length; k++){
+        if(data.artists[k] == null){
+          break;
+        }
+        for(let l = 0; l < data.artists[k].genres.length; l++){
+          if(!(data.artists[k].genres[l] in genreCount)){
+            genreCount[data.artists[k].genres[l]] = 1;
+          }
+          else{
+            genreCount[data.artists[k].genres[l]]++;
+          }
+        }
+      }
+
+    }
+
+    let sortable = [];
+    for (var genre in genreCount) {
+      sortable.push([genre, genreCount[genre]]);
+    }
+
+    sortable.sort(function(a, b) {
+      return b[1] - a[1];
+    });
+
+    let genreSorted = {};
+    sortable.forEach(function(item){
+        genreSorted[item[0]]=item[1]
+    });
+
+    let count = 1;
+    for(var genre in genreSorted){
+      genreInfo+='<tr><th>' + count + '</th>';
+      genreInfo+='<td>' + genre + '</td>';
+      genreInfo+='<td>' + genreSorted[genre] + '</td>';
+      genreInfo+='</tr>';
+      count++;
+      if(count > maxGenres){break;};
+    }
+
+    genreInfo+='</tbody>';
+    genreInfo+='</table>';
+    document.getElementById('genreTitle').textContent= "Your Top Genres: "
+    topGenres = genreSorted;
+    $('#main').append(genreInfo);
+    return;
+  }
+
+  async function oldGetGenres(){
     let maxArtists = 50;
     let genreInfo = '<p class="title" style="text-align: center"> YOUR TOP SPOTIFY GENRES: </p>'
     const url = 'https://api.spotify.com/v1/me/top/artists?limit=' + maxArtists;
@@ -130,5 +257,5 @@ export const renderPage = function() {
   $(function() {
     getToken();
     loadPage();
-    getGenres(25);
+    getGenres(25, 0);
   });
