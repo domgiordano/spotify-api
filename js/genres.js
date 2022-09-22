@@ -176,6 +176,13 @@ export const renderPage = function() {
     genreInfo+='</table>';
     document.getElementById('genreTitle').textContent= "Your Top Genres: "
     topGenres = genreSorted;
+    let gCount =1;
+    for(genre in topGenres){
+      localStorage.setItem("genre" + gCount, genre)
+      gCount++;
+
+    }
+    localStorage.setItem("test", 1);
     $('#main').append(genreInfo);
     return;
   }

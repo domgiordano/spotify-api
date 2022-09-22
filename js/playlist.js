@@ -144,6 +144,19 @@ export const renderPage = function() {
               </div>
             </div>
         </div>
+        <form method="post" action="/Tests/Post/">
+          <fieldset><legend>Filter Songs by Genre?</legend>
+            <div id="genreCol1" class="column is-one-quarter">
+            <div>
+            <div id="genreCol2" class="column is-one-quarter">
+            </div>
+            <div id="genreCol3" class="column is-one-quarter">
+            <div>
+            <div id="genreCol4" class="column is-one-quarter">
+            </div>
+            <br>
+          </fieldset>
+        </form>
         <button id="playlistBtn" class="button is-link is-light is-large is-outlined is-rounded">
           SUBMIT
         </button>
@@ -611,6 +624,17 @@ export const renderPage = function() {
         });
     });
 
+    //Render Checkboxes for filters
+    for(let i = 1; i < 5; i++){
+      let checkBoxInfo='';
+      for(let j = 1; j < 6; j++){
+        checkBoxInfo+='<input type="checkbox" name="filterGenre" value="'+ localStorage.getItem("genre" + (j + ((i-1) * 5 ))) +'">';
+        checkBoxInfo+='<label for="'+ localStorage.getItem("genre" + (j + ((i-1) * 5 ))) +'">'+ localStorage.getItem("genre" + (j + ((i-1) * 5 ))) +'</label>';
+        $('#genreCol' + i).append(checkBoxInfo);
+      }
+    }
+
+
 
     $(document).on("click", "#resetBtn", function(){
         document.getElementById("playlistTable").remove();
@@ -685,6 +709,8 @@ export const renderPage = function() {
       sortPlaylist(songJson, songAttrJson, "added_at", pTableDate)
       pTableDate = !pTableDate;
     });
+
+
 
   };
 
