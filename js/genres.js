@@ -59,6 +59,7 @@ export const renderPage = function() {
     let maxArtists = 50;
     let artistIds = [];
     let genreCount = {};
+    let artistGenres = {};
     let genreInfo = '<p class="title" style="text-align: center"> <span id="genreTitle"> Loading your top genres... </span></p>';
     $('#main').append(genreInfo);
     genreInfo='';
@@ -86,7 +87,7 @@ export const renderPage = function() {
       }
 
       for(let i = 1; i < maxSongs + 1; i++){
-        if(data.items[i-1] == null){
+        if( data.items[i-1] == null){
           console.log("donezo");
           break;
         }
@@ -136,13 +137,22 @@ export const renderPage = function() {
         if(data.artists[k] == null){
           break;
         }
+        let tempGenreList = [];
         for(let l = 0; l < data.artists[k].genres.length; l++){
+          tempGenreList.push(data.artists[k].genres[l]);
           if(!(data.artists[k].genres[l] in genreCount)){
             genreCount[data.artists[k].genres[l]] = 1;
           }
           else{
             genreCount[data.artists[k].genres[l]]++;
           }
+        }
+
+        console.log(tempGenreList);
+        console.log(data.artists[k]);
+        if(!(data.artists[k].id in artistGenres)){
+          console.log("adding")
+          artistGenres[data.artists[k].id] = tempGenreList;
         }
       }
 
@@ -182,6 +192,8 @@ export const renderPage = function() {
       gCount++;
 
     }
+    console.log(artistGenres);
+    localStorage.setItem('artistGenres', JSON.stringify(artistGenres));
     localStorage.setItem("test", 1);
     $('#main').append(genreInfo);
     return;

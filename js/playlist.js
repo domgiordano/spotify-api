@@ -37,7 +37,7 @@ export const renderPage = function() {
 
       <div id="main" class="container has-text-centered">
         <p class="title is-1">Select Filters</p>
-        <div class="columns is-multiline">
+        <div id="filterValues" class="columns is-multiline">
             <div class="column is-one-quarter">
                 <p class="subtitle is-5" style="text-align: center"> Dancability <span id="danceVal"> 0 </span> to <span id="danceValMax"> 1.00 </span></p>
                 MIN: <input id="danceSlider" class="slider has-output-tooltip is-fullwidth" step=".01" min="0.00" max="1.00" value="0" type="range"><br>
@@ -171,6 +171,9 @@ export const renderPage = function() {
 
   async function getSongs(filterVals, offset) {
     let genreFilter = [];
+    let artistGenres = JSON.parse(localStorage.getItem('artistGenres'));
+    console.log(artistGenres);
+
     for(let i = 1; i < maxGenres+1; i++){
       if(document.getElementById('genre' + i).checked){
         genreFilter.push(localStorage.getItem('genre' + i).toLowerCase());
@@ -273,24 +276,36 @@ export const renderPage = function() {
         }
         let month = data.items[i-1].added_at.slice(5,7);
         let year = data.items[i-1].added_at.slice(0,4);
-
+        let validDate = false;
         if( month <= filterVals['maxMonth'] && month >= filterVals['minMonth'] && year <= filterVals['maxYear'] && year >= filterVals['minYear']){
-          tempSongJson[data.items[i-1].track.id] = data.items[i-1];
-          songIds.push(data.items[i-1].track.id);
+          validDate = true;
         }
         let validGenre = false;
+        console.log(data.items[i-1])
         if(genreFilter.length != 0){
           loopJ:
             for(let j = 0; j < data.items[i-1].track.artists.length; j++){
-              for(let k = 0; k < data.items[i-1].track.artists[j].genres.length; k++){
+              console.log(typeof artistGenres)
+              let currArtistGenres = artistGenres[data.items[i-1].track.artists[j].id]
+              console.log(currArtistGenres);
+              if(currArtistGenres == null){continue;}
+              for(let k = 0; k < currArtistGenres.length; k++){
                 for(let l = 0; l < genreFilter.length; l++){
-                  if(genreFilter[l] == data.items[i-1].track.artists[j].genres[k]){
+                  if(genreFilter[l] == currArtistGenres[k]){
                     validGenre = true;
                     break loopJ;
                   }
                 }
               }
             }
+        }
+        else{
+          validGenre = true;
+        }
+
+        if(validDate && validGenre){
+          tempSongJson[data.items[i-1].track.id] = data.items[i-1];
+          songIds.push(data.items[i-1].track.id);
         }
       }
 
@@ -605,11 +620,12 @@ export const renderPage = function() {
 
     $(document).ready(function() {
         $("#playlistBtn").click(function(){
-            document.getElementById("playlistBtn").classList.add('is-loading')
+            document.getElementById("playlistBtn").classList.add('is-loading');
             let playlistTable = document.getElementById("playlistTable");
             if(playlistTable){
                 playlistTable.remove();
                 document.getElementById("resetBtn").remove();
+                document.getElementById("pTotal").remove();
             }
             var filterVals = {
                 danceMin: danceSlider.value,

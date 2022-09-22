@@ -50,7 +50,7 @@ export const loadPage = function() {
   console.log("load")
   const $root = $('#root');
 
-
+  localStorage.clear();
   $root.append(renderPage());
 };
 
