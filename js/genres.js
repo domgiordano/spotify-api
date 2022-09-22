@@ -45,6 +45,7 @@ export const renderPage = function() {
   </section>`
   };
 
+  //Get token to use for auth from URL
   export const getToken = async () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -54,22 +55,32 @@ export const renderPage = function() {
     return;
   }
 
-  async function getGenres(maxGenres, offset) {
+  async function loadGenres(maxGenres, offset) {
+    //set max songs used in spotify api call
     let maxSongs = 50;
     let maxArtists = 50;
+
+    //list of artist ids, object for counting genre frequency, object for storing each artists genres
     let artistIds = [];
     let genreCount = {};
     let artistGenres = {};
+    let userSongs = {};
+
+    //Genre title - with span to make it dynamic - append right away
     let genreInfo = '<p class="title" style="text-align: center"> <span id="genreTitle"> Loading your top genres... </span></p>';
     $('#main').append(genreInfo);
+
+    //reset genre info
+    //Add table header values
     genreInfo='';
     genreInfo+= '<table id="genreTable" class="table is-fullwidth is-hoverable">';
     genreInfo+= '<thead><tr><th class="has-text-left">Rank</th>';
     genreInfo+='<th class="has-text-centered"> Genre </th>'
-    genreInfo+= '<th class="has-text-centered"> Count</th>';
+    genreInfo+= '<th class="has-text-centered"> Artist Count</th>';
     genreInfo+='</tr></thead>';
     genreInfo+='<tbody id="genreTableBody">'
 
+    //Get all users save songs
     do{
       const url = 'https://api.spotify.com/v1/me/tracks?limit='+ maxSongs + '&offset=' + (offset * maxSongs);
       const headers = {
@@ -81,18 +92,27 @@ export const renderPage = function() {
       const data = await response.json();
       console.log(data)
 
+      //If response is empty break the loop
       if(data.items.length === 0){
         console.log("no more songs");
         break;
       }
 
+      // For every song called (50)
       for(let i = 1; i < maxSongs + 1; i++){
         if( data.items[i-1] == null){
           console.log("donezo");
           break;
         }
-        artistIds.push(data.items[i-1].track.artists[0].id)
+
+        //Add the artist id to array if it does not exist
+        if(!(artistIds.includes(data.items[i-1].track.artists[0].id))){
+          artistIds.push(data.items[i-1].track.artists[0].id)
+        }
+
       }
+
+      //dynamic Title fields
       if(offset == 40){
         document.getElementById('genreTitle').textContent= "Dang b you got a lot of songs.."
       }
@@ -102,10 +122,13 @@ export const renderPage = function() {
       offset++;
     }while(true);
 
-
+    //for every group of 50 IDs in array
+    //limit of 50 a time in call
+    // have to increment by 50
     offset=0;
     for(let i = 1; i < artistIds.length; i+= maxArtists){
       let idGroup='';
+      //Add the IDs to the ID group to be used - 50 at a time
       for(let j = offset; j < offset + maxArtists; j++){
         if(offset == 2000){
           document.getElementById('genreTitle').textContent= "Dont fret, they are coming.."
@@ -122,6 +145,8 @@ export const renderPage = function() {
         }
       }
       offset+=maxArtists;
+
+      //Call get artists on 50 ids collected
       const url = 'https://api.spotify.com/v1/artists?ids='+ idGroup;
       const headers = {
         Authorization: 'Bearer ' + access_token
@@ -131,15 +156,19 @@ export const renderPage = function() {
 
       const data = await response.json();
 
-      console.log("artists");
-      console.log(data);
+      //For every artist
       for(let k = 0; k < Object.keys(data.artists).length; k++){
         if(data.artists[k] == null){
           break;
         }
         let tempGenreList = [];
+        //for every genre the artist has
         for(let l = 0; l < data.artists[k].genres.length; l++){
+          //Push the genre to array for that artist
           tempGenreList.push(data.artists[k].genres[l]);
+
+          //If genre is not present in our genre counter - add it and set to 1
+          //otherwise - increment by 1
           if(!(data.artists[k].genres[l] in genreCount)){
             genreCount[data.artists[k].genres[l]] = 1;
           }
@@ -148,8 +177,7 @@ export const renderPage = function() {
           }
         }
 
-        console.log(tempGenreList);
-        console.log(data.artists[k]);
+        //If the artist is not present in our object - add it
         if(!(data.artists[k].id in artistGenres)){
           console.log("adding")
           artistGenres[data.artists[k].id] = tempGenreList;
@@ -158,6 +186,7 @@ export const renderPage = function() {
 
     }
 
+    //Sort genres in descending order
     let sortable = [];
     for (var genre in genreCount) {
       sortable.push([genre, genreCount[genre]]);
@@ -172,6 +201,7 @@ export const renderPage = function() {
         genreSorted[item[0]]=item[1]
     });
 
+    // For every genre (until max) add table info
     let count = 1;
     for(var genre in genreSorted){
       genreInfo+='<tr><th>' + count + '</th>';
@@ -184,7 +214,11 @@ export const renderPage = function() {
 
     genreInfo+='</tbody>';
     genreInfo+='</table>';
+    //Update text field of title
     document.getElementById('genreTitle').textContent= "Your Top Genres: "
+
+    //Set topGenres as sorted
+    //set all the top genres in localstorage
     topGenres = genreSorted;
     let gCount =1;
     for(genre in topGenres){
@@ -192,9 +226,42 @@ export const renderPage = function() {
       gCount++;
 
     }
-    console.log(artistGenres);
+
+    //Set the ArtistGenres in local storage
     localStorage.setItem('artistGenres', JSON.stringify(artistGenres));
-    localStorage.setItem("test", 1);
+    localStorage.setItem('topGenres', JSON.stringify(genreSorted));
+
+    //Append html to main
+    $('#main').append(genreInfo);
+    return;
+  }
+
+  function getGenres(maxGenres){
+    //Genre title - with span to make it dynamic
+    let genreInfo = '<p class="title" style="text-align: center"> <span id="genreTitle"> Your Top Genres: </span></p>';
+    genreInfo+= '<table id="genreTable" class="table is-fullwidth is-hoverable">';
+    genreInfo+= '<thead><tr><th class="has-text-left">Rank</th>';
+    genreInfo+='<th class="has-text-centered"> Genre </th>'
+    genreInfo+= '<th class="has-text-centered"> Artist Count </th>';
+    genreInfo+='</tr></thead>';
+    genreInfo+='<tbody id="genreTableBody">'
+
+    // For every genre (until max) add table info
+    let count = 1;
+    topGenres = JSON.parse(localStorage.getItem('topGenres'));
+    for(var genre in topGenres){
+      genreInfo+='<tr><th>' + count + '</th>';
+      genreInfo+='<td>' + genre + '</td>';
+      genreInfo+='<td>' + topGenres[genre] + '</td>';
+      genreInfo+='</tr>';
+      count++;
+      if(count > maxGenres){break;};
+    }
+
+    genreInfo+='</tbody>';
+    genreInfo+='</table>';
+    console.log("quick");
+    //Append html to main
     $('#main').append(genreInfo);
     return;
   }
@@ -214,7 +281,7 @@ export const renderPage = function() {
     genreInfo+= '<table id="genreTable" class="table is-fullwidth is-hoverable">';
     genreInfo+= '<thead><tr><th class="has-text-left">Rank</th>';
     genreInfo+='<th class="has-text-centered"> Genre </th>'
-    genreInfo+= '<th class="has-text-centered"> Count</th>';
+    genreInfo+= '<th class="has-text-centered"> Artist Count </th>';
     genreInfo+='<th class="has-text-centered">Your Top Artist for Genre</th>';
     genreInfo+='</tr></thead>';
     genreInfo+='<tbody id="genreTableBody">'
@@ -276,5 +343,11 @@ export const renderPage = function() {
   $(function() {
     getToken();
     loadPage();
-    getGenres(25, 0);
+    if(localStorage.getItem('artistGenres') === null){
+      loadGenres(25, 0);
+    }
+    else{
+      getGenres(25);
+    }
+
   });

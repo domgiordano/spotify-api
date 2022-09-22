@@ -172,16 +172,17 @@ export const renderPage = function() {
   async function getSongs(filterVals, offset) {
     let genreFilter = [];
     let artistGenres = JSON.parse(localStorage.getItem('artistGenres'));
-    console.log(artistGenres);
 
-    for(let i = 1; i < maxGenres+1; i++){
-      if(document.getElementById('genre' + i).checked){
-        genreFilter.push(localStorage.getItem('genre' + i).toLowerCase());
+    // get checkbox values if genres have been loaded
+    if(localStorage.getItem('artistGenres') != null){
+      for(let i = 1; i < maxGenres+1; i++){
+        if(document.getElementById('genre' + i).checked){
+          genreFilter.push(localStorage.getItem('genre' + i).toLowerCase());
+        }
       }
     }
-    console.log(genreFilter);
 
-    console.log(filterVals['minMonth']);
+
     //Check filter values
     if(filterVals['energyMin'] >= filterVals['energyMax']){
         alert("Invalid Energy Values. Try again.")
@@ -653,31 +654,36 @@ export const renderPage = function() {
         });
     });
 
-    //Render Checkboxes for filters
-    let checkBoxInfo = '<p class="title is-4">Filter by Genre:</p>';
-    checkBoxInfo += '<div class="columns is-multiline has-text-left">';
-    checkBoxInfo += '<div class="column is-one-fifth">';
-    checkBoxInfo += '<form method="post" action="/Tests/Post/">';
-    checkBoxInfo += '<fieldset>';
+      if(localStorage.getItem('artistGenres') != null){
+        //Render Checkboxes for filters
+        let checkBoxInfo = '<p class="title is-4">Filter by Genre:</p>';
+        checkBoxInfo += '<div class="columns is-multiline has-text-left">';
+        checkBoxInfo += '<div class="column is-one-fifth">';
+        checkBoxInfo += '<form method="post" action="/Tests/Post/">';
+        checkBoxInfo += '<fieldset>';
 
-    for(let i = 1; i < maxGenres + 1; i++){
-      checkBoxInfo+='<input type="checkbox" id="genre' + i + '" name="filterGenre" value="'+ localStorage.getItem("genre" + i) +'">';
-      checkBoxInfo+='<label for="'+ localStorage.getItem("genre" + i) +'"> '+ localStorage.getItem("genre" + i).toUpperCase() +' </label><br>';
-      if(i % 5 == 0){
-        checkBoxInfo+='</fieldset>';
-        checkBoxInfo+='</form>';
-        checkBoxInfo+='</div>';
-        if(i != maxGenres){
-          checkBoxInfo += '<div class="column is-one-fifth">';
-          checkBoxInfo += '<form method="post" action="/Tests/Post/">';
-          checkBoxInfo += '<fieldset>';
+        for(let i = 1; i < maxGenres + 1; i++){
+          checkBoxInfo+='<input type="checkbox" id="genre' + i + '" name="filterGenre" value="'+ localStorage.getItem("genre" + i) +'">';
+          checkBoxInfo+='<label for="'+ localStorage.getItem("genre" + i) +'"> '+ localStorage.getItem("genre" + i).toUpperCase() +' </label><br>';
+          if(i % 5 == 0){
+            checkBoxInfo+='</fieldset>';
+            checkBoxInfo+='</form>';
+            checkBoxInfo+='</div>';
+            if(i != maxGenres){
+              checkBoxInfo += '<div class="column is-one-fifth">';
+              checkBoxInfo += '<form method="post" action="/Tests/Post/">';
+              checkBoxInfo += '<fieldset>';
+            }
+
+          }
         }
-
+        checkBoxInfo+='</div>';
+        $('#genreCheckBoxes').append(checkBoxInfo);
+      }
+      else{
+        alert("Go to 'Top Genres' to download and use your top genres as filters for playlists.");
       }
 
-    }
-    checkBoxInfo+='</div>';
-    $('#genreCheckBoxes').append(checkBoxInfo);
 
 
     $(document).on("click", "#resetBtn", function(){
@@ -754,15 +760,12 @@ export const renderPage = function() {
       pTableDate = !pTableDate;
     });
 
-
-
   };
 
 
   $(function() {
     getToken();
     loadPage();
-
 
     //getSongs();
   });
