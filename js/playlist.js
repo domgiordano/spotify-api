@@ -2,6 +2,7 @@ let access_token = "";
 let refresh_token = "";
 let songJson = {};
 let songAttrJson = {};
+const maxGenres = 25;
 
 export const renderPage = function() {
     return `<section class="hero is-success is-fullheight">
@@ -143,20 +144,10 @@ export const renderPage = function() {
                 </select>
               </div>
             </div>
+            <div id="genreCheckBoxes" class="column is-full">
+            </div>
         </div>
-        <form method="post" action="/Tests/Post/">
-          <fieldset><legend>Filter Songs by Genre?</legend>
-            <div id="genreCol1" class="column is-one-quarter">
-            <div>
-            <div id="genreCol2" class="column is-one-quarter">
-            </div>
-            <div id="genreCol3" class="column is-one-quarter">
-            <div>
-            <div id="genreCol4" class="column is-one-quarter">
-            </div>
-            <br>
-          </fieldset>
-        </form>
+
         <button id="playlistBtn" class="button is-link is-light is-large is-outlined is-rounded">
           SUBMIT
         </button>
@@ -179,6 +170,14 @@ export const renderPage = function() {
   }
 
   async function getSongs(filterVals, offset) {
+    let genreFilter = [];
+    for(let i = 1; i < maxGenres+1; i++){
+      if(document.getElementById('genre' + i).checked){
+        genreFilter.push(localStorage.getItem('genre' + i).toLowerCase());
+      }
+    }
+    console.log(genreFilter);
+
     console.log(filterVals['minMonth']);
     //Check filter values
     if(filterVals['energyMin'] >= filterVals['energyMax']){
@@ -278,6 +277,20 @@ export const renderPage = function() {
         if( month <= filterVals['maxMonth'] && month >= filterVals['minMonth'] && year <= filterVals['maxYear'] && year >= filterVals['minYear']){
           tempSongJson[data.items[i-1].track.id] = data.items[i-1];
           songIds.push(data.items[i-1].track.id);
+        }
+        let validGenre = false;
+        if(genreFilter.length != 0){
+          loopJ:
+            for(let j = 0; j < data.items[i-1].track.artists.length; j++){
+              for(let k = 0; k < data.items[i-1].track.artists[j].genres.length; k++){
+                for(let l = 0; l < genreFilter.length; l++){
+                  if(genreFilter[l] == data.items[i-1].track.artists[j].genres[k]){
+                    validGenre = true;
+                    break loopJ;
+                  }
+                }
+              }
+            }
         }
       }
 
@@ -625,15 +638,30 @@ export const renderPage = function() {
     });
 
     //Render Checkboxes for filters
-    for(let i = 1; i < 5; i++){
-      let checkBoxInfo='';
-      for(let j = 1; j < 6; j++){
-        checkBoxInfo+='<input type="checkbox" name="filterGenre" value="'+ localStorage.getItem("genre" + (j + ((i-1) * 5 ))) +'">';
-        checkBoxInfo+='<label for="'+ localStorage.getItem("genre" + (j + ((i-1) * 5 ))) +'">'+ localStorage.getItem("genre" + (j + ((i-1) * 5 ))) +'</label>';
-        $('#genreCol' + i).append(checkBoxInfo);
-      }
-    }
+    let checkBoxInfo = '<p class="title is-4">Filter by Genre:</p>';
+    checkBoxInfo += '<div class="columns is-multiline has-text-left">';
+    checkBoxInfo += '<div class="column is-one-fifth">';
+    checkBoxInfo += '<form method="post" action="/Tests/Post/">';
+    checkBoxInfo += '<fieldset>';
 
+    for(let i = 1; i < maxGenres + 1; i++){
+      checkBoxInfo+='<input type="checkbox" id="genre' + i + '" name="filterGenre" value="'+ localStorage.getItem("genre" + i) +'">';
+      checkBoxInfo+='<label for="'+ localStorage.getItem("genre" + i) +'"> '+ localStorage.getItem("genre" + i).toUpperCase() +' </label><br>';
+      if(i % 5 == 0){
+        checkBoxInfo+='</fieldset>';
+        checkBoxInfo+='</form>';
+        checkBoxInfo+='</div>';
+        if(i != maxGenres){
+          checkBoxInfo += '<div class="column is-one-fifth">';
+          checkBoxInfo += '<form method="post" action="/Tests/Post/">';
+          checkBoxInfo += '<fieldset>';
+        }
+
+      }
+
+    }
+    checkBoxInfo+='</div>';
+    $('#genreCheckBoxes').append(checkBoxInfo);
 
 
     $(document).on("click", "#resetBtn", function(){
