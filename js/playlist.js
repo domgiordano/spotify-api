@@ -385,9 +385,11 @@ export const renderPage = function() {
 
     let resetButton = document.getElementById("resetBtn");
     let buttonInfo ='<div><button id="resetBtn" class="button is-warning is-light is-large is-outlined is-rounded"> Reset Page pls. </button></div>';
-    let songNumberInfo='<div id="pTotal"><p class="title is-3">Number of Songs Selected: ' + Object.keys(tempSongJson).length + '</p>';
+    let songNumberInfo='<div id="pTotal"><br><p class="title is-3">Number of Songs Selected: ' + Object.keys(tempSongJson).length + '</p><br>';
+    let downloadButtonInfo = '<div><button id="downloadBtn" class="button is-danger is-light is-large is-outlined is-rounded">Download Playlist</button></div><br>';
     songInfo+='</table>';
     $('#main').append(songNumberInfo);
+    $('#main').append(downloadButtonInfo);
     $('#main').append(songInfo);
     $('#main').append(buttonInfo);
     document.getElementById("playlistBtn").classList.remove('is-loading')
@@ -547,6 +549,56 @@ export const renderPage = function() {
 
   }
 
+  async function downloadPlaylist(songs) {
+    getToken();
+    //get user
+    let userID = localStorage.getItem('userID');
+    console.log(userID)
+
+    const settings = {
+      method: 'POST',
+      body: JSON.stringify({name: "Dom-made-me-do-it", description: "Prolly the best playlist you got", public: true}),
+      headers: {
+        Authorization: 'Bearer ' + access_token
+      }
+    };
+
+    const url = `https://api.spotify.com/v1/users/${userID}/playlists` ;
+    const response = await fetch(url, settings);
+    const data = await response.json();
+
+    console.log(data)
+    let playlistID = data.id;
+
+    //get song ids into string
+    let songIds = '';
+    let songCount = 0;
+    console.log(songs);
+
+    for(let trackID in songs){
+      songIds+= 'spotify:track:' + trackID;
+      if(songCount < Object.keys(songs).length - 1){
+        songIds+=',';
+      }
+      songCount++;
+    }
+
+    //add songs to playlist
+    const trackSettings = {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + access_token
+      }
+    };
+
+    const trackUrl = `https://api.spotify.com/v1/playlists/${playlistID}/tracks?uris=` + songIds ;
+    const trackResponse = await fetch(trackUrl, trackSettings);
+    const trackData = await trackResponse.json();
+
+    console.log(trackData)
+
+  }
+
   export const loadPage = function() {
 
     const $root = $('#root');
@@ -561,6 +613,7 @@ export const renderPage = function() {
                 playlistTable.remove();
                 document.getElementById("resetBtn").remove();
                 document.getElementById("pTotal").remove();
+                document.getElementById('downloadBtn').remove();
             }
             var filterVals = {
                 danceMin: document.getElementById('danceMin').value,
@@ -643,8 +696,14 @@ export const renderPage = function() {
         document.getElementById("playlistTable").remove();
         document.getElementById("resetBtn").remove();
         document.getElementById("pTotal").remove();
+        document.getElementById('downloadBtn').remove();
 
     })
+
+    $(document).on("click", "#downloadBtn", function(){
+      downloadPlaylist(songJson);
+
+  })
 
 
     let pTableSong= true;

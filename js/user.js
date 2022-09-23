@@ -63,6 +63,7 @@ export const renderPage = function() {
     userInfo+= '<p class="subtitle style="text-align: center"> Id: ' + data.id + ' </p>';
     userInfo+= '<p class="subtitle style="text-align: center"> Followers: ' + data.followers.total + ' </p>';
     console.log(userInfo)
+    localStorage.setItem("userID", data.id);
     $('#main').append(userInfo);
   }
 
