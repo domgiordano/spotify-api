@@ -1,3 +1,5 @@
+
+
 let access_token = "";
 let refresh_token = "";
 let songJson = {};
@@ -39,118 +41,88 @@ export const renderPage = function() {
         <p class="title is-1">Select Filters</p>
         <div id="filterValues" class="columns is-multiline">
             <div class="column is-one-quarter">
-                <p class="subtitle is-5" style="text-align: center"> Dancability <span id="danceVal"> 0 </span> to <span id="danceValMax"> 1.00 </span></p>
-                MIN: <input id="danceSlider" class="slider has-output-tooltip is-fullwidth" step=".01" min="0.00" max="1.00" value="0" type="range"><br>
-                MAX: <input id="danceSliderMax" class="slider has-output-tooltip is-fullwidth" step=".01" min="0.00" max="1.00" value="1.00" type="range">
-            </div>
-            <div class="column is-one-quarter">
-                <p class="subtitle is-5" style="text-align: center"> Loudness <span id="loudVal"> -60 </span> to <span id="loudValMax"> 0.00 </span></p>
-                MIN: <input id="loudSlider" class="slider has-output-tooltip is-fullwidth" step=".01" min="-60.00" max="0.00" value="-60.00" type="range"><br>
-                MAX: <input id="loudSliderMax" class="slider has-output-tooltip is-fullwidth" step=".01" min="-60.00" max="0.00" value="0.00" type="range">
-            </div>
-            <div class="column is-one-quarter">
-                <p class="subtitle is-5" style="text-align: center"> Tempo <span id="tempoVal"> 0 </span> to <span id="tempoValMax"> 200 </span></p>
-                MIN: <input id="tempoSlider" class="slider has-output-tooltip is-fullwidth" step="1" min="0" max="200" value="0" type="range"><br>
-                MAX: <input id="tempoSliderMax" class="slider has-output-tooltip is-fullwidth" step="1" min="0" max="200" value="200" type="range">
-            </div>
-            <div class="column is-one-quarter">
-                <p class="subtitle is-5" style="text-align: center"> Energy <span id="energyVal"> 0 </span> to <span id="energyValMax"> 1.00 </span></p>
-                MIN <input id="energySlider" class="slider has-output-tooltip is-fullwidth" step=".01" min="0.00" max="1.00" value="0" type="range"><br>
-                MAX <input id="energySliderMax" class="slider has-output-tooltip is-fullwidth" step=".01" min="0.00" max="1.00" value="1.00" type="range">
-            </div>
-            <div class="column is-one-quarter">
-                <p class="subtitle is-5" style="text-align: center"> Speechiness <span id="speechVal"> 0 </span> to <span id="speechValMax"> 1.00 </span></p>
-                MIN: <input id="speechSlider" class="slider has-output-tooltip is-fullwidth" step=".01" min="0.00" max="1.00" value="0" type="range"><br>
-                MAX: <input id="speechSliderMax" class="slider has-output-tooltip is-fullwidth" step=".01" min="0.00" max="1.00" value="1.00" type="range">
-            </div>
-            <div class="column is-one-quarter">
-                <p class="subtitle is-5" style="text-align: center"> Valence <span id="valenceVal"> 0 </span> to <span id="valenceValMax"> 1.00 </span></p>
-                MIN: <input id="valenceSlider" class="slider has-output-tooltip is-fullwidth" step=".01" min="0.00" max="1.00" value="0" type="range"><br>
-                MAX: <input id="valenceSliderMax" class="slider has-output-tooltip is-fullwidth" step=".01" min="0.00" max="1.00" value="1.00" type="range">
-            </div>
-            <div class="column is-one-quarter">
-              <p class="subtitle is-5" style="text-align: center"> Min Date </p>
-              <div class="select is-link is-rounded">
-                <select id="minMonth">
-                  <option>Month</option>
-                  <option>01</option>
-                  <option>02</option>
-                  <option>03</option>
-                  <option>04</option>
-                  <option>05</option>
-                  <option>06</option>
-                  <option>07</option>
-                  <option>08</option>
-                  <option>09</option>
-                  <option>10</option>
-                  <option>11</option>
-                  <option>12</option>
-                </select>
+              <div class="column is-half>
+                <p class="subtitle is-4" style="text-align: center">Danceability</p>
+                MIN: <input id="danceMin" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="0.00" type="number"><br>
+                MAX: <input id="danceMax" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="1.00" type="number">
               </div>
-              <div class="select is-link is-rounded">
-                <select id="minYear">
-                  <option>Year</option>
-                  <option>2022</option>
-                  <option>2021</option>
-                  <option>2020</option>
-                  <option>2019</option>
-                  <option>2018</option>
-                  <option>2017</option>
-                  <option>2016</option>
-                  <option>2015</option>
-                  <option>2014</option>
-                  <option>2013</option>
-                  <option>2012</option>
-                  <option>2011</option>
-                  <option>2010</option>
-                </select>
+              <div class="column is-half>
+                <p class="subtitle is-4" style="text-align: center">Loudness</p>
+                MIN <input id="loudMin" class="input is-rounded is-normal is-link" min="-60.00" max="0.00" value="-60.00" type="number"><br>
+                MAX <input id="loudMax" class="input is-rounded is-normal is-link" min="-60.00" max="0.00" value="0.00" type="number">
               </div>
             </div>
             <div class="column is-one-quarter">
-              <p class="subtitle is-5" style="text-align: center"> Max Date </p>
-              <div class="select is-link is-rounded">
-                <select id="maxMonth">
-                  <option>Month</option>
-                  <option>01</option>
-                  <option>02</option>
-                  <option>03</option>
-                  <option>04</option>
-                  <option>05</option>
-                  <option>06</option>
-                  <option>07</option>
-                  <option>08</option>
-                  <option>09</option>
-                  <option>10</option>
-                  <option>11</option>
-                  <option>12</option>
-                </select>
+              <div class="column is-half>
+                <p class="subtitle is-4" style="text-align: center">Tempo</p>
+                MIN: <input id="tempoMin" class="input is-rounded is-normal is-link" min="0" max="200" value="0" type="number"><br>
+                MAX: <input id="tempoMax" class="input is-rounded is-normal is-link" min="0" max="200" value="200" type="number">
               </div>
-              <div class="select is-link is-rounded">
-                <select id="maxYear">
-                  <option>Year</option>
-                  <option>2022</option>
-                  <option>2021</option>
-                  <option>2020</option>
-                  <option>2019</option>
-                  <option>2018</option>
-                  <option>2017</option>
-                  <option>2016</option>
-                  <option>2015</option>
-                  <option>2014</option>
-                  <option>2013</option>
-                  <option>2012</option>
-                  <option>2011</option>
-                  <option>2010</option>
-                </select>
+              <div class="column is-half>
+                <p class="subtitle is-4" style="text-align: center">Energy</p>
+                MIN <input id="energyMin" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="0" type="number"><br>
+                MAX <input id="energyMax" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="1.00" type="number">
               </div>
             </div>
+            <div class="column is-one-quarter">
+              <div class="column is-half>
+                <p class="subtitle is-4" style="text-align: center">Instrumentalness</p>
+                MIN: <input id="instruMin" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="0" type="number"><br>
+                MAX: <input id="instruMax" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="1.00" type="number">
+              </div>
+              <div class="column is-half>
+                <p class="subtitle is-4" style="text-align: center">Valence</p>
+                MIN: <input id="valenceMin" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="0" type="number"><br>
+                MAX: <input id="valenceMax" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="1.00" type="number">
+              </div>
+            </div>
+            <div class="column is-one-quarter">
+              <div class="column is-half>
+                <p class="subtitle is-4" style="text-align: center">Acousticness</p>
+                MIN: <input id="acoustMin" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="0" type="number"><br>
+                MAX: <input id="acoustMax" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="1.00" type="number">
+              </div>
+              <div class="column is-half>
+                <p class="subtitle is-4" style="text-align: center">Popularity</p>
+                MIN: <input id="popMin" class="input is-rounded is-normal is-link" min="0" max="100" value="0" type="number"><br>
+                MAX: <input id="popMax" class="input is-rounded is-normal is-link" min="0" max="100" value="100" type="number">
+              </div>
+            </div>
+            <div class="column is-half">
+              <p class="subtitle is-4" style="text-align: center">Saved to Library Date:</p>
+            </div>
+            <div class="column is-half">
+              <p class="subtitle is-4" style="text-align: center">Song Creation Date:</p>
+            </div>
+              <div class="column is-one-quarter">
+                MIN Date: <input id="minMonthSaved" class="input is-rounded is-normal is-link" min="1" max="12" value="1" type="number">
+                <input id="minYearSaved" class="input is-rounded is-normal is-link" min="1900" max="2022" value="1900" type="number">
+              </div>
+              <div class="column is-one-quarter">
+                MAX Date: <input id="maxMonthSaved" class="input is-rounded is-normal is-link" min="1" max="12" value="12" type="number">
+                <input id="maxYearSaved" class="input is-rounded is-normal is-link" min="1900" max="2022" value="2022" type="number">
+              </div>
+              <div class="column is-quarter">
+                MIN Date: <input id="minMonthCreated" class="input is-rounded is-normal is-link" min="1" max="12" value="1" type="number">
+                <input id="minYearCreated" class="input is-rounded is-normal is-link" min="1900" max="2022" value="1900" type="number">
+              </div>
+              <div class="column is-one-quarter">
+                MAX Date: <input id="maxMonthCreated" class="input is-rounded is-normal is-link" min="1" max="12" value="12" type="number">
+                <input id="maxYearCreated" class="input is-rounded is-normal is-link" min="1900" max="2022" value="2022" type="number">
+              </div>
+            </div>
+
+
+
+
             <div id="genreCheckBoxes" class="column is-full">
             </div>
+            <button id="playlistBtn" class="button is-link is-light is-large is-outlined is-rounded">
+              SUBMIT
+            </button>
         </div>
 
-        <button id="playlistBtn" class="button is-link is-light is-large is-outlined is-rounded">
-          SUBMIT
-        </button>
+
       </div>
     </div>
 
@@ -170,6 +142,8 @@ export const renderPage = function() {
   }
 
   async function getSongs(filterVals, offset, allSongs, topGenres, artistGenres) {
+    console.log(Object.keys(allSongs).length)
+
     let genreFilter = [];
     console.log(allSongs)
     console.log(topGenres);
@@ -185,7 +159,7 @@ export const renderPage = function() {
       if(count == 26){break;}
     }
 
-
+    console.log(genreFilter.length)
 
     //Check filter values
     if(filterVals['energyMin'] >= filterVals['energyMax']){
@@ -208,8 +182,8 @@ export const renderPage = function() {
         document.getElementById("playlistBtn").classList.remove('is-loading')
         return;
     }
-    if(filterVals['speechMin'] >= filterVals['speechMax']){
-        alert("Invalid Speechiness Values. Try again.")
+    if(filterVals['instruMin'] >= filterVals['instruMax']){
+        alert("Invalid Instrumentalness Values. Try again.")
         document.getElementById("playlistBtn").classList.remove('is-loading')
         return;
     }
@@ -219,19 +193,31 @@ export const renderPage = function() {
         return;
     }
 
-    if(filterVals['minYear'] > filterVals ['maxYear']){
+    if(filterVals['acoustMin'] >= filterVals['acoustMax']){
+      alert("Invalid Acousticness Values. Try again.")
+      document.getElementById("playlistBtn").classList.remove('is-loading')
+      return;
+    }
+
+    if(filterVals['popMin'] >= filterVals['popMax']){
+      alert("Invalid Popularity Values. Try again.")
+      document.getElementById("playlistBtn").classList.remove('is-loading')
+      return;
+    }
+
+    if(filterVals['minYearSaved'] > filterVals ['maxYearSaved']){
       alert("Invalid Date Range, doofus")
       document.getElementById("playlistBtn").classList.remove('is-loading')
       return;
     }
 
-    if(filterVals['minYear'] == filterVals['maxYear'] && filterVals['minMonth'] > filterVals['maxMonth']){
+    if(filterVals['minYearSaved'] == filterVals['maxYearSaved'] && filterVals['minMonthSaved'] > filterVals['maxMonthSaved']){
       alert("Invalid Date Range, nerd")
       document.getElementById("playlistBtn").classList.remove('is-loading')
       return;
     }
 
-    if(filterVals['minMonth'] == 'Month' || filterVals['maxMonth'] == 'Month' || filterVals['minYear'] == 'Year' || filterVals['maxYear'] == 'Year'){
+    if(filterVals['minYearCreated'] == filterVals['maxYearCreated'] && filterVals['minMonthCreated'] > filterVals['maxMonthCreated']){
       alert("Invalid Date Range, dweeb")
       document.getElementById("playlistBtn").classList.remove('is-loading')
       return;
@@ -248,12 +234,15 @@ export const renderPage = function() {
         songInfo+= '<th id= "pTableSong" class="has-text-centered">Song Title</th>';
         songInfo+='<th id="pTableArtist" class="has-text-centered">Artist</th>';
         songInfo+='<th id="pTableDance" class="has-text-centered"><abbr title="Danceability">DNC</abbr></th>';
-        songInfo+='<th id="pTableEnergy" class="has-text-centered"><abbr title="Energy">ENG</abbr></th>';
-        songInfo+='<th id="pTableLoud" class="has-text-centered"><abbr title="Loudness">db</abbr></th>';
         songInfo+='<th id="pTableTempo" class="has-text-centered"><abbr title="Tempo">BPM</abbr></th>';
-        songInfo+='<th id="pTableSpeech" class="has-text-centered"><abbr title="Speechiness">SPCH</abbr></th>';
+        songInfo+='<th id="pTableInstru" class="has-text-centered"><abbr title="Instrumentalness">INSTRU</abbr></th>';
+        songInfo+='<th id="pTableAcoust" class="has-text-centered"><abbr title="Acousticness">ACOUST</abbr></th>';
+        songInfo+='<th id="pTableLoud" class="has-text-centered"><abbr title="Loudness">db</abbr></th>';
+        songInfo+='<th id="pTableEnergy" class="has-text-centered"><abbr title="Energy">ENG</abbr></th>';
         songInfo+='<th id="pTableValence" class="has-text-centered"><abbr title="Valence">VAL</abbr></th>';
+        songInfo+='<th id="pTablePop" class="has-text-centered"><abbr title="Popularity">POP</abbr></th>';
         songInfo+='<th id="pTableDate" class="has-text-centered">Date Added</th>';
+        songInfo+='<th id="pTableReleaseDate" class="has-text-centered">Date Released</th>';
         songInfo+='</tr></thead>';
         songInfo+='<tbody id="playlistTableBody">'
     }
@@ -263,10 +252,26 @@ export const renderPage = function() {
     for(let songID in allSongs){
       let month = allSongs[songID].added_at.slice(5,7);
       let year = allSongs[songID].added_at.slice(0,4);
+
+      let releaseMonth = allSongs[songID].track.album.release_date.slice(5,7);
+      let releaseYear = allSongs[songID].track.album.release_date.slice(0,4);
+
+
       let validDate = false;
-      if( month <= filterVals['maxMonth'] && month >= filterVals['minMonth'] && year <= filterVals['maxYear'] && year >= filterVals['minYear']){
-        validDate = true;
+      if( parseInt(month) <= parseInt(filterVals['maxMonthSaved']) && parseInt(month) >= parseInt(filterVals['minMonthSaved']) && parseInt(year) <= parseInt(filterVals['maxYearSaved']) && parseInt(year) >= parseInt(filterVals['minYearSaved'])){
+        if(parseInt(releaseYear) <= parseInt(filterVals['maxYearCreated']) && parseInt(releaseYear) >= parseInt(filterVals['minYearCreated'])){
+          if(releaseMonth != ""){
+            if(parseInt(releaseMonth) <= parseInt(filterVals['maxMonthCreated']) && parseInt(releaseMonth) >= parseInt(filterVals['minMonthCreated'])){
+              validDate = true;
+            }
+          }
+          else{
+            validDate = true;
+          }
+
+        }
       }
+
       let validGenre = false;
       if(genreFilter.length != 0){
         loopJ:
@@ -287,6 +292,7 @@ export const renderPage = function() {
         validGenre = true;
       }
 
+
       if(validDate && validGenre){
         tempSongJson[allSongs[songID].track.id] = allSongs[songID];
         songIds.push(allSongs[songID].track.id);
@@ -297,10 +303,13 @@ export const renderPage = function() {
 
     let tempSongAttrJson = {};
     console.log(Object.keys(tempSongJson).length)
-    for(let i = 1; i < songIds.length + 1; i++){
 
+    let trackCount = 0;
+    loopAllSongs:
+    for(let i = 1; i < songIds.length + 1; i++){
+        console.log("Track Count: " + trackCount);
         let songName = tempSongJson[songIds[i-1]].track.name;
-        let songArtists = tempSongJson[songIds[i-1].artist_string];
+        let songArtists = tempSongJson[songIds[i-1]].artist_string;
 
         let songImage = tempSongJson[songIds[i-1]].track.album.images[0].url;
 
@@ -317,30 +326,49 @@ export const renderPage = function() {
                 songData.danceability > filterVals['danceMin'] && songData.danceability < filterVals['danceMax'] &&
                 songData.tempo > filterVals['tempoMin'] && songData.tempo < filterVals['tempoMax'] &&
                 songData.loudness > filterVals['loudMin'] && songData.loudness < filterVals['loudMax'] &&
-                songData.speechiness > filterVals['speechMin'] && songData.speechiness < filterVals['speechMax'] &&
-                songData.valence > filterVals['valenceMin'] && songData.valence < filterVals['valenceMax']){
+                songData.instrumentalness > filterVals['instruMin'] && songData.instrumentalness < filterVals['instruMax'] &&
+                songData.valence > filterVals['valenceMin'] && songData.valence < filterVals['valenceMax'] &&
+                songData.acousticness > filterVals['acoustMin'] && songData.acousticness < filterVals['acoustMax'] &&
+                tempSongJson[songIds[i-1]].track.popularity > filterVals['popMin'] && tempSongJson[songIds[i-1]].track.popularity < filterVals['popMax']){
 
             playlistSongCount++;
-            let month = tempSongJson[songIds[i-1]].added_at.slice(5,7);
-            let year = tempSongJson[songIds[i-1]].added_at.slice(0,4);
-            let day = tempSongJson[songIds[i-1]].added_at.slice(8,10);
+            let monthSaved = tempSongJson[songIds[i-1]].added_at.slice(5,7);
+            let yearSaved = tempSongJson[songIds[i-1]].added_at.slice(0,4);
+            let daySaved = tempSongJson[songIds[i-1]].added_at.slice(8,10);
+            let dateCreated = tempSongJson[songIds[i-1]].track.album.release_date.slice(5,7);
+
+            if(tempSongJson[songIds[i-1]].track.album.release_date_precision == 'day') {
+              dateCreated += '/' + tempSongJson[songIds[i-1]].track.album.release_date.slice(8,10);
+            }
+
+            dateCreated += '/' + tempSongJson[songIds[i-1]].track.album.release_date.slice(0,4);
+
             songInfo+='<tr><th>' + i + '</th>';
             songInfo+='<td><img src="' + songImage + '" height="100" width="100"></td>';
             songInfo+='<td>' + songName + '</td>';
             songInfo+='<td>' + songArtists + '</td>';
             songInfo+='<td>' + songData.danceability + '</td>';
-            songInfo+='<td>' + songData.energy + '</td>';
-            songInfo+='<td>' + songData.loudness + '</td>';
             songInfo+='<td>' + songData.tempo + '</td>';
-            songInfo+='<td>' + songData.speechiness + '</td>';
+            songInfo+='<td>' + songData.instrumentalness + '</td>';
+            songInfo+='<td>' + songData.acousticness + '</td>';
+            songInfo+='<td>' + songData.loudness + '</td>';
+            songInfo+='<td>' + songData.energy + '</td>';
             songInfo+='<td>' + songData.valence + '</td>';
-            songInfo+='<td>' + month + '/' + day + '/' + year + '</td>';
+            songInfo+='<td>' + tempSongJson[songIds[i-1]].track.popularity + '</td>';
+            songInfo+='<td>' + monthSaved + '/' + daySaved + '/' + yearSaved + '</td>';
+            songInfo+='<td>' + dateCreated + '</td>';
             songInfo+='</tr>';
             songData.added_at = tempSongJson[songIds[i-1]].added_at;
+            songData.release_date = tempSongJson[songIds[i-1]].track.album.release_date;
+            songData.popularity = tempSongJson[songIds[i-1]].track.popularity;
             songData.name = songName;
             songData.artist = tempSongJson[songIds[i-1]].track.artists[0].name;
             tempSongAttrJson[songIds[i-1]] = songData;
+            trackCount++;
 
+            if(trackCount >= 250){
+              break loopAllSongs;
+            }
 
         }
         else{
@@ -389,7 +417,7 @@ export const renderPage = function() {
 
     let sortable = [];
     for(var id in sortValCount){
-        if(sortVal == 'added_at'){
+        if(sortVal == 'added_at' || sortVal == 'release_date'){
           sortable.push([id, new Date(sortValCount[id])]);
         }
         else{
@@ -438,12 +466,15 @@ export const renderPage = function() {
     songInfo+= '<th id= "pTableSong" class="has-text-centered">Song Title</th>';
     songInfo+='<th id="pTableArtist" class="has-text-centered">Artist</th>';
     songInfo+='<th id="pTableDance" class="has-text-centered"><abbr title="Danceability">DNC</abbr></th>';
-    songInfo+='<th id="pTableEnergy" class="has-text-centered"><abbr title="Energy">ENG</abbr></th>';
-    songInfo+='<th id="pTableLoud" class="has-text-centered"><abbr title="Loudness">db</abbr></th>';
     songInfo+='<th id="pTableTempo" class="has-text-centered"><abbr title="Tempo">BPM</abbr></th>';
-    songInfo+='<th id="pTableSpeech" class="has-text-centered"><abbr title="Speechiness">SPCH</abbr></th>';
+    songInfo+='<th id="pTableInstru" class="has-text-centered"><abbr title="Instrumentalness">INSTRU</abbr></th>';
+    songInfo+='<th id="pTableAcoust" class="has-text-centered"><abbr title="Acousticness">ACOUST</abbr></th>';
+    songInfo+='<th id="pTableLoud" class="has-text-centered"><abbr title="Loudness">db</abbr></th>';
+    songInfo+='<th id="pTableEnergy" class="has-text-centered"><abbr title="Energy">ENG</abbr></th>';
     songInfo+='<th id="pTableValence" class="has-text-centered"><abbr title="Valence">VAL</abbr></th>';
+    songInfo+='<th id="pTablePop" class="has-text-centered"><abbr title="Popularity">POP</abbr></th>';
     songInfo+='<th id="pTableDate" class="has-text-centered">Date Added</th>';
+    songInfo+='<th id="pTableReleaseDate" class="has-text-centered">Date Released</th>';
     songInfo+='</tr></thead>';
     songInfo+='<tbody id="playlistTableBody">'
 
@@ -470,17 +501,30 @@ export const renderPage = function() {
       let month = songAttr.added_at.slice(5,7);
       let year = songAttr.added_at.slice(0,4);
       let day = songAttr.added_at.slice(8,10);
+      let dateCreated = song.album.release_date.slice(5,7);
+
+      if(song.album.release_date_precision == 'day') {
+        dateCreated += '/' + song.album.release_date.slice(8,10);
+      }
+
+      dateCreated += '/' + song.album.release_date.slice(0,4);
+
+
+
       songInfo+='<tr><th>' + playlistSongCount + '</th>';
       songInfo+='<td><img src="' + songImage + '" height="100" width="100"></td>';
       songInfo+='<td>' + songName + '</td>';
       songInfo+='<td>' + songArtists + '</td>';
       songInfo+='<td>' + songAttr.danceability + '</td>';
-      songInfo+='<td>' + songAttr.energy + '</td>';
-      songInfo+='<td>' + songAttr.loudness + '</td>';
       songInfo+='<td>' + songAttr.tempo + '</td>';
-      songInfo+='<td>' + songAttr.speechiness + '</td>';
+      songInfo+='<td>' + songAttr.instrumentalness + '</td>';
+      songInfo+='<td>' + songAttr.acousticness + '</td>';
+      songInfo+='<td>' + songAttr.loudness + '</td>';
+      songInfo+='<td>' + songAttr.energy + '</td>';
       songInfo+='<td>' + songAttr.valence + '</td>';
+      songInfo+='<td>' + song.popularity + '</td>';
       songInfo+='<td>' + month + '/' + day + '/' + year + '</td>';
+      songInfo+='<td>' + dateCreated + '</td>';
       songInfo+='</tr>';
       playlistSongCount++;
     }
@@ -509,87 +553,6 @@ export const renderPage = function() {
 
     $root.append(renderPage());
 
-    var danceSlider = document.getElementById("danceSlider");
-    var tempoSlider = document.getElementById("tempoSlider");
-    var loudSlider = document.getElementById("loudSlider");
-    var energySlider = document.getElementById("energySlider");
-    var speechSlider = document.getElementById("speechSlider");
-    var valenceSlider = document.getElementById("valenceSlider");
-    var danceSliderMax = document.getElementById("danceSliderMax");
-    var tempoSliderMax = document.getElementById("tempoSliderMax");
-    var loudSliderMax = document.getElementById("loudSliderMax");
-    var energySliderMax = document.getElementById("energySliderMax");
-    var speechSliderMax = document.getElementById("speechSliderMax");
-    var valenceSliderMax = document.getElementById("valenceSliderMax");
-
-    var danceVal = document.getElementById("danceVal");
-    var tempoVal = document.getElementById("tempoVal");
-    var loudVal = document.getElementById("loudVal");
-    var energyVal = document.getElementById("energyVal");
-    var speechVal = document.getElementById("speechVal");
-    var valenceVal = document.getElementById("valenceVal");
-    var danceValMax = document.getElementById("danceValMax");
-    var tempoValMax = document.getElementById("tempoValMax");
-    var loudValMax = document.getElementById("loudValMax");
-    var energyValMax = document.getElementById("energyValMax");
-    var speechValMax = document.getElementById("speechValMax");
-    var valenceValMax = document.getElementById("valenceValMax");
-
-    danceVal.innterHTML = danceSlider.nodeValue;
-    tempoVal.innterHTML = tempoSlider.nodeValue;
-    loudVal.innterHTML = loudSlider.nodeValue;
-    energyVal.innerHTML = energySlider.nodeValue;
-    speechVal.innterHTML = speechSlider.nodeValue;
-    valenceVal.innerHTML = valenceSlider.nodeValue;
-    danceValMax.innterHTML = danceSliderMax.nodeValue;
-    tempoValMax.innterHTML = tempoSliderMax.nodeValue;
-    loudValMax.innterHTML = loudSliderMax.nodeValue;
-    energyValMax.innerHTML = energySliderMax.nodeValue;
-    speechValMax.innterHTML = speechSliderMax.nodeValue;
-    valenceValMax.innerHTML = valenceSliderMax.nodeValue;
-
-    danceSlider.oninput = function() {
-        danceVal.innerHTML = this.value;
-    }
-    tempoSlider.oninput = function() {
-        tempoVal.innerHTML = this.value;
-    }
-    loudSlider.oninput = function() {
-        loudVal.innerHTML = this.value;
-    }
-    energySlider.oninput = function() {
-        energyVal.innerHTML = this.value;
-    }
-    speechSlider.oninput = function() {
-        speechVal.innerHTML = this.value;
-    }
-    valenceSlider.oninput = function() {
-        valenceVal.innerHTML = this.value;
-    }
-    danceSliderMax.oninput = function() {
-        danceValMax.innerHTML = this.value;
-    }
-    tempoSliderMax.oninput = function() {
-        tempoValMax.innerHTML = this.value;
-    }
-    loudSliderMax.oninput = function() {
-        loudValMax.innerHTML = this.value;
-    }
-    energySliderMax.oninput = function() {
-        energyValMax.innerHTML = this.value;
-    }
-    speechSliderMax.oninput = function() {
-        speechValMax.innerHTML = this.value;
-    }
-    valenceSliderMax.oninput = function() {
-        valenceValMax.innerHTML = this.value;
-    }
-
-    var minMonthVal = document.getElementById("minMonth");
-    var minYearVal = document.getElementById("minYear");
-    var maxMonthVal = document.getElementById("maxMonth");
-    var maxYearVal = document.getElementById("maxYear");
-
     $(document).ready(function() {
         $("#playlistBtn").click(function(){
             document.getElementById("playlistBtn").classList.add('is-loading');
@@ -600,23 +563,33 @@ export const renderPage = function() {
                 document.getElementById("pTotal").remove();
             }
             var filterVals = {
-                danceMin: danceSlider.value,
-                danceMax: danceSliderMax.value,
-                tempoMin: tempoSlider.value,
-                tempoMax: tempoSliderMax.value,
-                loudMin: loudSlider.value,
-                loudMax: loudSliderMax.value,
-                energyMin: energySlider.value,
-                energyMax: energySliderMax.value,
-                speechMin: speechSlider.value,
-                speechMax: speechSliderMax.value,
-                valenceMin: valenceSlider.value,
-                valenceMax: valenceSliderMax.value,
-                minMonth: minMonthVal.value,
-                minYear: minYearVal.value,
-                maxMonth: maxMonthVal.value,
-                maxYear: maxYearVal.value,
+                danceMin: document.getElementById('danceMin').value,
+                danceMax: document.getElementById('danceMax').value,
+                tempoMin: document.getElementById('tempoMin').value,
+                tempoMax: document.getElementById('tempoMax').value,
+                loudMin: document.getElementById('loudMin').value,
+                loudMax: document.getElementById('loudMax').value,
+                energyMin: document.getElementById('energyMin').value,
+                energyMax: document.getElementById('energyMax').value,
+                instruMin: document.getElementById('instruMin').value,
+                instruMax: document.getElementById('instruMax').value,
+                valenceMin: document.getElementById('valenceMin').value,
+                valenceMax: document.getElementById('valenceMax').value,
+                popMin: document.getElementById('popMin').value,
+                popMax: document.getElementById('popMax').value,
+                acoustMin: document.getElementById('acoustMin').value,
+                acoustMax: document.getElementById('acoustMax').value,
+                minMonthSaved: document.getElementById('minMonthSaved').value,
+                minYearSaved: document.getElementById('minYearSaved').value,
+                maxMonthSaved: document.getElementById('maxMonthSaved').value,
+                maxYearSaved: document.getElementById('maxYearSaved').value,
+                minMonthCreated: document.getElementById('minMonthCreated').value,
+                minYearCreated: document.getElementById('minYearCreated').value,
+                maxMonthCreated: document.getElementById('maxMonthCreated').value,
+                maxYearCreated: document.getElementById('maxYearCreated').value,
             };
+
+            console.log(filterVals)
 
             localforage.getItem('artistGenres').then(function(artistGenres) {
               localforage.getItem('topGenres').then(function(topGenres) {
@@ -680,9 +653,12 @@ export const renderPage = function() {
     let pTableEnergy= true;
     let pTableLoud= true;
     let pTableTempo= true;
-    let pTableSpeech= true;
+    let pTableInstru= true;
     let pTableValence= true;
     let pTableDate = true;
+    let pTableReleaseDate = true;
+    let pTablePop = true;
+    let pTableAcoust = true;
 
 
     $(document).on("click", "#pTableSong", function(){
@@ -721,11 +697,11 @@ export const renderPage = function() {
       sortPlaylist(songJson, songAttrJson, "tempo", pTableTempo)
       pTableTempo = !pTableTempo;
     });
-    $(document).on("click", "#pTableSpeech", function(){
-      console.log("click table speech");
-      console.log(pTableSpeech)
-      sortPlaylist(songJson, songAttrJson, "speechiness", pTableSpeech)
-      pTableSpeech = !pTableSpeech;
+    $(document).on("click", "#pTableInstru", function(){
+      console.log("click table instru");
+      console.log(pTableInstru)
+      sortPlaylist(songJson, songAttrJson, "instrumentalness", pTableInstru)
+      pTableInstru = !pTableInstru;
     });
     $(document).on("click", "#pTableValence", function(){
       console.log("click table valence");
@@ -740,6 +716,27 @@ export const renderPage = function() {
       pTableDate = !pTableDate;
     });
 
+    $(document).on("click", "#pTablePop", function(){
+      console.log("click table pop");
+      console.log(pTablePop)
+      sortPlaylist(songJson, songAttrJson, "popularity", pTablePop)
+      pTablePop = !pTablePop;
+    });
+
+    $(document).on("click", "#pTableReleaseDate", function(){
+      console.log("click table release date");
+      console.log(pTableReleaseDate)
+      sortPlaylist(songJson, songAttrJson, "release_Date", pTableReleaseDate)
+      pTableReleaseDate = !pTableReleaseDate;
+    });
+
+    $(document).on("click", "#pTableAcoust", function(){
+      console.log("click table acoust");
+      console.log(pTableAcoust)
+      sortPlaylist(songJson, songAttrJson, "acousticness", pTableAcoust)
+      pTableAcoust = !pTableAcoust;
+    });
+
   };
 
 
@@ -749,3 +746,4 @@ export const renderPage = function() {
 
     //getSongs();
   });
+
