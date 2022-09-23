@@ -80,6 +80,9 @@ export const renderPage = function() {
     const $root = $('#root');
 
     $root.append(renderPage());
+    localforage.getItem('allSongs').then(function(result) {
+      console.log(result);
+    })
   };
 
 

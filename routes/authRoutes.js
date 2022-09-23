@@ -25,6 +25,10 @@ router.get('/home', async (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'html', 'index.html'));
 });
 
+router.get('/load', async (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'html', 'load.html'));
+});
+
 router.get('/user', async (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'html', 'user.html'));
 });
@@ -97,7 +101,7 @@ router.get('/login', async (req, res) => {
       //res.redirect(`${process.env.CLIENT_REDIRECTURI}?${query}`);
 
       //res.sendFile(path.join(__dirname, '..', 'html', 'home.html'));
-      res.redirect(`${process.env.USERURI}?access_token=${access_token}&refresh_token=${refresh_token}`);
+      res.redirect(`${process.env.LOADURI}?access_token=${access_token}&refresh_token=${refresh_token}`);
     });
 
 
