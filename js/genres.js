@@ -55,8 +55,10 @@ export const renderPage = function() {
     return;
   }
 
-  function getGenres(maxGenres){
+  function getGenres(maxGenres, topGenres){
     //Genre title - with span to make it dynamic
+
+    console.log(topGenres);
     let genreInfo = '<p class="title" style="text-align: center"> <span id="genreTitle"> Your Top Genres: </span></p>';
     genreInfo+= '<table id="genreTable" class="table is-fullwidth is-hoverable">';
     genreInfo+= '<thead><tr><th class="has-text-left">Rank</th>';
@@ -67,7 +69,7 @@ export const renderPage = function() {
 
     // For every genre (until max) add table info
     let count = 1;
-    topGenres = JSON.parse(localStorage.getItem('topGenres'));
+    //topGenres = JSON.parse(localStorage.getItem('topGenres'));
     for(var genre in topGenres){
       genreInfo+='<tr><th>' + count + '</th>';
       genreInfo+='<td>' + genre + '</td>';
@@ -162,11 +164,8 @@ export const renderPage = function() {
   $(function() {
     getToken();
     loadPage();
-    if(localStorage.getItem('artistGenres') === null){
-      loadGenres(25, 0);
-    }
-    else{
-      getGenres(25);
-    }
+    localforage.getItem('topGenres').then(function(topGenres) {
+      getGenres(25, topGenres);
+    });
 
   });

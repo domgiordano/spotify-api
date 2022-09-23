@@ -53,45 +53,38 @@ export const renderPage = function() {
     return;
   }
 
-  async function getArtists(offset) {
+  async function getArtists(offset, topArtists) {
     let maxArtists = 10;
     let artistInfo = '';
+    console.log(topArtists);
     if(offset == 0) {
         artistInfo += '<p id="artistsHeader" class="title" style="text-align: center"> YOUR TOP SPOTIFY ARTISTS: </p>'
         artistInfo+='<div id="cardGroup" class="columns is-multiline" style="margin-left: 0.025%">';
     }
 
-    const url = 'https://api.spotify.com/v1/me/top/artists?limit=' + maxArtists + '&offset=' + (offset * maxArtists);
-    const headers = {
-      Authorization: 'Bearer ' + access_token
-    }
-
-    const response = await fetch(url, { headers });
-
-    const data = await response.json();
-
-    for(let i = 1; i < maxArtists + 1; i++){
+    console.log(offset)
+    for(let i = 1 + (maxArtists * offset); i < (maxArtists * (offset + 1)) + 1; i++){
 
         let artistGenres = "";
-        for(let j = 0; j < data.items[i-1].genres.length; j++){
+        for(let j = 0; j < topArtists[i-1].genres.length; j++){
             if(j == 0){
-                artistGenres+= data.items[i-1].genres[j];
+                artistGenres+= topArtists[i-1].genres[j];
             }
             else{
-                artistGenres+= ", " + data.items[i-1].genres[j];
+                artistGenres+= ", " + topArtists[i-1].genres[j];
             }
 
         }
 
-        artistInfo+='<div id="card_' + (i + (offset * maxArtists)) + '" class="column is-one-quarter" style="margin: 1%; width: 31%">';
+        artistInfo+='<div id="card_' + (i) + '" class="column is-one-quarter" style="margin: 1%; width: 31%">';
         artistInfo+='<div class="card-content" style="text-align: center">';
         artistInfo+='<div class="card-image"  style="background: white">';
-        artistInfo+='<figure class="image is-square"><img src="' + data.items[i-1].images[0].url + '" alt="Placeholder image"></figure>';
+        artistInfo+='<figure class="image is-square"><img src="' + topArtists[i-1].images[0].url + '" alt="Placeholder image"></figure>';
         artistInfo+='</div>';
         artistInfo+='<div class="media">';
-        artistInfo+='<div class="media-content" ><p class="title is-4" style=" text-align: center">'+ (i + (offset * maxArtists)) + ': ' + data.items[i-1].name + '</p>';
+        artistInfo+='<div class="media-content" ><p class="title is-4" style=" text-align: center">'+ i + ': ' + topArtists[i-1].name + '</p>';
         artistInfo+='<p class="subtitle is-6" style="text-align: center"> Genres: ' + artistGenres + ' </p>';
-        artistInfo+='<p class="subtitle is-6" style="text-align: center"> Popularity: ' + data.items[i-1].popularity + ' </p>';
+        artistInfo+='<p class="subtitle is-6" style="text-align: center"> Popularity: ' + topArtists[i-1].popularity + ' </p>';
         artistInfo+='</div></div></div></div>';
     }
 
@@ -127,12 +120,16 @@ export const renderPage = function() {
   $(function() {
     getToken();
     loadPage();
-    getArtists(0);
+    localforage.getItem('topArtists').then(function(topArtists) {
+      getArtists(0, topArtists);
+    });
 
-    let offset = 1;
+    let offset = 0;
 
     $(document).on("click", "#moreBtn", function() {
-      getArtists(offset);
+      localforage.getItem('topArtists').then(function(topArtists) {
+        getArtists(offset, topArtists);
+      });
       offset+=1;
       console.log("more click");
     });
@@ -142,7 +139,9 @@ export const renderPage = function() {
         document.getElementById("moreBtn").remove();
         document.getElementById("resetBtn").remove();
         document.getElementById("artistsHeader").remove();
-        getArtists(0);
+        localforage.getItem('topArtists').then(function(topArtists) {
+          getArtists(0, topArtists);
+        });
         offset = 0;
     })
   });

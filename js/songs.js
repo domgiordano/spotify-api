@@ -52,53 +52,37 @@ export const renderPage = function() {
     return;
   }
 
-  async function getSongs(offset) {
+  async function getSongs(offset, topSongs) {
     let songInfo = '';
     if(offset == 0) {
       songInfo+='<p id="songsHeader" class="title" style="text-align: center"> YOUR TOP SPOTIFY SONGS: </p>'
       songInfo+='<div id="cardGroup" class="columns is-multiline" style="margin-left: 0.025%">';
     }
     let maxSongs = 10;
-    let url = 'https://api.spotify.com/v1/me/top/tracks?limit='+ maxSongs + '&offset=' + offset * maxSongs;
-    console.log(url)
-    const headers = {
-      Authorization: 'Bearer ' + access_token
-    }
-
-    const response = await fetch(url, { headers });
-
-    const data = await response.json();
-
-
-    for(let i = 1; i < maxSongs + 1; i++){
-        let songName = data.items[i-1].name;
+    for(let i = 1 + (maxSongs * offset); i < (maxSongs * (offset + 1)) + 1; i++){
+        let songName = topSongs[i-1].name;
         let songArtists = "";
-        for(let j = 0; j < data.items[i-1].artists.length; j++){
+        for(let j = 0; j < topSongs[i-1].artists.length; j++){
           if (j == 0) {
-            songArtists += data.items[i-1].artists[j].name;
+            songArtists += topSongs[i-1].artists[j].name;
           }
           else if (j == 1) {
-            songArtists += " ft. " + data.items[i-1].artists[j].name;
+            songArtists += " ft. " + topSongs[i-1].artists[j].name;
           }
           else {
-            songArtists += " & " + data.items[i-1].artists[j].name;
+            songArtists += " & " + topSongs[i-1].artists[j].name;
           }
         }
-        songInfo+='<div id="card_' + (i + (offset * maxSongs)) + '" class="column is-one-quarter" style="margin: 1%; width: 31%">';
+        songInfo+='<div id="card_' + (i) + '" class="column is-one-quarter" style="margin: 1%; width: 31%">';
         songInfo+='<div class="card-content" style="text-align: center">';
         songInfo+='<div class="card-image"  style="background: white">';
-        songInfo+='<figure class="image"><img src="' + data.items[i-1].album.images[0].url + '" alt="Placeholder image"></figure>';
+        songInfo+='<figure class="image"><img src="' + topSongs[i-1].album.images[0].url + '" alt="Placeholder image"></figure>';
         songInfo+='</div>';
         songInfo+='<div class="media">';
-        songInfo+='<div class="media-content" ><p class="title is-4" style=" text-align: center">'+ (i + (offset * maxSongs)) + ': ' + songName + '</p>';
+        songInfo+='<div class="media-content" ><p class="title is-4" style=" text-align: center">'+ (i) + ': ' + songName + '</p>';
         songInfo+='<p class="subtitle is-6" style="text-align: center">' + songArtists + '</p>';
         songInfo+='</div></div></div></div>';
 
-
-        /* songInfo += '<div class="tile is-parent>';
-        songInfo += '<article class="tile is-child box"><img src="' + data.items[i-1].album.images[0].url + '" width="100" height="100" alt="Placeholder image">'
-        songInfo += '<p class="subtitle style="text-align: center">'+ i + ': ' + songName + ' by ' + songArtists + ' </p></article>';
-        songInfo += '</div>'; */
 
     }
 
@@ -141,10 +125,15 @@ export const renderPage = function() {
     loadPage();
     getSongs(0);
 
-    let offset = 1;
+    localforage.getItem('topSongs').then(function(topSongs) {
+      getSongs(0, topSongs);
+    });
+    let offset = 0;
 
     $(document).on("click", "#moreBtn", function() {
-      getSongs(offset);
+      localforage.getItem('topSongs').then(function(topSongs) {
+        getSongs(offset, topSongs);
+      });
       offset+=1;
       console.log("more click");
     });
@@ -154,7 +143,9 @@ export const renderPage = function() {
       document.getElementById("moreBtn").remove();
       document.getElementById("resetBtn").remove();
       document.getElementById("songsHeader").remove();
-      getSongs(0);
+      localforage.getItem('topSongs').then(function(topSongs) {
+        getSongs(0, topSongs);
+      });
       offset = 0;
   })
   });
