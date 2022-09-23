@@ -169,18 +169,22 @@ export const renderPage = function() {
     return;
   }
 
-  async function getSongs(filterVals, offset) {
+  async function getSongs(filterVals, offset, allSongs, topGenres, artistGenres) {
     let genreFilter = [];
-    let artistGenres = JSON.parse(localStorage.getItem('artistGenres'));
+    console.log(allSongs)
+    console.log(topGenres);
 
+    let songs = await allSongs;
     // get checkbox values if genres have been loaded
-    if(localStorage.getItem('artistGenres') != null){
-      for(let i = 1; i < maxGenres+1; i++){
-        if(document.getElementById('genre' + i).checked){
-          genreFilter.push(localStorage.getItem('genre' + i).toLowerCase());
-        }
+    let count = 1;
+    for(let genres in topGenres){
+      if(document.getElementById('genre' + count).checked){
+        genreFilter.push(genres.toLowerCase());
       }
+      count++;
+      if(count == 26){break;}
     }
+
 
 
     //Check filter values
@@ -255,81 +259,48 @@ export const renderPage = function() {
     }
     let songIds = [];
     let tempSongJson = {};
-    do{
-      const url = 'https://api.spotify.com/v1/me/tracks?limit='+ maxSongs + '&offset=' + (offset * maxSongs);
-      const headers = {
-        Authorization: 'Bearer ' + access_token
+
+    for(let songID in allSongs){
+      let month = allSongs[songID].added_at.slice(5,7);
+      let year = allSongs[songID].added_at.slice(0,4);
+      let validDate = false;
+      if( month <= filterVals['maxMonth'] && month >= filterVals['minMonth'] && year <= filterVals['maxYear'] && year >= filterVals['minYear']){
+        validDate = true;
       }
-
-      const response = await fetch(url, { headers });
-
-      const data = await response.json();
-
-      if(data.items.length === 0){
-        console.log("no more songs");
-        break;
-      }
-
-      for(let i = 1; i < maxSongs + 1; i++){
-        if(data.items[i-1] == null){
-          console.log("donezo");
-          break;
-        }
-        let month = data.items[i-1].added_at.slice(5,7);
-        let year = data.items[i-1].added_at.slice(0,4);
-        let validDate = false;
-        if( month <= filterVals['maxMonth'] && month >= filterVals['minMonth'] && year <= filterVals['maxYear'] && year >= filterVals['minYear']){
-          validDate = true;
-        }
-        let validGenre = false;
-        console.log(data.items[i-1])
-        if(genreFilter.length != 0){
-          loopJ:
-            for(let j = 0; j < data.items[i-1].track.artists.length; j++){
-              console.log(typeof artistGenres)
-              let currArtistGenres = artistGenres[data.items[i-1].track.artists[j].id]
-              console.log(currArtistGenres);
-              if(currArtistGenres == null){continue;}
-              for(let k = 0; k < currArtistGenres.length; k++){
-                for(let l = 0; l < genreFilter.length; l++){
-                  if(genreFilter[l] == currArtistGenres[k]){
-                    validGenre = true;
-                    break loopJ;
-                  }
+      let validGenre = false;
+      if(genreFilter.length != 0){
+        loopJ:
+          for(let j = 0; j < allSongs[songID].track.artists.length; j++){
+            let currArtistGenres = artistGenres[allSongs[songID].track.artists[j].id]
+            if(currArtistGenres == null){continue;}
+            for(let k = 0; k < currArtistGenres.length; k++){
+              for(let l = 0; l < genreFilter.length; l++){
+                if(genreFilter[l] == currArtistGenres[k]){
+                  validGenre = true;
+                  break loopJ;
                 }
               }
             }
-        }
-        else{
-          validGenre = true;
-        }
+          }
+      }
+      else{
+        validGenre = true;
+      }
 
-        if(validDate && validGenre){
-          tempSongJson[data.items[i-1].track.id] = data.items[i-1];
-          songIds.push(data.items[i-1].track.id);
-        }
+      if(validDate && validGenre){
+        tempSongJson[allSongs[songID].track.id] = allSongs[songID];
+        songIds.push(allSongs[songID].track.id);
       }
 
       offset++;
-    }while(true);
+    }
 
     let tempSongAttrJson = {};
     console.log(Object.keys(tempSongJson).length)
     for(let i = 1; i < songIds.length + 1; i++){
 
         let songName = tempSongJson[songIds[i-1]].track.name;
-        let songArtists = "";
-        for(let j = 0; j < tempSongJson[songIds[i-1]].track.artists.length; j++){
-          if (j == 0) {
-            songArtists += tempSongJson[songIds[i-1]].track.artists[j].name;
-          }
-          else if (j == 1) {
-            songArtists += " ft. " + tempSongJson[songIds[i-1]].track.artists[j].name;
-          }
-          else {
-            songArtists += " & " + tempSongJson[songIds[i-1]].track.artists[j].name;
-          }
-        }
+        let songArtists = tempSongJson[songIds[i-1].artist_string];
 
         let songImage = tempSongJson[songIds[i-1]].track.album.images[0].url;
 
@@ -646,7 +617,16 @@ export const renderPage = function() {
                 maxMonth: maxMonthVal.value,
                 maxYear: maxYearVal.value,
             };
-            let songResults = getSongs(filterVals, 0);
+
+            localforage.getItem('artistGenres').then(function(artistGenres) {
+              localforage.getItem('topGenres').then(function(topGenres) {
+                localforage.getItem('allSongs').then(function(allSongs) {
+                  getSongs(filterVals, 0, allSongs, topGenres, artistGenres);
+                });
+              });
+            });
+
+            //let songResults = getSongs(filterVals, 0);
             //let songJson = songResults[0];
             //let songAttrJson = songResults[1];
             //console.log(songJson);
