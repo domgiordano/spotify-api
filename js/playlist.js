@@ -117,6 +117,7 @@ export const renderPage = function() {
             <button id="resetBtn" class="button is-warning is-light is-large is-outlined is-rounded" disabled=true > Reset Page pls. </button>
             <button id="playlistBtn" class="button is-link is-light is-large is-outlined is-rounded"> SUBMIT </button>
             <button id="downloadBtn" class="button is-danger is-light is-large is-outlined is-rounded" disabled=true >Download Playlist</button>
+            <br>
 
 
         </div>
@@ -385,7 +386,9 @@ export const renderPage = function() {
 
     songInfo+='</table>';
     let resetButton = document.getElementById("resetBtn");
-    let songNumberInfo='<div id="pTotal"><br><p class="title is-3">Number of Songs Selected: ' + Object.keys(tempSongJson).length + '</p><br>';
+    let songNumberInfo ='<div id="pName" class="field"><label style="margin:1em" id="playlistLabel" class="label">Playlist Title:</label><div class="control"><input id="pNameInput" class="input" type="text" placeholder="myPlaylistByDom"></div></div>';
+    songNumberInfo +='<div id="pTotal"><br><p class="title is-3">Number of Songs Selected: ' + Object.keys(tempSongJson).length + '</p><br>';
+
     $('#main').append(songNumberInfo);
     $('#main').append(songInfo);
 
@@ -432,10 +435,6 @@ export const renderPage = function() {
   }
 
   async function sortPlaylist(songs, songAttrs, sortVal, isASC) {
-    console.log(sortVal);
-    console.log(isASC);
-    console.log(songs);
-    console.log(songAttrs);
 
     sortVal = sortVal.toLowerCase();
     let tempVals = Object.values(songAttrs);
@@ -485,10 +484,11 @@ export const renderPage = function() {
     sortable.forEach(function(item){
       valueSorted[item[0]]=item[1]
     });
-    console.log(valueSorted);
 
     //Reload data sorted
     $('#resetBtn').trigger('click');
+    document.getElementById("downloadBtn").disabled = false;
+        document.getElementById("resetBtn").disabled = false;
     let playlistSongCount=1;
 
     //Construct Table Header
@@ -566,7 +566,9 @@ export const renderPage = function() {
 
     let resetButton = document.getElementById("resetBtn");
 
-    let songNumberInfo='<div id="pTotal"><p class="title is-3">Number of Songs Selected: ' + Object.keys(songs).length + '</p>';
+    let songNumberInfo ='<div id="pName" class="field"><label style="margin:1em" id="playlistLabel" class="label">Playlist Title:</label><div class="control"><input id="pNameInput" class="input" type="text" placeholder="myPlaylistByDom"></div></div>';
+    songNumberInfo +='<div id="pTotal"><br><p class="title is-3">Number of Songs Selected: ' + playlistSongCount + '</p><br>';
+
     songInfo+='</table>';
     $('#main').append(songNumberInfo);
     $('#main').append(songInfo);
@@ -583,11 +585,15 @@ export const renderPage = function() {
     getToken();
     //get user
     let userID = localStorage.getItem('userID');
+    let playlistName = document.getElementById('pNameInput').value
+    if(playlistName == ""){
+      playlistName = "Playlist-gen-by-dom"
+    }
     console.log(userID)
 
     const settings = {
       method: 'POST',
-      body: JSON.stringify({name: "Dom-made-me-do-it", description: "Prolly the best playlist you got", public: true}),
+      body: JSON.stringify({name: playlistName, description: "Prolly the best playlist you got", public: true}),
       headers: {
         Authorization: 'Bearer ' + access_token
       }
@@ -626,6 +632,8 @@ export const renderPage = function() {
     const trackData = await trackResponse.json();
 
     console.log(trackData)
+
+    alert("Playlist " + playlistName + " created and downloaded. Check spotify.")
 
   }
 
@@ -671,6 +679,7 @@ export const renderPage = function() {
             if(playlistTable){
                 playlistTable.remove();
                 document.getElementById("pTotal").remove();
+                document.getElementById("pName").remove();
 
             }
             var filterVals = {
@@ -753,6 +762,7 @@ export const renderPage = function() {
     $(document).on("click", "#resetBtn", function(){
         document.getElementById("playlistTable").remove();
         document.getElementById("pTotal").remove();
+        document.getElementById("pName").remove();
         document.getElementById("downloadBtn").disabled = true;
         document.getElementById("resetBtn").disabled = true;
 
