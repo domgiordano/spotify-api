@@ -35,7 +35,7 @@ export const renderPage = function() {
     <!-- Hero content: will be in the middle -->
     <div class="hero-body">
       <div id="main" class="container has-text-centered">
-        <p class="title is-1"><span id="loadTitle"> Loading (stealing) your Songs, Genres, Artists, etc. (data)... </span></p>
+        <p class="title is-1"><span id="loadMain" >Loading (stealing) your Spotify data</span><span id="loadTitle"></span></p>
         <br>
         <button id="loadBtn" class="button is-link is-light is-large is-outlined is-rounded" disabled> Continue </button>
       </div>
@@ -58,6 +58,10 @@ export const renderPage = function() {
     let genreCount = {};
     let artistGenres = {};
     let userSongs = {};
+
+    //span elements
+    let titleSpan = document.getElementById('loadTitle')
+    let dotCount = 0;
 
     //Get all users save songs
     do{
@@ -83,6 +87,23 @@ export const renderPage = function() {
           console.log("donezo");
           break;
         }
+        if(i % 10 == 0){
+          dotCount++;
+          if(dotCount == 3){
+            titleSpan.textContent = '...';
+            dotCount = -1;
+          }
+          else if(dotCount == 2){
+            titleSpan.textContent = '..';
+          }
+          else if(dotCount == 1){
+            titleSpan.textContent = '.';
+          }
+          else if(dotCount == 0){
+            titleSpan.textContent = '';
+          }
+        }
+
 
         //Add the artist id to array if it does not exist
         if(!(artistIds.includes(data.items[i-1].track.artists[0].id))){
@@ -124,6 +145,24 @@ export const renderPage = function() {
 
       //For every artist
       for(let k = 0; k < Object.keys(data.artists).length; k++){
+
+        if(k % 10 == 0){
+          dotCount++;
+          if(dotCount == 3){
+            titleSpan.textContent = '...';
+            dotCount = -1;
+          }
+          else if(dotCount == 2){
+            titleSpan.textContent = '..';
+          }
+          else if(dotCount == 1){
+            titleSpan.textContent = '.';
+          }
+          else if(dotCount == 0){
+            titleSpan.textContent = '';
+          }
+        }
+
         if(data.artists[k] == null){
           break;
         }
@@ -186,6 +225,8 @@ export const renderPage = function() {
     localStorage.setItem('topGenres', JSON.stringify(topGenres));
     console.log("genres done");
 
+    document.getElementById("loadTitle").textContent = '';
+    document.getElementById("loadMain").textContent= 'All Spotify data loaded (stolen).'
     document.getElementById("loadBtn").disabled = false;
     return;
   }
