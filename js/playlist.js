@@ -48,15 +48,15 @@ export const renderPage = function() {
               </div>
               <div class="column is-half>
                 <p class="subtitle is-4" style="text-align: center">Loudness</p>
-                MIN <input id="loudMin" class="input is-rounded is-normal is-link" min="-60.00" max="0.00" value="-60.00" type="number"><br>
-                MAX <input id="loudMax" class="input is-rounded is-normal is-link" min="-60.00" max="0.00" value="0.00" type="number">
+                MIN <input id="loudMin" class="input is-rounded is-normal is-link" min="-60.00" max="60.00" value="-60.00" type="number"><br>
+                MAX <input id="loudMax" class="input is-rounded is-normal is-link" min="-60.00" max="60.00" value="60.00" type="number">
               </div>
             </div>
             <div class="column is-one-quarter">
               <div class="column is-half>
                 <p class="subtitle is-4" style="text-align: center">Tempo</p>
-                MIN: <input id="tempoMin" class="input is-rounded is-normal is-link" min="0" max="200" value="0" type="number"><br>
-                MAX: <input id="tempoMax" class="input is-rounded is-normal is-link" min="0" max="200" value="200" type="number">
+                MIN: <input id="tempoMin" class="input is-rounded is-normal is-link" min="0" max="250" value="0" type="number"><br>
+                MAX: <input id="tempoMax" class="input is-rounded is-normal is-link" min="0" max="250" value="250" type="number">
               </div>
               <div class="column is-half>
                 <p class="subtitle is-4" style="text-align: center">Energy</p>
@@ -305,7 +305,7 @@ export const renderPage = function() {
     let tempSongAttrJson = {};
     console.log(Object.keys(tempSongJson).length)
 
-    let trackCount = 0;
+    let trackCount = 1;
     loopAllSongs:
     for(let i = 1; i < songIds.length + 1; i++){
         console.log("Track Count: " + trackCount);
@@ -323,14 +323,14 @@ export const renderPage = function() {
         const songData = await songResponse.json();
 
 
-        if (songData.energy > filterVals['energyMin'] && songData.energy < filterVals['energyMax'] &&
-                songData.danceability > filterVals['danceMin'] && songData.danceability < filterVals['danceMax'] &&
-                songData.tempo > filterVals['tempoMin'] && songData.tempo < filterVals['tempoMax'] &&
-                songData.loudness > filterVals['loudMin'] && songData.loudness < filterVals['loudMax'] &&
-                songData.instrumentalness > filterVals['instruMin'] && songData.instrumentalness < filterVals['instruMax'] &&
-                songData.valence > filterVals['valenceMin'] && songData.valence < filterVals['valenceMax'] &&
-                songData.acousticness > filterVals['acoustMin'] && songData.acousticness < filterVals['acoustMax'] &&
-                tempSongJson[songIds[i-1]].track.popularity > filterVals['popMin'] && tempSongJson[songIds[i-1]].track.popularity < filterVals['popMax']){
+        if (songData.energy >= filterVals['energyMin'] && songData.energy <= filterVals['energyMax'] &&
+                songData.danceability >= filterVals['danceMin'] && songData.danceability <= filterVals['danceMax'] &&
+                songData.tempo >= filterVals['tempoMin'] && songData.tempo <= filterVals['tempoMax'] &&
+                songData.loudness >= filterVals['loudMin'] && songData.loudness <= filterVals['loudMax'] &&
+                songData.instrumentalness >= filterVals['instruMin'] && songData.instrumentalness <= filterVals['instruMax'] &&
+                songData.valence >= filterVals['valenceMin'] && songData.valence <= filterVals['valenceMax'] &&
+                songData.acousticness >= filterVals['acoustMin'] && songData.acousticness <= filterVals['acoustMax'] &&
+                tempSongJson[songIds[i-1]].track.popularity >= filterVals['popMin'] && tempSongJson[songIds[i-1]].track.popularity <= filterVals['popMax']){
 
             playlistSongCount++;
             let monthSaved = tempSongJson[songIds[i-1]].added_at.slice(5,7);
@@ -344,30 +344,39 @@ export const renderPage = function() {
 
             dateCreated += '/' + tempSongJson[songIds[i-1]].track.album.release_date.slice(0,4);
 
-            songInfo+='<tr><th>' + i + '</th>';
-            songInfo+='<td><img src="' + songImage + '" height="100" width="100"></td>';
-            songInfo+='<td>' + songName + '</td>';
-            songInfo+='<td>' + songArtists + '</td>';
-            songInfo+='<td>' + songData.danceability + '</td>';
-            songInfo+='<td>' + songData.tempo + '</td>';
-            songInfo+='<td>' + songData.instrumentalness + '</td>';
-            songInfo+='<td>' + songData.acousticness + '</td>';
-            songInfo+='<td>' + songData.loudness + '</td>';
-            songInfo+='<td>' + songData.energy + '</td>';
-            songInfo+='<td>' + songData.valence + '</td>';
-            songInfo+='<td>' + tempSongJson[songIds[i-1]].track.popularity + '</td>';
-            songInfo+='<td>' + monthSaved + '/' + daySaved + '/' + yearSaved + '</td>';
-            songInfo+='<td>' + dateCreated + '</td>';
-            songInfo+='</tr>';
+            if(trackCount <= 100){
+              songInfo+='<tr><th>' + trackCount + '</th>';
+              songInfo+='<td><img src="' + songImage + '" height="100" width="100"></td>';
+              songInfo+='<td>' + songName + '</td>';
+              songInfo+='<td>' + songArtists + '</td>';
+              songInfo+='<td>' + songData.danceability + '</td>';
+              songInfo+='<td>' + songData.tempo + '</td>';
+              songInfo+='<td>' + songData.instrumentalness + '</td>';
+              songInfo+='<td>' + songData.acousticness + '</td>';
+              songInfo+='<td>' + songData.loudness + '</td>';
+              songInfo+='<td>' + songData.energy + '</td>';
+              songInfo+='<td>' + songData.valence + '</td>';
+              songInfo+='<td>' + tempSongJson[songIds[i-1]].track.popularity + '</td>';
+              songInfo+='<td>' + monthSaved + '/' + daySaved + '/' + yearSaved + '</td>';
+              songInfo+='<td>' + dateCreated + '</td>';
+              songInfo+='</tr>';
+            }
+
+            //update songData
             songData.added_at = tempSongJson[songIds[i-1]].added_at;
             songData.release_date = tempSongJson[songIds[i-1]].track.album.release_date;
             songData.popularity = tempSongJson[songIds[i-1]].track.popularity;
             songData.name = songName;
             songData.artist = tempSongJson[songIds[i-1]].track.artists[0].name;
             tempSongAttrJson[songIds[i-1]] = songData;
+
             trackCount++;
 
-            if(trackCount >= 250){
+            if(trackCount >= 251){
+              for(let x = i; x < songIds.length; x++){
+                delete tempSongJson[songIds[x]];
+              }
+              alert("250+ songs selected. Maybe narrow it down a bit, eh.")
               break loopAllSongs;
             }
 
