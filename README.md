@@ -1,5 +1,5 @@
 # spotify-api
-##Config
+## Config
   * Clone Repo
   * Configure .env file with following vars:
     * Port
@@ -21,18 +21,18 @@
   * Run `node app.js` to launch local env
   * Go to localhost:8080/api/home
   
-##Home Page
+## Home Page
   * Shows user profile
   * Currently shows image, id, followers, and name
   
-##Top Songs Page
+## Top Songs Page
 * Shows users top songs 10 at a time
 * Adding way to go to every songs 'info' page
   * Info page will include:
     * Song stats
     * Artist info
     
-##Top Artists Page
+## Top Artists Page
 * Shows user top artists 10 at a time
 * Adding way to go to every artists 'info' page
   * Info page will include:
@@ -47,7 +47,7 @@
   * Genre page will include:
     * Users top songs and artists for that genre
 
-##Playlist Generator Page
+## Playlist Generator Page
 *Generate playlists based on filters
 *Filters include:
   * Energy
