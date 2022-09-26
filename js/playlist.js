@@ -112,18 +112,18 @@ export const renderPage = function() {
               </div>
             </div>
 
-
-
-
             <div id="genreCheckBoxes" class="column is-full">
             </div>
-            <button id="playlistBtn" class="button is-link is-light is-large is-outlined is-rounded">
-              SUBMIT
-            </button>
+            <button id="resetBtn" class="button is-warning is-light is-large is-outlined is-rounded" disabled=true > Reset Page pls. </button>
+            <button id="playlistBtn" class="button is-link is-light is-large is-outlined is-rounded"> SUBMIT </button>
+            <button id="downloadBtn" class="button is-danger is-light is-large is-outlined is-rounded" disabled=true >Download Playlist</button>
+
+
         </div>
 
 
       </div>
+
     </div>
 
     <!-- Hero footer: will stick at the bottom -->
@@ -383,16 +383,47 @@ export const renderPage = function() {
     songInfo+='</tbody>';
     console.log(songIds)
 
-    let resetButton = document.getElementById("resetBtn");
-    let buttonInfo ='<div><button id="resetBtn" class="button is-warning is-light is-large is-outlined is-rounded"> Reset Page pls. </button></div>';
-    let songNumberInfo='<div id="pTotal"><br><p class="title is-3">Number of Songs Selected: ' + Object.keys(tempSongJson).length + '</p><br>';
-    let downloadButtonInfo = '<div><button id="downloadBtn" class="button is-danger is-light is-large is-outlined is-rounded">Download Playlist</button></div><br>';
     songInfo+='</table>';
+    let resetButton = document.getElementById("resetBtn");
+    let songNumberInfo='<div id="pTotal"><br><p class="title is-3">Number of Songs Selected: ' + Object.keys(tempSongJson).length + '</p><br>';
     $('#main').append(songNumberInfo);
-    $('#main').append(downloadButtonInfo);
     $('#main').append(songInfo);
-    $('#main').append(buttonInfo);
+
+    //reset buttons
     document.getElementById("playlistBtn").classList.remove('is-loading')
+    document.getElementById("downloadBtn").disabled = false;
+    document.getElementById("resetBtn").disabled = false;
+
+     //enable all filter value fields
+     document.getElementById("danceMin").disabled = false;
+     document.getElementById("danceMax").disabled = false;
+     document.getElementById("tempoMin").disabled = false;
+     document.getElementById("tempoMax").disabled = false;
+     document.getElementById("loudMin").disabled = false;
+     document.getElementById("loudMax").disabled = false;
+     document.getElementById("energyMin").disabled = false;
+     document.getElementById("energyMax").disabled = false;
+     document.getElementById("instruMin").disabled = false;
+     document.getElementById("instruMax").disabled = false;
+     document.getElementById("valenceMin").disabled = false;
+     document.getElementById("valenceMax").disabled = false;
+     document.getElementById("popMin").disabled = false;
+     document.getElementById("popMax").disabled = false;
+     document.getElementById("acoustMin").disabled = false;
+     document.getElementById("acoustMax").disabled = false;
+     document.getElementById("minMonthSaved").disabled = false;
+     document.getElementById("minYearSaved").disabled = false;
+     document.getElementById("maxMonthSaved").disabled = false;
+     document.getElementById("maxYearSaved").disabled = false;
+     document.getElementById("minMonthCreated").disabled = false;
+     document.getElementById("minYearCreated").disabled = false;
+     document.getElementById("maxMonthCreated").disabled = false;
+     document.getElementById("maxYearCreated").disabled = false;
+
+     //enable check box filters
+     for(let i = 1; i < maxGenres + 1; i++){
+       document.getElementById("genre" + i).disabled = false;
+     }
 
     songJson = tempSongJson;
     songAttrJson = tempSongAttrJson;
@@ -534,12 +565,11 @@ export const renderPage = function() {
     songInfo+='</tbody>';
 
     let resetButton = document.getElementById("resetBtn");
-    let buttonInfo ='<div><button id="resetBtn" class="button is-warning is-light is-large is-outlined is-rounded"> Reset Page pls. </button></div>';
+
     let songNumberInfo='<div id="pTotal"><p class="title is-3">Number of Songs Selected: ' + Object.keys(songs).length + '</p>';
     songInfo+='</table>';
     $('#main').append(songNumberInfo);
     $('#main').append(songInfo);
-    $('#main').append(buttonInfo);
     document.getElementById("playlistBtn").classList.remove('is-loading')
 
     songJson = songs;
@@ -608,12 +638,40 @@ export const renderPage = function() {
     $(document).ready(function() {
         $("#playlistBtn").click(function(){
             document.getElementById("playlistBtn").classList.add('is-loading');
+
+            document.getElementById("danceMin").disabled = true;
+            document.getElementById("danceMax").disabled = true;
+            document.getElementById("tempoMin").disabled = true;
+            document.getElementById("tempoMax").disabled = true;
+            document.getElementById("loudMin").disabled = true;
+            document.getElementById("loudMax").disabled = true;
+            document.getElementById("energyMin").disabled = true;
+            document.getElementById("energyMax").disabled = true;
+            document.getElementById("instruMin").disabled = true;
+            document.getElementById("instruMax").disabled = true;
+            document.getElementById("valenceMin").disabled = true;
+            document.getElementById("valenceMax").disabled = true;
+            document.getElementById("popMin").disabled = true;
+            document.getElementById("popMax").disabled = true;
+            document.getElementById("acoustMin").disabled = true;
+            document.getElementById("acoustMax").disabled = true;
+            document.getElementById("minMonthSaved").disabled = true;
+            document.getElementById("minYearSaved").disabled = true;
+            document.getElementById("maxMonthSaved").disabled = true;
+            document.getElementById("maxYearSaved").disabled = true;
+            document.getElementById("minMonthCreated").disabled = true;
+            document.getElementById("minYearCreated").disabled = true;
+            document.getElementById("maxMonthCreated").disabled = true;
+            document.getElementById("maxYearCreated").disabled = true;
+            //disable check box filters
+            for(let i = 1; i < maxGenres + 1; i++){
+              document.getElementById("genre" + i).disabled = true;
+            }
             let playlistTable = document.getElementById("playlistTable");
             if(playlistTable){
                 playlistTable.remove();
-                document.getElementById("resetBtn").remove();
                 document.getElementById("pTotal").remove();
-                document.getElementById('downloadBtn').remove();
+
             }
             var filterVals = {
                 danceMin: document.getElementById('danceMin').value,
@@ -694,9 +752,9 @@ export const renderPage = function() {
 
     $(document).on("click", "#resetBtn", function(){
         document.getElementById("playlistTable").remove();
-        document.getElementById("resetBtn").remove();
         document.getElementById("pTotal").remove();
-        document.getElementById('downloadBtn').remove();
+        document.getElementById("downloadBtn").disabled = true;
+        document.getElementById("resetBtn").disabled = true;
 
     })
 
