@@ -252,37 +252,96 @@ export const renderPage = function() {
 
   async function loadSongs() {
     let maxSongs = 50;
-    let url = 'https://api.spotify.com/v1/me/top/tracks?limit='+ maxSongs;
+    let urlShort = 'https://api.spotify.com/v1/me/top/tracks?limit='+ maxSongs + '&time_range=short_term';
 
     const headers = {
       Authorization: 'Bearer ' + access_token
     }
 
-    const response = await fetch(url, { headers });
+    const responseShort = await fetch(urlShort, { headers });
 
-    const data = await response.json();
+    const dataShort = await responseShort.json();
 
 
     for(let i = 1; i < maxSongs + 1; i++){
         let songArtists = "";
-        for(let j = 0; j < data.items[i-1].artists.length; j++){
+        for(let j = 0; j < dataShort.items[i-1].artists.length; j++){
           if (j == 0) {
-            songArtists += data.items[i-1].artists[j].name;
+            songArtists += dataShort.items[i-1].artists[j].name;
           }
           else if (j == 1) {
-            songArtists += " ft. " + data.items[i-1].artists[j].name;
+            songArtists += " ft. " + dataShort.items[i-1].artists[j].name;
           }
           else {
-            songArtists += " & " + data.items[i-1].artists[j].name;
+            songArtists += " & " + dataShort.items[i-1].artists[j].name;
           }
         }
 
-        data.items[i-1].artist_string = songArtists;
+        dataShort.items[i-1].artist_string = songArtists;
 
     }
-    localStorage.setItem('topSongs', JSON.stringify(data.items));
-    localforage.setItem("topSongs", data.items);
-    console.log("top songs done");
+    //localStorage.setItem('topSongs', JSON.stringify(data.items));
+    localforage.setItem("topShortTermSongs", dataShort.items);
+    console.log("top songs short term done");
+
+    //medium term songs
+    let urlMedium = 'https://api.spotify.com/v1/me/top/tracks?limit='+ maxSongs + '&time_range=medium_term';
+
+    const responseMedium = await fetch(urlMedium, { headers });
+
+    const dataMedium = await responseMedium.json();
+
+
+    for(let i = 1; i < maxSongs + 1; i++){
+        let songArtists = "";
+        for(let j = 0; j < dataMedium.items[i-1].artists.length; j++){
+          if (j == 0) {
+            songArtists += dataMedium.items[i-1].artists[j].name;
+          }
+          else if (j == 1) {
+            songArtists += " ft. " + dataMedium.items[i-1].artists[j].name;
+          }
+          else {
+            songArtists += " & " + dataMedium.items[i-1].artists[j].name;
+          }
+        }
+
+        dataMedium.items[i-1].artist_string = songArtists;
+
+    }
+    //localStorage.setItem('topSongs', JSON.stringify(data.items));
+    localforage.setItem("topMediumTermSongs", dataMedium.items);
+    console.log("top songs Medium term done");
+
+    //long term top songs
+    let urlLong = 'https://api.spotify.com/v1/me/top/tracks?limit='+ maxSongs + '&time_range=long_term';
+
+    const responseLong = await fetch(urlLong, { headers });
+
+    const dataLong = await responseLong.json();
+
+
+    for(let i = 1; i < maxSongs + 1; i++){
+        let songArtists = "";
+        for(let j = 0; j < dataLong.items[i-1].artists.length; j++){
+          if (j == 0) {
+            songArtists += dataLong.items[i-1].artists[j].name;
+          }
+          else if (j == 1) {
+            songArtists += " ft. " + dataLong.items[i-1].artists[j].name;
+          }
+          else {
+            songArtists += " & " + dataLong.items[i-1].artists[j].name;
+          }
+        }
+
+        dataLong.items[i-1].artist_string = songArtists;
+
+    }
+    //localStorage.setItem('topSongs', JSON.stringify(data.items));
+    localforage.setItem("topLongTermSongs", dataLong.items);
+    console.log("top songs Long term done");
+    console.log("all top songs complete.")
 
   }
 
