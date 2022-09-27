@@ -37,54 +37,54 @@ export const renderPage = function() {
 
     <div class="hero-body">
 
-      <div id="main" class="container has-text-centered">
+      <div id="main" class="container has-text-centered" style="margin: 0; padding: 0; width: 100%">
         <p class="title is-1">Select Filters</p>
-        <div id="filterValues" class="columns is-multiline">
-            <div class="column is-one-quarter">
-              <div class="column is-half>
-                <p class="subtitle is-4" style="text-align: center">Danceability</p>
-                MIN: <input id="danceMin" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="0.00" type="number"><br>
+        <div id="filterValues" class="columns is-multiline" style="margin: 0; padding: 0">
+            <div class="column is-half" style="margin: 0; width: 50%">
+              <div class="column is-one-quarter" style="margin: 0; padding: 0; width: 25%">
+                <p class="subtitle is-5" style="text-align: center">Danceability</p>
+                MIN: <input id="danceMin" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="0.00" type="number">
                 MAX: <input id="danceMax" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="1.00" type="number">
               </div>
-              <div class="column is-half>
-                <p class="subtitle is-4" style="text-align: center">Loudness</p>
-                MIN <input id="loudMin" class="input is-rounded is-normal is-link" min="-60.00" max="60.00" value="-60.00" type="number"><br>
+              <div class="column is-one-quarter" style="margin: 0; padding: 0; width: 25%">
+                <p class="subtitle is-5" style="text-align: center">Loudness</p>
+                MIN <input id="loudMin" class="input is-rounded is-normal is-link" min="-60.00" max="60.00" value="-60.00" type="number">
                 MAX <input id="loudMax" class="input is-rounded is-normal is-link" min="-60.00" max="60.00" value="60.00" type="number">
               </div>
-            </div>
-            <div class="column is-one-quarter">
-              <div class="column is-half>
-                <p class="subtitle is-4" style="text-align: center">Tempo</p>
-                MIN: <input id="tempoMin" class="input is-rounded is-normal is-link" min="0" max="250" value="0" type="number"><br>
+
+
+              <div class="column is-one-quarter" style="margin: 0; padding: 0; width: 25%">
+                <p class="subtitle is-5" style="text-align: center">Tempo</p>
+                MIN: <input id="tempoMin" class="input is-rounded is-normal is-link" min="0" max="250" value="0" type="number">
                 MAX: <input id="tempoMax" class="input is-rounded is-normal is-link" min="0" max="250" value="250" type="number">
               </div>
-              <div class="column is-half>
-                <p class="subtitle is-4" style="text-align: center">Energy</p>
-                MIN <input id="energyMin" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="0" type="number"><br>
+              <div class="column is-one-quarter" style="margin: 0; padding: 0; width: 25%">
+                <p class="subtitle is-5" style="text-align: center">Energy</p>
+                MIN <input id="energyMin" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="0" type="number">
                 MAX <input id="energyMax" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="1.00" type="number">
               </div>
             </div>
-            <div class="column is-one-quarter">
-              <div class="column is-half>
-                <p class="subtitle is-4" style="text-align: center">Instrumentalness</p>
-                MIN: <input id="instruMin" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="0" type="number"><br>
+            <div class="column is-half" style="margin: 0; width: 50%">
+              <div class="column is-one-quarter" style="margin: 0; padding: 0; width: 25%">
+                <p class="subtitle is-5" style="text-align: center">Instrumentalness</p>
+                MIN: <input id="instruMin" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="0" type="number">
                 MAX: <input id="instruMax" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="1.00" type="number">
               </div>
-              <div class="column is-half>
-                <p class="subtitle is-4" style="text-align: center">Valence</p>
-                MIN: <input id="valenceMin" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="0" type="number"><br>
+              <div class="column is-one-quarter" style="margin: 0; padding: 0; width: 25%">
+                <p class="subtitle is-5" style="text-align: center">Valence</p>
+                MIN: <input id="valenceMin" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="0" type="number">
                 MAX: <input id="valenceMax" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="1.00" type="number">
               </div>
-            </div>
-            <div class="column is-one-quarter">
-              <div class="column is-half>
-                <p class="subtitle is-4" style="text-align: center">Acousticness</p>
-                MIN: <input id="acoustMin" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="0" type="number"><br>
+
+
+              <div class="column is-one-quarter" style="margin: 0; padding: 0; width: 25%">
+                <p class="subtitle is-5" style="text-align: center">Acousticness</p>
+                MIN: <input id="acoustMin" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="0" type="number">
                 MAX: <input id="acoustMax" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="1.00" type="number">
               </div>
-              <div class="column is-half>
-                <p class="subtitle is-4" style="text-align: center">Popularity</p>
-                MIN: <input id="popMin" class="input is-rounded is-normal is-link" min="0" max="100" value="0" type="number"><br>
+              <div class="column is-one-quarter" style="margin: 0; padding: 0; width: 25%">
+                <p class="subtitle is-5" style="text-align: center">Popularity</p>
+                MIN: <input id="popMin" class="input is-rounded is-normal is-link" min="0" max="100" value="0" type="number">
                 MAX: <input id="popMax" class="input is-rounded is-normal is-link" min="0" max="100" value="100" type="number">
               </div>
             </div>
@@ -102,7 +102,7 @@ export const renderPage = function() {
                 MAX Date: <input id="maxMonthSaved" class="input is-rounded is-normal is-link" min="1" max="12" value="12" type="number">
                 <input id="maxYearSaved" class="input is-rounded is-normal is-link" min="1900" max="2022" value="2022" type="number">
               </div>
-              <div class="column is-quarter">
+              <div class="column is-one-quarter">
                 MIN Date: <input id="minMonthCreated" class="input is-rounded is-normal is-link" min="1" max="12" value="1" type="number">
                 <input id="minYearCreated" class="input is-rounded is-normal is-link" min="1900" max="2022" value="1900" type="number">
               </div>
