@@ -235,18 +235,40 @@ export const renderPage = function() {
     let maxArtists = 50;
     let artistInfo = '';
 
-    const url = 'https://api.spotify.com/v1/me/top/artists?limit=' + maxArtists;
+    const urlShort = 'https://api.spotify.com/v1/me/top/artists?limit=' + maxArtists + '&time_range=short_term';
     const headers = {
       Authorization: 'Bearer ' + access_token
     }
 
-    const response = await fetch(url, { headers });
+    const responseShort = await fetch(urlShort, { headers });
 
-    const data = await response.json();
+    const dataShort = await responseShort.json();
 
-    localforage.setItem("topArtists", data.items);
-    localStorage.setItem('topArtists', JSON.stringify(data.items));
-    console.log("top artists done");
+    localforage.setItem("topShortTermArtists", dataShort.items);
+    //localStorage.setItem('topArtists', JSON.stringify(data.items));
+    console.log("top short term artists done");
+
+    //medium term artists
+    const urlMedium = 'https://api.spotify.com/v1/me/top/artists?limit=' + maxArtists + '&time_range=medium_term';
+
+    const responseMedium = await fetch(urlMedium, { headers });
+
+    const dataMedium = await responseMedium.json();
+
+    localforage.setItem("topMediumTermArtists", dataMedium.items);
+    //localStorage.setItem('topArtists', JSON.stringify(data.items));
+    console.log("top Medium term artists done");
+
+    //long term artists
+    const urlLong = 'https://api.spotify.com/v1/me/top/artists?limit=' + maxArtists + '&time_range=long_term';
+
+    const responseLong = await fetch(urlLong, { headers });
+
+    const dataLong = await responseLong.json();
+
+    localforage.setItem("topLongTermArtists", dataLong.items);
+    //localStorage.setItem('topArtists', JSON.stringify(data.items));
+    console.log("top Long term artists done");
     return;
   }
 

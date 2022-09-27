@@ -1,5 +1,6 @@
 let access_token = "";
 let refresh_token = "";
+let currentTerm = '';
 
 export const renderPage = function() {
     return `<section class="hero is-success is-fullheight">
@@ -33,8 +34,14 @@ export const renderPage = function() {
     <!-- Hero content: will be in the middle -->
     <div class="hero-body">
       <div id="main" class="container has-text-centered">
-        <p class="title is-1">
-        </p>
+        <p id="artistsHeader" class="title" style="text-align: center"> YOUR TOP SPOTIFY ARTISTS: </p>
+        <div class="tabs is-medium is-centered is-toggle is-toggle-rounded">
+          <ul>
+            <li id="shortTerm" class="is-active"><a>Last 4 weeks</a></li>
+            <li id="mediumTerm" ><a>Last 6 Months</a></li>
+            <li id="longTerm" ><a>All Time</a></li>
+          </ul>
+        </div>
       </div>
     </div>
 
@@ -58,7 +65,6 @@ export const renderPage = function() {
     let artistInfo = '';
     console.log(topArtists);
     if(offset == 0) {
-        artistInfo += '<p id="artistsHeader" class="title" style="text-align: center"> YOUR TOP SPOTIFY ARTISTS: </p>'
         artistInfo+='<div id="cardGroup" class="columns is-multiline" style="margin-left: 0.025%">';
     }
 
@@ -76,7 +82,7 @@ export const renderPage = function() {
 
         }
 
-        artistInfo+='<div id="card_' + (i) + '" class="column is-one-quarter" style="margin: 1%; width: 31%">';
+        artistInfo+='<div id="card_' + (i) + '" class="column is-one-fifth" style="width: 20%">';
         artistInfo+='<div class="card-content" style="text-align: center">';
         artistInfo+='<div class="card-image"  style="background: white">';
         artistInfo+='<figure class="image is-square"><img src="' + topArtists[i-1].images[0].url + '" alt="Placeholder image"></figure>';
@@ -120,7 +126,8 @@ export const renderPage = function() {
   $(function() {
     getToken();
     loadPage();
-    localforage.getItem('topArtists').then(function(topArtists) {
+    currentTerm = "shortTerm"
+    localforage.getItem('topShortTermArtists').then(function(topArtists) {
       getArtists(0, topArtists);
     });
 
@@ -138,10 +145,44 @@ export const renderPage = function() {
         document.getElementById("cardGroup").remove();
         document.getElementById("moreBtn").remove();
         document.getElementById("resetBtn").remove();
-        document.getElementById("artistsHeader").remove();
-        localforage.getItem('topArtists').then(function(topArtists) {
-          getArtists(0, topArtists);
-        });
+
+        if(currentTerm == 'shortTerm'){
+          localforage.getItem('topShortTermArtists').then(function(topArtists) {
+            getArtists(0, topArtists);
+          });
+        }
+        else if(currentTerm =='mediumTerm'){
+          localforage.getItem('topMediumTermArtists').then(function(topArtists) {
+            getArtists(0, topArtists);
+          });
+        }
+        else if(currentTerm =='longTerm'){
+          localforage.getItem('topLongTermArtists').then(function(topArtists) {
+            getArtists(0, topArtists);
+          });
+        }
         offset = 0;
     })
+
+    $(document).on("click", "#shortTerm", function(){
+      document.getElementById("mediumTerm").classList.remove('is-active');
+      document.getElementById("longTerm").classList.remove('is-active');
+      document.getElementById("shortTerm").classList.add('is-active');
+      currentTerm ="shortTerm";
+      $('#resetBtn').trigger('click');
+    });
+    $(document).on("click", "#mediumTerm", function(){
+      document.getElementById("shortTerm").classList.remove('is-active');
+      document.getElementById("longTerm").classList.remove('is-active');
+      document.getElementById("mediumTerm").classList.add('is-active');
+      currentTerm ="mediumTerm";
+      $('#resetBtn').trigger('click');
+    });
+    $(document).on("click", "#longTerm", function(){
+      document.getElementById("shortTerm").classList.remove('is-active');
+      document.getElementById("mediumTerm").classList.remove('is-active');
+      document.getElementById("longTerm").classList.add('is-active');
+      currentTerm ="longTerm";
+      $('#resetBtn').trigger('click');
+    });
   });
