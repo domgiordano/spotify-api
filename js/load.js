@@ -114,7 +114,6 @@ export const renderPage = function() {
 
       offset++;
     }while(true);
-
     //for every group of 50 IDs in array
     //limit of 50 a time in call
     // have to increment by 50
