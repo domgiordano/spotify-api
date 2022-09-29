@@ -135,6 +135,27 @@ export const renderPage = function() {
 
     <!-- Hero footer: will stick at the bottom -->
     <div id="footer" class="hero-foot has-background-black-bis">
+      <nav class="pagination is-centered is-rounded is-large" role="navigation" aria-label="pagination">
+        <a id="prevPage" class="pagination-previous is-disabled" title="This is the first page">Previous Page</a>
+        <a id="nextPage" class="pagination-next is-disabled">Next page</a>
+        <ul class="pagination-list">
+          <li>
+            <a id="page1" class="pagination-link is-disabled" aria-label="1">1</a>
+          </li>
+          <li>
+            <a id="page2" class="pagination-link is-disabled" aria-label="2">2</a>
+          </li>
+          <li>
+            <a id="page3" class="pagination-link is-disabled" aria-label="3">3</a>
+          </li>
+          <li>
+            <a id="page4" class="pagination-link is-disabled" aria-label="4">4</a>
+          </li>
+          <li>
+            <a id="page5" class="pagination-link is-disabled" aria-label="5">5</a>
+          </li>
+        </ul>
+      </nav>
     </div>
   </section>`
   };
@@ -150,7 +171,6 @@ export const renderPage = function() {
 
   async function getSongs(filterVals, offset, allSongs, topGenres, artistGenres) {
     console.log(Object.keys(allSongs).length)
-
     let genreFilter = [];
     console.log(allSongs)
     console.log(topGenres);
@@ -350,7 +370,7 @@ export const renderPage = function() {
 
             dateCreated += '/' + tempSongJson[songIds[i-1]].track.album.release_date.slice(0,4);
 
-            if(trackCount <= 100){
+            if(trackCount <= maxSongs){
               songInfo+='<tr><th>' + trackCount + '</th>';
               songInfo+='<td><img src="' + songImage + '" height="100" width="100"></td>';
               songInfo+='<td>' + songName + '</td>';
@@ -443,14 +463,27 @@ export const renderPage = function() {
        document.getElementById("genre" + i).disabled = false;
      }
 
+    //enable Pages
+    document.getElementById("nextPage").classList.remove('is-disabled');
+    document.getElementById("page1").classList.remove('is-disabled');
+    document.getElementById("page1").classList.add('is-current');
+
     songJson = tempSongJson;
     songAttrJson = tempSongAttrJson;
+
+    if(Object.keys(songJson).length > 50){document.getElementById("page2").classList.remove('is-disabled');}
+    if(Object.keys(songJson).length > 100){document.getElementById("page3").classList.remove('is-disabled');}
+    if(Object.keys(songJson).length > 150){document.getElementById("page4").classList.remove('is-disabled');}
+    if(Object.keys(songJson).length > 200){document.getElementById("page5").classList.remove('is-disabled');}
+
+
 
     return Promise.resolve([tempSongJson, tempSongAttrJson]);
   }
 
   async function sortPlaylist(songs, songAttrs, sortVal, isASC) {
-
+    let maxSongs = 50;
+    let offset = parseInt(document.getElementsByClassName('is-current')[0].getAttribute('aria-label')) - 1;
     sortVal = sortVal.toLowerCase();
     let tempVals = Object.values(songAttrs);
     let tempKeys = Object.keys(songAttrs);
@@ -503,7 +536,7 @@ export const renderPage = function() {
     //Reload data sorted
     $('#resetBtn').trigger('click');
     document.getElementById("downloadBtn").disabled = false;
-        document.getElementById("resetBtn").disabled = false;
+    document.getElementById("resetBtn").disabled = false;
     let playlistSongCount=1;
 
     //Construct Table Header
@@ -527,53 +560,60 @@ export const renderPage = function() {
     songInfo+='<tbody id="playlistTableBody">'
 
     //Construct Table Rows
+    let sortedPlaylist = {};
+    let sortedPlaylistAttr = {};
     for(var id in valueSorted){
-      let song = songs[id].track;
-      let songAttr = songAttrs[id];
-      let songName = song.name;
-      let songArtists = "";
-      for(let j = 0; j < song.artists.length; j++){
-        if (j == 0) {
-          songArtists += song.artists[j].name;
+      if(playlistSongCount <= maxSongs){
+        let song = songs[id].track;
+        let songAttr = songAttrs[id];
+        let songName = song.name;
+        let songArtists = "";
+        for(let j = 0; j < song.artists.length; j++){
+          if (j == 0) {
+            songArtists += song.artists[j].name;
+          }
+          else if (j == 1) {
+            songArtists += " ft. " + song.artists[j].name;
+          }
+          else {
+            songArtists += " & " + song.artists[j].name;
+          }
         }
-        else if (j == 1) {
-          songArtists += " ft. " + song.artists[j].name;
+
+        let songImage = song.album.images[0].url;
+
+        let month = songAttr.added_at.slice(5,7);
+        let year = songAttr.added_at.slice(0,4);
+        let day = songAttr.added_at.slice(8,10);
+        let dateCreated = song.album.release_date.slice(5,7);
+
+        if(song.album.release_date_precision == 'day') {
+          dateCreated += '/' + song.album.release_date.slice(8,10);
         }
-        else {
-          songArtists += " & " + song.artists[j].name;
-        }
+
+        dateCreated += '/' + song.album.release_date.slice(0,4);
+
+
+
+        songInfo+='<tr><th>' + playlistSongCount + '</th>';
+        songInfo+='<td><img src="' + songImage + '" height="100" width="100"></td>';
+        songInfo+='<td>' + songName + '</td>';
+        songInfo+='<td>' + songArtists + '</td>';
+        songInfo+='<td>' + songAttr.danceability + '</td>';
+        songInfo+='<td>' + songAttr.tempo + '</td>';
+        songInfo+='<td>' + songAttr.instrumentalness + '</td>';
+        songInfo+='<td>' + songAttr.acousticness + '</td>';
+        songInfo+='<td>' + songAttr.loudness + '</td>';
+        songInfo+='<td>' + songAttr.energy + '</td>';
+        songInfo+='<td>' + songAttr.valence + '</td>';
+        songInfo+='<td>' + song.popularity + '</td>';
+        songInfo+='<td>' + month + '/' + day + '/' + year + '</td>';
+        songInfo+='<td>' + dateCreated + '</td>';
+        songInfo+='</tr>';
+        //if(playlistSongCount >= maxSongs){break;};
       }
-
-      let songImage = song.album.images[0].url;
-
-      let month = songAttr.added_at.slice(5,7);
-      let year = songAttr.added_at.slice(0,4);
-      let day = songAttr.added_at.slice(8,10);
-      let dateCreated = song.album.release_date.slice(5,7);
-
-      if(song.album.release_date_precision == 'day') {
-        dateCreated += '/' + song.album.release_date.slice(8,10);
-      }
-
-      dateCreated += '/' + song.album.release_date.slice(0,4);
-
-
-
-      songInfo+='<tr><th>' + playlistSongCount + '</th>';
-      songInfo+='<td><img src="' + songImage + '" height="100" width="100"></td>';
-      songInfo+='<td>' + songName + '</td>';
-      songInfo+='<td>' + songArtists + '</td>';
-      songInfo+='<td>' + songAttr.danceability + '</td>';
-      songInfo+='<td>' + songAttr.tempo + '</td>';
-      songInfo+='<td>' + songAttr.instrumentalness + '</td>';
-      songInfo+='<td>' + songAttr.acousticness + '</td>';
-      songInfo+='<td>' + songAttr.loudness + '</td>';
-      songInfo+='<td>' + songAttr.energy + '</td>';
-      songInfo+='<td>' + songAttr.valence + '</td>';
-      songInfo+='<td>' + song.popularity + '</td>';
-      songInfo+='<td>' + month + '/' + day + '/' + year + '</td>';
-      songInfo+='<td>' + dateCreated + '</td>';
-      songInfo+='</tr>';
+      sortedPlaylist[id] = songJson[id];
+      sortedPlaylistAttr[id] = songAttrJson[id];
       playlistSongCount++;
     }
 
@@ -589,8 +629,8 @@ export const renderPage = function() {
     $('#main').append(songInfo);
     document.getElementById("playlistBtn").classList.remove('is-loading')
 
-    songJson = songs;
-    songAttrJson = songAttrs;
+    songJson = sortedPlaylist;
+    songAttrJson = sortedPlaylistAttr;
 
     return;
 
@@ -608,7 +648,7 @@ export const renderPage = function() {
 
     const settings = {
       method: 'POST',
-      body: JSON.stringify({name: playlistName, description: "Prolly the best playlist you got", public: true}),
+      body: JSON.stringify({name: playlistName, description: "Prolly the best playlist you got - made by dom", public: true}),
       headers: {
         Authorization: 'Bearer ' + access_token
       }
@@ -648,8 +688,107 @@ export const renderPage = function() {
 
     console.log(trackData)
 
-    alert("Playlist " + playlistName + " created and downloaded. Check spotify.")
+    alert("Playlist '" + playlistName + "' created and downloaded. Check spotify ya filthy animal")
 
+  }
+
+  async function pageController(offset, songs, songAttrs){
+    //Reload data sorted
+    $('#resetBtn').trigger('click');
+    document.getElementById("downloadBtn").disabled = false;
+    document.getElementById("resetBtn").disabled = false;
+    let playlistSongCount=1;
+    let maxSongs = 50;
+
+    //Construct Table Header
+    let songInfo = '';
+    songInfo+= '<table id="playlistTable" class="table is-hoverable">';
+    songInfo+= '<thead><tr><th><abbr title="Number">Num</abbr></th>';
+    songInfo+='<th class="has-text-centered"> Cover Art </th>'
+    songInfo+= '<th id= "pTableSong" class="has-text-centered">Song Title</th>';
+    songInfo+='<th id="pTableArtist" class="has-text-centered">Artist</th>';
+    songInfo+='<th id="pTableDance" class="has-text-centered"><abbr title="Danceability">DNC</abbr></th>';
+    songInfo+='<th id="pTableTempo" class="has-text-centered"><abbr title="Tempo">BPM</abbr></th>';
+    songInfo+='<th id="pTableInstru" class="has-text-centered"><abbr title="Instrumentalness">INSTRU</abbr></th>';
+    songInfo+='<th id="pTableAcoust" class="has-text-centered"><abbr title="Acousticness">ACOUST</abbr></th>';
+    songInfo+='<th id="pTableLoud" class="has-text-centered"><abbr title="Loudness">db</abbr></th>';
+    songInfo+='<th id="pTableEnergy" class="has-text-centered"><abbr title="Energy">ENG</abbr></th>';
+    songInfo+='<th id="pTableValence" class="has-text-centered"><abbr title="Valence">VAL</abbr></th>';
+    songInfo+='<th id="pTablePop" class="has-text-centered"><abbr title="Popularity">POP</abbr></th>';
+    songInfo+='<th id="pTableDate" class="has-text-centered">Date Added</th>';
+    songInfo+='<th id="pTableReleaseDate" class="has-text-centered">Date Released</th>';
+    songInfo+='</tr></thead>';
+    songInfo+='<tbody id="playlistTableBody">'
+
+
+
+    //Construct Table Rows
+    for(var id in songs){
+      if(playlistSongCount > maxSongs * offset){
+        let song = songs[id].track;
+        let songAttr = songAttrs[id];
+        let songName = song.name;
+        let songArtists = "";
+        for(let j = 0; j < song.artists.length; j++){
+          if (j == 0) {
+            songArtists += song.artists[j].name;
+          }
+          else if (j == 1) {
+            songArtists += " ft. " + song.artists[j].name;
+          }
+          else {
+            songArtists += " & " + song.artists[j].name;
+          }
+        }
+
+        let songImage = song.album.images[0].url;
+
+        let month = songAttr.added_at.slice(5,7);
+        let year = songAttr.added_at.slice(0,4);
+        let day = songAttr.added_at.slice(8,10);
+        let dateCreated = song.album.release_date.slice(5,7);
+
+        if(song.album.release_date_precision == 'day') {
+          dateCreated += '/' + song.album.release_date.slice(8,10);
+        }
+
+        dateCreated += '/' + song.album.release_date.slice(0,4);
+
+
+
+        songInfo+='<tr><th>' + playlistSongCount + '</th>';
+        songInfo+='<td><img src="' + songImage + '" height="100" width="100"></td>';
+        songInfo+='<td>' + songName + '</td>';
+        songInfo+='<td>' + songArtists + '</td>';
+        songInfo+='<td>' + songAttr.danceability + '</td>';
+        songInfo+='<td>' + songAttr.tempo + '</td>';
+        songInfo+='<td>' + songAttr.instrumentalness + '</td>';
+        songInfo+='<td>' + songAttr.acousticness + '</td>';
+        songInfo+='<td>' + songAttr.loudness + '</td>';
+        songInfo+='<td>' + songAttr.energy + '</td>';
+        songInfo+='<td>' + songAttr.valence + '</td>';
+        songInfo+='<td>' + song.popularity + '</td>';
+        songInfo+='<td>' + month + '/' + day + '/' + year + '</td>';
+        songInfo+='<td>' + dateCreated + '</td>';
+        songInfo+='</tr>';
+        if(playlistSongCount >= maxSongs *(offset + 1)){break;};
+      }
+      playlistSongCount++;
+    }
+
+    songInfo+='</tbody>';
+
+    let resetButton = document.getElementById("resetBtn");
+
+    let songNumberInfo ='<div id="pName" class="field"><label style="margin:1em" id="playlistLabel" class="label">Playlist Title:</label><div class="control"><input id="pNameInput" class="input" type="text" placeholder="myPlaylistByDom"></div></div>';
+    songNumberInfo +='<div id="pTotal"><br><p class="title is-3">Number of Songs Selected: ' + Object.keys(songs).length + '</p><br>';
+
+    songInfo+='</table>';
+    $('#main').append(songNumberInfo);
+    $('#main').append(songInfo);
+    document.getElementById("playlistBtn").classList.remove('is-loading')
+
+    return;
   }
 
   export const loadPage = function() {
@@ -877,6 +1016,83 @@ export const renderPage = function() {
       console.log(pTableAcoust)
       sortPlaylist(songJson, songAttrJson, "acousticness", pTableAcoust)
       pTableAcoust = !pTableAcoust;
+    });
+
+    $(document).on("click", "#page1", function(){
+      if(!document.getElementById('playlistTable')){return;}
+      document.getElementById("prevPage").classList.add('is-disabled');
+      document.getElementById("nextPage").classList.remove('is-disabled');
+      document.getElementById("page1").classList.add('is-current');
+      document.getElementById("page2").classList.remove('is-current');
+      document.getElementById("page3").classList.remove('is-current');
+      document.getElementById("page4").classList.remove('is-current');
+      document.getElementById("page5").classList.remove('is-current');
+
+      pageController(0, songJson, songAttrJson);
+
+    });
+
+    $(document).on("click", "#page2", function(){
+      if(!document.getElementById('playlistTable')){return;}
+      if(Object.keys(songJson).length <= 50){return;}
+      document.getElementById("prevPage").classList.remove('is-disabled');
+      document.getElementById("nextPage").classList.remove('is-disabled');
+      document.getElementById("page2").classList.add('is-current');
+      document.getElementById("page1").classList.remove('is-current');
+      document.getElementById("page3").classList.remove('is-current');
+      document.getElementById("page4").classList.remove('is-current');
+      document.getElementById("page5").classList.remove('is-current');
+      pageController(1, songJson, songAttrJson);
+
+    });
+    $(document).on("click", "#page3", function(){
+      if(!document.getElementById('playlistTable')){return;}
+      if(Object.keys(songJson).length <= 100){return;}
+      document.getElementById("prevPage").classList.remove('is-disabled');
+      document.getElementById("nextPage").classList.remove('is-disabled');
+      document.getElementById("page3").classList.add('is-current');
+      document.getElementById("page2").classList.remove('is-current');
+      document.getElementById("page1").classList.remove('is-current');
+      document.getElementById("page4").classList.remove('is-current');
+      document.getElementById("page5").classList.remove('is-current');
+      pageController(2, songJson, songAttrJson);
+
+    });
+    $(document).on("click", "#page4", function(){
+      if(!document.getElementById('playlistTable')){return;}
+      if(Object.keys(songJson).length <= 150){return;}
+      document.getElementById("prevPage").classList.remove('is-disabled');
+      document.getElementById("nextPage").classList.remove('is-disabled');
+      document.getElementById("page4").classList.add('is-current');
+      document.getElementById("page2").classList.remove('is-current');
+      document.getElementById("page3").classList.remove('is-current');
+      document.getElementById("page1").classList.remove('is-current');
+      document.getElementById("page5").classList.remove('is-current');
+      pageController(3, songJson, songAttrJson);
+
+    });
+    $(document).on("click", "#page5", function(){
+      if(!document.getElementById('playlistTable')){return;}
+      if(Object.keys(songJson).length <= 200){return;}
+      document.getElementById("prevPage").classList.remove('is-disabled');
+      document.getElementById("nextPage").classList.add('is-disabled');
+      document.getElementById("page5").classList.add('is-current');
+      document.getElementById("page2").classList.remove('is-current');
+      document.getElementById("page3").classList.remove('is-current');
+      document.getElementById("page4").classList.remove('is-current');
+      document.getElementById("page1").classList.remove('is-current');
+      pageController(4, songJson, songAttrJson);
+
+    });
+
+    $(document).on("click", "#prevPage", function(){
+      let currPage = parseInt(document.getElementsByClassName('is-current')[0].getAttribute('aria-label')) - 1;
+      $('#page' + currPage).trigger('click');
+    });
+
+    $(document).on("click", "#nextPage", function(){
+      let currPage = parseInt(document.getElementsByClassName('is-current')[0].getAttribute('aria-label')) + 1;
+      $('#page' + currPage).trigger('click');
     });
 
   };

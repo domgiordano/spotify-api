@@ -34,13 +34,32 @@ export const renderPage = function() {
     <!-- Hero content: will be in the middle -->
     <div class="hero-body">
       <div id="main" class="container has-text-centered">
-        <p class="title is-1">
-        </p>
       </div>
     </div>
 
     <!-- Hero footer: will stick at the bottom -->
     <div class="hero-foot has-background-black-bis">
+      <nav class="pagination is-centered is-rounded is-large" role="navigation" aria-label="pagination">
+        <a id="prevPage" class="pagination-previous is-disabled" title="This is the first page">Previous Page</a>
+        <a id="nextPage" class="pagination-next">Next page</a>
+        <ul class="pagination-list">
+          <li>
+            <a id="page1" class="pagination-link is-current" aria-label="1">1</a>
+          </li>
+          <li>
+            <a id="page2" class="pagination-link" aria-label="2">2</a>
+          </li>
+          <li>
+            <a id="page3" class="pagination-link" aria-label="3">3</a>
+          </li>
+          <li>
+            <a id="page4" class="pagination-link" aria-label="4">4</a>
+          </li>
+          <li>
+            <a id="page5" class="pagination-link" aria-label="5">5</a>
+          </li>
+        </ul>
+      </nav>
     </div>
   </section>`
   };
@@ -55,11 +74,16 @@ export const renderPage = function() {
     return;
   }
 
-  function getGenres(maxGenres, topGenres){
+  function getGenres(offset, topGenres){
     //Genre title - with span to make it dynamic
+    if(document.getElementById('genreTable')){
+      document.getElementById('genreTitle').remove();
+      document.getElementById('genreTable').remove();
+    }
 
+    let maxGenres = 25;
     console.log(topGenres);
-    let genreInfo = '<p class="title" style="text-align: center"> <span id="genreTitle"> Your Top Genres: </span></p>';
+    let genreInfo = '<p id="genreTitle" class="title" style="text-align: center"> <span id="genreTitle"> Your Top Genres: </span></p>';
     genreInfo+= '<table id="genreTable" class="table is-fullwidth is-hoverable">';
     genreInfo+= '<thead><tr><th class="has-text-left">Rank</th>';
     genreInfo+='<th class="has-text-centered"> Genre </th>'
@@ -71,12 +95,15 @@ export const renderPage = function() {
     let count = 1;
     //topGenres = JSON.parse(localStorage.getItem('topGenres'));
     for(var genre in topGenres){
-      genreInfo+='<tr><th>' + count + '</th>';
-      genreInfo+='<td>' + genre + '</td>';
-      genreInfo+='<td>' + topGenres[genre] + '</td>';
-      genreInfo+='</tr>';
+      if(count >= maxGenres * offset){
+        console.log('made it');
+        genreInfo+='<tr><th>' + count + '</th>';
+        genreInfo+='<td>' + genre + '</td>';
+        genreInfo+='<td>' + topGenres[genre] + '</td>';
+        genreInfo+='</tr>';
+        if(count >= maxGenres *(offset + 1)){break;};
+      }
       count++;
-      if(count > maxGenres){break;};
     }
 
     genreInfo+='</tbody>';
@@ -165,7 +192,84 @@ export const renderPage = function() {
     getToken();
     loadPage();
     localforage.getItem('topGenres').then(function(topGenres) {
-      getGenres(25, topGenres);
+      getGenres(0, topGenres);
+    });
+
+    $(document).on("click", "#page1", function(){
+      document.getElementById("prevPage").classList.add('is-disabled');
+      document.getElementById("nextPage").classList.remove('is-disabled');
+      document.getElementById("page1").classList.add('is-current');
+      document.getElementById("page2").classList.remove('is-current');
+      document.getElementById("page3").classList.remove('is-current');
+      document.getElementById("page4").classList.remove('is-current');
+      document.getElementById("page5").classList.remove('is-current');
+      localforage.getItem('topGenres').then(function(topGenres) {
+        getGenres(0, topGenres);
+      });
+
+    });
+
+    $(document).on("click", "#page2", function(){
+      document.getElementById("prevPage").classList.remove('is-disabled');
+      document.getElementById("nextPage").classList.remove('is-disabled');
+      document.getElementById("page2").classList.add('is-current');
+      document.getElementById("page1").classList.remove('is-current');
+      document.getElementById("page3").classList.remove('is-current');
+      document.getElementById("page4").classList.remove('is-current');
+      document.getElementById("page5").classList.remove('is-current');
+      localforage.getItem('topGenres').then(function(topGenres) {
+        getGenres(1, topGenres);
+      });
+
+    });
+    $(document).on("click", "#page3", function(){
+      document.getElementById("prevPage").classList.remove('is-disabled');
+      document.getElementById("nextPage").classList.remove('is-disabled');
+      document.getElementById("page3").classList.add('is-current');
+      document.getElementById("page2").classList.remove('is-current');
+      document.getElementById("page1").classList.remove('is-current');
+      document.getElementById("page4").classList.remove('is-current');
+      document.getElementById("page5").classList.remove('is-current');
+      localforage.getItem('topGenres').then(function(topGenres) {
+        getGenres(2, topGenres);
+      });
+
+    });
+    $(document).on("click", "#page4", function(){
+      document.getElementById("prevPage").classList.remove('is-disabled');
+      document.getElementById("nextPage").classList.remove('is-disabled');
+      document.getElementById("page4").classList.add('is-current');
+      document.getElementById("page2").classList.remove('is-current');
+      document.getElementById("page3").classList.remove('is-current');
+      document.getElementById("page1").classList.remove('is-current');
+      document.getElementById("page5").classList.remove('is-current');
+      localforage.getItem('topGenres').then(function(topGenres) {
+        getGenres(3, topGenres);
+      });
+
+    });
+    $(document).on("click", "#page5", function(){
+      document.getElementById("prevPage").classList.remove('is-disabled');
+      document.getElementById("nextPage").classList.add('is-disabled');
+      document.getElementById("page5").classList.add('is-current');
+      document.getElementById("page2").classList.remove('is-current');
+      document.getElementById("page3").classList.remove('is-current');
+      document.getElementById("page4").classList.remove('is-current');
+      document.getElementById("page1").classList.remove('is-current');
+      localforage.getItem('topGenres').then(function(topGenres) {
+        getGenres(4, topGenres);
+      });
+
+    });
+
+    $(document).on("click", "#prevPage", function(){
+      let currPage = parseInt(document.getElementsByClassName('is-current')[0].getAttribute('aria-label')) - 1;
+      $('#page' + currPage).trigger('click');
+    });
+
+    $(document).on("click", "#nextPage", function(){
+      let currPage = parseInt(document.getElementsByClassName('is-current')[0].getAttribute('aria-label')) + 1;
+      $('#page' + currPage).trigger('click');
     });
 
   });

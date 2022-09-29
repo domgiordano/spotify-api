@@ -146,7 +146,7 @@ export const renderPage = function() {
       document.getElementById("mediumTerm").classList.remove('is-active');
       document.getElementById("longTerm").classList.remove('is-active');
       document.getElementById("shortTerm").classList.add('is-active');
-      currentTerm ="shortTerm";
+      currentTerm ="topShortTermSongs";
       $('#page1').trigger('click');
     });
     $(document).on("click", "#mediumTerm", function(){
