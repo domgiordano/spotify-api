@@ -45,7 +45,28 @@ export const renderPage = function() {
     </div>
 
     <!-- Hero footer: will stick at the bottom -->
-    <div class="hero-foot has-background-black-bis">
+    <div class="hero-foot">
+      <nav class="pagination is-centered is-rounded is-large" role="navigation" aria-label="pagination">
+        <a id="prevPage" class="pagination-previous is-disabled" title="This is the first page">Previous Page</a>
+        <a id="nextPage" class="pagination-next">Next page</a>
+        <ul class="pagination-list">
+          <li>
+            <a id="page1" class="pagination-link is-current" aria-label="1">1</a>
+          </li>
+          <li>
+            <a id="page2" class="pagination-link" aria-label="2">2</a>
+          </li>
+          <li>
+            <a id="page3" class="pagination-link" aria-label="3">3</a>
+          </li>
+          <li>
+            <a id="page4" class="pagination-link" aria-label="4">4</a>
+          </li>
+          <li>
+            <a id="page5" class="pagination-link" aria-label="5">5</a>
+          </li>
+        </ul>
+      </nav>
     </div>
   </section>`
   };
@@ -60,10 +81,13 @@ export const renderPage = function() {
   }
 
   async function getSongs(offset, topSongs) {
-    let songInfo = '';
-    if(offset == 0) {
-      songInfo+='<div id="cardGroup" class="columns is-multiline" style="margin-left: 0.025%">';
+
+    if(document.getElementById('cardGroup')){
+      document.getElementById('cardGroup').remove();
     }
+    let songInfo = '';
+    songInfo+='<div id="cardGroup" class="columns is-multiline">';
+
     let maxSongs = 10;
     for(let i = 1 + (maxSongs * offset); i < (maxSongs * (offset + 1)) + 1; i++){
         let songName = topSongs[i-1].name;
@@ -92,27 +116,9 @@ export const renderPage = function() {
 
     }
 
+    songInfo+='</div>';
+    $('#main').append(songInfo);
 
-
-    let moreButton = document.getElementById("moreBtn");
-    let resetButton = document.getElementById("resetBtn");
-    let buttonInfo ='<div><button id="moreBtn" class="button is-link is-light is-large is-outlined is-rounded"> Gimme more my guy </button><button id="resetBtn" class="button is-warning is-light is-large is-outlined is-rounded"> Reset Page pls. </button></div>';
-    if (offset != 0){
-        //playlist.innerHTML = '';
-        moreButton.remove();
-        resetButton.remove();
-        $('#cardGroup').append(songInfo);
-    }
-    else{
-      songInfo+='</div>';
-      $('#main').append(songInfo);
-    }
-
-    $('#main').append(buttonInfo);
-
-    if(offset == 4){
-      $('#moreBtn').attr('disabled','disabled');
-    }
 
 
   }
@@ -130,64 +136,110 @@ export const renderPage = function() {
     getToken();
     loadPage();
     //getSongs(0);
-    currentTerm="shortTerm";
+    currentTerm="topShortTermSongs";
     localforage.getItem('topShortTermSongs').then(function(topSongs) {
       getSongs(0, topSongs);
     });
     let offset = 0;
-
-    $(document).on("click", "#moreBtn", function() {
-      localforage.getItem('topSongs').then(function(topSongs) {
-        getSongs(offset, topSongs);
-      });
-      offset+=1;
-      console.log("more click");
-    });
-
-    $(document).on("click", "#resetBtn", function(){
-      document.getElementById("cardGroup").remove();
-      document.getElementById("moreBtn").remove();
-      document.getElementById("resetBtn").remove();
-      //document.getElementById("songsHeader").remove();
-
-      if(currentTerm == 'shortTerm'){
-        localforage.getItem('topShortTermSongs').then(function(topSongs) {
-          getSongs(0, topSongs);
-        });
-      }
-      else if(currentTerm =='mediumTerm'){
-        localforage.getItem('topMediumTermSongs').then(function(topSongs) {
-          getSongs(0, topSongs);
-        });
-      }
-      else if(currentTerm =='longTerm'){
-        localforage.getItem('topLongTermSongs').then(function(topSongs) {
-          getSongs(0, topSongs);
-        });
-      }
-
-      offset = 0;
-    })
 
     $(document).on("click", "#shortTerm", function(){
       document.getElementById("mediumTerm").classList.remove('is-active');
       document.getElementById("longTerm").classList.remove('is-active');
       document.getElementById("shortTerm").classList.add('is-active');
       currentTerm ="shortTerm";
-      $('#resetBtn').trigger('click');
+      $('#page1').trigger('click');
     });
     $(document).on("click", "#mediumTerm", function(){
       document.getElementById("shortTerm").classList.remove('is-active');
       document.getElementById("longTerm").classList.remove('is-active');
       document.getElementById("mediumTerm").classList.add('is-active');
-      currentTerm ="mediumTerm";
-      $('#resetBtn').trigger('click');
+      currentTerm ="topMediumTermSongs";
+      $('#page1').trigger('click');
     });
     $(document).on("click", "#longTerm", function(){
       document.getElementById("shortTerm").classList.remove('is-active');
       document.getElementById("mediumTerm").classList.remove('is-active');
       document.getElementById("longTerm").classList.add('is-active');
-      currentTerm ="longTerm";
-      $('#resetBtn').trigger('click');
+      currentTerm ="topLongTermSongs";
+      $('#page1').trigger('click');
     });
+
+    $(document).on("click", "#page1", function(){
+      document.getElementById("prevPage").classList.add('is-disabled');
+      document.getElementById("nextPage").classList.remove('is-disabled');
+      document.getElementById("page1").classList.add('is-current');
+      document.getElementById("page2").classList.remove('is-current');
+      document.getElementById("page3").classList.remove('is-current');
+      document.getElementById("page4").classList.remove('is-current');
+      document.getElementById("page5").classList.remove('is-current');
+      localforage.getItem(currentTerm).then(function(topSongs) {
+        getSongs(0, topSongs);
+      });
+
+    });
+
+    $(document).on("click", "#page2", function(){
+      document.getElementById("prevPage").classList.remove('is-disabled');
+      document.getElementById("nextPage").classList.remove('is-disabled');
+      document.getElementById("page2").classList.add('is-current');
+      document.getElementById("page1").classList.remove('is-current');
+      document.getElementById("page3").classList.remove('is-current');
+      document.getElementById("page4").classList.remove('is-current');
+      document.getElementById("page5").classList.remove('is-current');
+      localforage.getItem(currentTerm).then(function(topSongs) {
+        getSongs(1, topSongs);
+      });
+
+    });
+    $(document).on("click", "#page3", function(){
+      document.getElementById("prevPage").classList.remove('is-disabled');
+      document.getElementById("nextPage").classList.remove('is-disabled');
+      document.getElementById("page3").classList.add('is-current');
+      document.getElementById("page2").classList.remove('is-current');
+      document.getElementById("page1").classList.remove('is-current');
+      document.getElementById("page4").classList.remove('is-current');
+      document.getElementById("page5").classList.remove('is-current');
+      localforage.getItem(currentTerm).then(function(topSongs) {
+        getSongs(2, topSongs);
+      });
+
+    });
+    $(document).on("click", "#page4", function(){
+      document.getElementById("prevPage").classList.remove('is-disabled');
+      document.getElementById("nextPage").classList.remove('is-disabled');
+      document.getElementById("page4").classList.add('is-current');
+      document.getElementById("page2").classList.remove('is-current');
+      document.getElementById("page3").classList.remove('is-current');
+      document.getElementById("page1").classList.remove('is-current');
+      document.getElementById("page5").classList.remove('is-current');
+      localforage.getItem(currentTerm).then(function(topSongs) {
+        getSongs(3, topSongs);
+      });
+
+    });
+    $(document).on("click", "#page5", function(){
+      document.getElementById("prevPage").classList.remove('is-disabled');
+      document.getElementById("nextPage").classList.add('is-disabled');
+      document.getElementById("page5").classList.add('is-current');
+      document.getElementById("page2").classList.remove('is-current');
+      document.getElementById("page3").classList.remove('is-current');
+      document.getElementById("page4").classList.remove('is-current');
+      document.getElementById("page1").classList.remove('is-current');
+      localforage.getItem(currentTerm).then(function(topSongs) {
+        getSongs(4, topSongs);
+      });
+
+    });
+
+    $(document).on("click", "#prevPage", function(){
+      let currPage = parseInt(document.getElementsByClassName('is-current')[0].getAttribute('aria-label')) - 1;
+      $('#page' + currPage).trigger('click');
+    });
+
+    $(document).on("click", "#nextPage", function(){
+      let currPage = parseInt(document.getElementsByClassName('is-current')[0].getAttribute('aria-label')) + 1;
+      $('#page' + currPage).trigger('click');
+    });
+
+
   });

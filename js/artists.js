@@ -47,6 +47,27 @@ export const renderPage = function() {
 
     <!-- Hero footer: will stick at the bottom -->
     <div class="hero-foot has-background-black-bis">
+      <nav class="pagination is-centered is-rounded is-large" role="navigation" aria-label="pagination">
+        <a id="prevPage" class="pagination-previous is-disabled" title="This is the first page">Previous Page</a>
+        <a id="nextPage" class="pagination-next">Next page</a>
+        <ul class="pagination-list">
+          <li>
+            <a id="page1" class="pagination-link is-current" aria-label="1" pagination-active-color="success">1</a>
+          </li>
+          <li>
+            <a id="page2" class="pagination-link" aria-label="2">2</a>
+          </li>
+          <li>
+            <a id="page3" class="pagination-link" aria-label="3">3</a>
+          </li>
+          <li>
+            <a id="page4" class="pagination-link" aria-label="4">4</a>
+          </li>
+          <li>
+            <a id="page5" class="pagination-link" aria-label="5">5</a>
+          </li>
+        </ul>
+      </nav>
     </div>
   </section>`
   };
@@ -63,12 +84,12 @@ export const renderPage = function() {
   async function getArtists(offset, topArtists) {
     let maxArtists = 10;
     let artistInfo = '';
-    console.log(topArtists);
-    if(offset == 0) {
-        artistInfo+='<div id="cardGroup" class="columns is-multiline" style="margin-left: 0.025%">';
+    if(document.getElementById('cardGroup')){
+      document.getElementById('cardGroup').remove();
     }
 
-    console.log(offset)
+    artistInfo+='<div id="cardGroup" class="columns is-multiline">';
+
     for(let i = 1 + (maxArtists * offset); i < (maxArtists * (offset + 1)) + 1; i++){
 
         let artistGenres = "";
@@ -94,25 +115,8 @@ export const renderPage = function() {
         artistInfo+='</div></div></div></div>';
     }
 
-    let moreButton = document.getElementById("moreBtn");
-    let resetButton = document.getElementById("resetBtn");
-    let buttonInfo ='<div><button id="moreBtn" class="button is-link is-light is-large is-outlined is-rounded"> Gimme more my guy </button><button id="resetBtn" class="button is-warning is-light is-large is-outlined is-rounded"> Reset Page pls. </button></div>';
-    if (offset != 0){
-        //playlist.innerHTML = '';
-        moreButton.remove();
-        resetButton.remove();
-        $('#cardGroup').append(artistInfo);
-    }
-    else{
-      artistInfo+='</div>';
-      $('#main').append(artistInfo);
-    }
-
-    $('#main').append(buttonInfo);
-
-    if(offset == 4){
-      $('#moreBtn').attr('disabled','disabled');
-    }
+    artistInfo+='</div>';
+    $('#main').append(artistInfo);
   }
 
   export const loadPage = function() {
@@ -126,63 +130,109 @@ export const renderPage = function() {
   $(function() {
     getToken();
     loadPage();
-    currentTerm = "shortTerm"
-    localforage.getItem('topShortTermArtists').then(function(topArtists) {
+    currentTerm = "topShortTermArtists"
+    localforage.getItem(currentTerm).then(function(topArtists) {
       getArtists(0, topArtists);
     });
 
     let offset = 0;
 
-    $(document).on("click", "#moreBtn", function() {
-      localforage.getItem('topArtists').then(function(topArtists) {
-        getArtists(offset, topArtists);
-      });
-      offset+=1;
-      console.log("more click");
-    });
-
-    $(document).on("click", "#resetBtn", function(){
-        document.getElementById("cardGroup").remove();
-        document.getElementById("moreBtn").remove();
-        document.getElementById("resetBtn").remove();
-
-        if(currentTerm == 'shortTerm'){
-          localforage.getItem('topShortTermArtists').then(function(topArtists) {
-            getArtists(0, topArtists);
-          });
-        }
-        else if(currentTerm =='mediumTerm'){
-          localforage.getItem('topMediumTermArtists').then(function(topArtists) {
-            getArtists(0, topArtists);
-          });
-        }
-        else if(currentTerm =='longTerm'){
-          localforage.getItem('topLongTermArtists').then(function(topArtists) {
-            getArtists(0, topArtists);
-          });
-        }
-        offset = 0;
-    })
-
     $(document).on("click", "#shortTerm", function(){
       document.getElementById("mediumTerm").classList.remove('is-active');
       document.getElementById("longTerm").classList.remove('is-active');
       document.getElementById("shortTerm").classList.add('is-active');
-      currentTerm ="shortTerm";
-      $('#resetBtn').trigger('click');
+      currentTerm ="topShortTermArtists";
+      $('#page1').trigger('click');
     });
     $(document).on("click", "#mediumTerm", function(){
       document.getElementById("shortTerm").classList.remove('is-active');
       document.getElementById("longTerm").classList.remove('is-active');
       document.getElementById("mediumTerm").classList.add('is-active');
-      currentTerm ="mediumTerm";
-      $('#resetBtn').trigger('click');
+      currentTerm ="topMediumTermArtists";
+      $('#page1').trigger('click');
     });
     $(document).on("click", "#longTerm", function(){
       document.getElementById("shortTerm").classList.remove('is-active');
       document.getElementById("mediumTerm").classList.remove('is-active');
       document.getElementById("longTerm").classList.add('is-active');
-      currentTerm ="longTerm";
-      $('#resetBtn').trigger('click');
+      currentTerm ="topLongTermArtists";
+      $('#page1').trigger('click');
+    });
+
+    $(document).on("click", "#page1", function(){
+      document.getElementById("prevPage").classList.add('is-disabled');
+      document.getElementById("nextPage").classList.remove('is-disabled');
+      document.getElementById("page1").classList.add('is-current');
+      document.getElementById("page2").classList.remove('is-current');
+      document.getElementById("page3").classList.remove('is-current');
+      document.getElementById("page4").classList.remove('is-current');
+      document.getElementById("page5").classList.remove('is-current');
+      localforage.getItem(currentTerm).then(function(topArtists) {
+        getArtists(0, topArtists);
+      });
+
+    });
+
+    $(document).on("click", "#page2", function(){
+      document.getElementById("prevPage").classList.remove('is-disabled');
+      document.getElementById("nextPage").classList.remove('is-disabled');
+      document.getElementById("page2").classList.add('is-current');
+      document.getElementById("page1").classList.remove('is-current');
+      document.getElementById("page3").classList.remove('is-current');
+      document.getElementById("page4").classList.remove('is-current');
+      document.getElementById("page5").classList.remove('is-current');
+      localforage.getItem(currentTerm).then(function(topArtists) {
+        getArtists(1, topArtists);
+      });
+
+    });
+    $(document).on("click", "#page3", function(){
+      document.getElementById("prevPage").classList.remove('is-disabled');
+      document.getElementById("nextPage").classList.remove('is-disabled');
+      document.getElementById("page3").classList.add('is-current');
+      document.getElementById("page2").classList.remove('is-current');
+      document.getElementById("page1").classList.remove('is-current');
+      document.getElementById("page4").classList.remove('is-current');
+      document.getElementById("page5").classList.remove('is-current');
+      localforage.getItem(currentTerm).then(function(topArtists) {
+        getArtists(2, topArtists);
+      });
+
+    });
+    $(document).on("click", "#page4", function(){
+      document.getElementById("prevPage").classList.remove('is-disabled');
+      document.getElementById("nextPage").classList.remove('is-disabled');
+      document.getElementById("page4").classList.add('is-current');
+      document.getElementById("page2").classList.remove('is-current');
+      document.getElementById("page3").classList.remove('is-current');
+      document.getElementById("page1").classList.remove('is-current');
+      document.getElementById("page5").classList.remove('is-current');
+      localforage.getItem(currentTerm).then(function(topArtists) {
+        getArtists(3, topArtists);
+      });
+
+    });
+    $(document).on("click", "#page5", function(){
+      document.getElementById("prevPage").classList.remove('is-disabled');
+      document.getElementById("nextPage").classList.add('is-disabled');
+      document.getElementById("page5").classList.add('is-current');
+      document.getElementById("page2").classList.remove('is-current');
+      document.getElementById("page3").classList.remove('is-current');
+      document.getElementById("page4").classList.remove('is-current');
+      document.getElementById("page1").classList.remove('is-current');
+      localforage.getItem(currentTerm).then(function(topArtists) {
+        getArtists(4, topArtists);
+      });
+
+    });
+
+    $(document).on("click", "#prevPage", function(){
+      let currPage = parseInt(document.getElementsByClassName('is-current')[0].getAttribute('aria-label')) - 1;
+      $('#page' + currPage).trigger('click');
+    });
+
+    $(document).on("click", "#nextPage", function(){
+      let currPage = parseInt(document.getElementsByClassName('is-current')[0].getAttribute('aria-label')) + 1;
+      $('#page' + currPage).trigger('click');
     });
   });

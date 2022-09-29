@@ -35,7 +35,7 @@ export const renderPage = function() {
 
     <div class="hero-body">
 
-      <div id="main" class="container has-text-centered" style="margin: 0; padding: 0; width: 100%">
+      <div id="main" class="container has-text-centered" >
         <p class="title is-1">Select Filters</p>
         <div id="filterValues" class="columns is-multiline" style="margin: 0; padding: 0">
           <div id="card_1" class="column is-one-quarter" style="width: 12.5%">
