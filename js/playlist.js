@@ -41,57 +41,57 @@ export const renderPage = function() {
           <div id="card_1" class="column is-one-quarter" style="width: 12.5%">
             <div class="card-content" style="text-align: center">
               <p class="subtitle is-5" style="text-align: center"><span class="hovertext" data-hover="DANCEABILITY">DNC</span></p>
-              MIN: <input id="danceMin" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="0.00" type="number">
-              MAX: <input id="danceMax" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="1.00" type="number">
+              MIN: <input id="danceMin" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="0.00" type="number">
+              MAX: <input id="danceMax" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="1.00" type="number">
             </div>
           </div>
           <div id="card_2" class="column" style="width: 12.5%">
             <div class="card-content" style="text-align: center">
               <p class="subtitle is-5" style="text-align: center"><span class="hovertext" data-hover="LOUDNESS">dB</span></p>
-              MIN <input id="loudMin" class="input is-rounded is-normal is-link" min="-60" max="60" value="-60" type="number">
-              MAX <input id="loudMax" class="input is-rounded is-normal is-link" min="-60" max="60" value="60" type="number">
+              MIN <input id="loudMin" class="input is-rounded is-normal is-link" step="1" min="-60" max="60" value="-60" type="number">
+              MAX <input id="loudMax" class="input is-rounded is-normal is-link" step="1" min="-60" max="60" value="60" type="number">
             </div>
           </div>
           <div id="card_3" class="column is-one-quarter" style="width: 12.5%">
             <div class="card-content" style="text-align: center">
               <p class="subtitle is-5" style="text-align: center"><span class="hovertext" data-hover="TEMPO">BPM</span></p>
-              MIN: <input id="tempoMin" class="input is-rounded is-normal is-link" min="0" max="250" value="0" type="number">
-              MAX: <input id="tempoMax" class="input is-rounded is-normal is-link" min="0" max="250" value="250" type="number">
+              MIN: <input id="tempoMin" class="input is-rounded is-normal is-link" step="1" min="0" max="250" value="0" type="number">
+              MAX: <input id="tempoMax" class="input is-rounded is-normal is-link" step="1" min="0" max="250" value="250" type="number">
             </div>
           </div>
           <div id="card_4" class="column is-one-quarter" style="width: 12.5%">
             <div class="card-content" style="text-align: center">
               <p class="subtitle is-5" style="text-align: center"><span class="hovertext" data-hover="ENERGY">ENRG</span></p>
-              MIN <input id="energyMin" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="0" type="number">
-              MAX <input id="energyMax" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="1.00" type="number">
+              MIN <input id="energyMin" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="0" type="number">
+              MAX <input id="energyMax" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="1.00" type="number">
             </div>
           </div>
           <div id="card_5" class="column is-one-quarter" style="width: 12.5%">
             <div class="card-content" style="text-align: center">
               <p class="subtitle is-5" style="text-align: center"><span class="hovertext" data-hover="INSTRUMENTALNESS">INSTRU</span></p>
-              MIN: <input id="instruMin" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="0" type="number">
-              MAX: <input id="instruMax" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="1.00" type="number">
+              MIN: <input id="instruMin" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="0" type="number">
+              MAX: <input id="instruMax" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="1.00" type="number">
             </div>
           </div>
           <div id="card_6" class="column is-one-quarter" style="width: 12.5%">
             <div class="card-content" style="text-align: center">
               <p class="subtitle is-5" style="text-align: center"><span class="hovertext" data-hover="VALENCE">VAL</span></p>
-              MIN: <input id="valenceMin" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="0" type="number">
-              MAX: <input id="valenceMax" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="1.00" type="number">
+              MIN: <input id="valenceMin" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="0" type="number">
+              MAX: <input id="valenceMax" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="1.00" type="number">
             </div>
           </div>
           <div id="card_7" class="column is-one-quarter" style="width: 12.5%">
             <div class="card-content" style="text-align: center">
               <p class="subtitle is-5" style="text-align: center"><span class="hovertext" data-hover="ACOUSTICNESS">ACST</span></p>
-              MIN: <input id="acoustMin" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="0" type="number">
-              MAX: <input id="acoustMax" class="input is-rounded is-normal is-link" min="0.00" max="1.00" value="1.00" type="number">
+              MIN: <input id="acoustMin" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="0" type="number">
+              MAX: <input id="acoustMax" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="1.00" type="number">
             </div>
           </div>
           <div id="card_8" class="column is-one-quarter" style="width: 12.5%">
             <div class="card-content" style="text-align: center">
               <p class="subtitle is-5" style="text-align: center"><span class="hovertext" data-hover="POPULARITY">POP</span></p>
-              MIN: <input id="popMin" class="input is-rounded is-normal is-link" min="0" max="100" value="0" type="number">
-              MAX: <input id="popMax" class="input is-rounded is-normal is-link" min="0" max="100" value="100" type="number">
+              MIN: <input id="popMin" class="input is-rounded is-normal is-link" step="1" min="0" max="100" value="0" type="number">
+              MAX: <input id="popMax" class="input is-rounded is-normal is-link" step="1" min="0" max="100" value="100" type="number">
             </div>
           </div>
           <div class="column is-half">
@@ -192,61 +192,83 @@ export const renderPage = function() {
     if(filterVals['energyMin'] >= filterVals['energyMax']){
         alert("Invalid Energy Values. Try again.")
         document.getElementById("playlistBtn").classList.remove('is-loading')
+        document.getElementById("resetBtn").disabled = false;
+        $('#resetBtn').trigger('click');
         return;
     }
     if(filterVals['danceMin'] >= filterVals['danceMax']){
         alert("Invalid Dancability Values. Try again.")
         document.getElementById("playlistBtn").classList.remove('is-loading')
+        document.getElementById("resetBtn").disabled = false;
+        $('#resetBtn').trigger('click');
         return;
     }
     if(filterVals['tempoMin'] >= filterVals['tempoMax']){
         alert("Invalid Tempo Values. Try again.")
         document.getElementById("playlistBtn").classList.remove('is-loading')
+        document.getElementById("resetBtn").disabled = false;
+        $('#resetBtn').trigger('click');
         return;
     }
     if(filterVals['loudMin'] >= filterVals['loudMax']){
         alert("Invalid Loudness Values. Try again.")
         document.getElementById("playlistBtn").classList.remove('is-loading')
+        document.getElementById("resetBtn").disabled = false;
+        $('#resetBtn').trigger('click');
         return;
     }
     if(filterVals['instruMin'] >= filterVals['instruMax']){
         alert("Invalid Instrumentalness Values. Try again.")
         document.getElementById("playlistBtn").classList.remove('is-loading')
+        document.getElementById("resetBtn").disabled = false;
+        $('#resetBtn').trigger('click');
         return;
     }
     if(filterVals['valenceMin'] >= filterVals['valenceMax']){
         alert("Invalid Valence Values. Try again.")
         document.getElementById("playlistBtn").classList.remove('is-loading')
+        document.getElementById("resetBtn").disabled = false;
+        $('#resetBtn').trigger('click');
         return;
     }
 
     if(filterVals['acoustMin'] >= filterVals['acoustMax']){
       alert("Invalid Acousticness Values. Try again.")
       document.getElementById("playlistBtn").classList.remove('is-loading')
+      document.getElementById("resetBtn").disabled = false;
+      $('#resetBtn').trigger('click');
       return;
     }
 
     if(filterVals['popMin'] >= filterVals['popMax']){
       alert("Invalid Popularity Values. Try again.")
       document.getElementById("playlistBtn").classList.remove('is-loading')
+      document.getElementById("resetBtn").disabled = false;
+      $('#resetBtn' + currPage).trigger('click');
       return;
     }
 
     if(filterVals['minYearSaved'] > filterVals ['maxYearSaved']){
       alert("Invalid Date Range, doofus")
       document.getElementById("playlistBtn").classList.remove('is-loading')
+      document.getElementById("resetBtn").disabled = false;
+      $('#resetBtn' + currPage).trigger('click');
       return;
     }
 
     if(filterVals['minYearSaved'] == filterVals['maxYearSaved'] && filterVals['minMonthSaved'] > filterVals['maxMonthSaved']){
       alert("Invalid Date Range, nerd")
       document.getElementById("playlistBtn").classList.remove('is-loading')
+      document.getElementById("resetBtn").disabled = false;
+      $('#resetBtn' + currPage).trigger('click');
       return;
     }
 
     if(filterVals['minYearCreated'] == filterVals['maxYearCreated'] && filterVals['minMonthCreated'] > filterVals['maxMonthCreated']){
       alert("Invalid Date Range, dweeb")
       document.getElementById("playlistBtn").classList.remove('is-loading')
+      document.getElementById("resetBtn").disabled = false;
+      $('#resetBtn' + currPage).trigger('click');
       return;
     }
 
@@ -837,22 +859,22 @@ export const renderPage = function() {
 
             }
             var filterVals = {
-                danceMin: document.getElementById('danceMin').value,
-                danceMax: document.getElementById('danceMax').value,
-                tempoMin: document.getElementById('tempoMin').value,
-                tempoMax: document.getElementById('tempoMax').value,
-                loudMin: document.getElementById('loudMin').value,
-                loudMax: document.getElementById('loudMax').value,
-                energyMin: document.getElementById('energyMin').value,
-                energyMax: document.getElementById('energyMax').value,
-                instruMin: document.getElementById('instruMin').value,
-                instruMax: document.getElementById('instruMax').value,
-                valenceMin: document.getElementById('valenceMin').value,
-                valenceMax: document.getElementById('valenceMax').value,
-                popMin: document.getElementById('popMin').value,
-                popMax: document.getElementById('popMax').value,
-                acoustMin: document.getElementById('acoustMin').value,
-                acoustMax: document.getElementById('acoustMax').value,
+                danceMin: parseFloat(document.getElementById('danceMin').value),
+                danceMax: parseFloat(document.getElementById('danceMax').value),
+                tempoMin: parseFloat(document.getElementById('tempoMin').value),
+                tempoMax: parseFloat(document.getElementById('tempoMax').value),
+                loudMin: parseFloat(document.getElementById('loudMin').value),
+                loudMax: parseFloat(document.getElementById('loudMax').value),
+                energyMin: parseFloat(document.getElementById('energyMin').value),
+                energyMax: parseFloat(document.getElementById('energyMax').value),
+                instruMin: parseFloat(document.getElementById('instruMin').value),
+                instruMax: parseFloat(document.getElementById('instruMax').value),
+                valenceMin: parseFloat(document.getElementById('valenceMin').value),
+                valenceMax: parseFloat(document.getElementById('valenceMax').value),
+                popMin: parseFloat(document.getElementById('popMin').value),
+                popMax: parseFloat(document.getElementById('popMax').value),
+                acoustMin: parseFloat(document.getElementById('acoustMin').value),
+                acoustMax: parseFloat(document.getElementById('acoustMax').value),
                 minMonthSaved: document.getElementById('minMonthSaved').value,
                 minYearSaved: document.getElementById('minYearSaved').value,
                 maxMonthSaved: document.getElementById('maxMonthSaved').value,
@@ -914,11 +936,41 @@ export const renderPage = function() {
 
 
     $(document).on("click", "#resetBtn", function(){
-        document.getElementById("playlistTable").remove();
-        document.getElementById("pTotal").remove();
-        document.getElementById("pName").remove();
+        console.log('click')
+        if(document.getElementById('playlistTable') != null){document.getElementById("playlistTable").remove();}
+        if(document.getElementById('pTotal') != null){document.getElementById("pTotal").remove();}
+        if(document.getElementById('pName') != null){document.getElementById("pName").remove();}
         document.getElementById("downloadBtn").disabled = true;
         document.getElementById("resetBtn").disabled = true;
+
+        //enable all filter value fields
+        document.getElementById("danceMin").disabled = false;
+        document.getElementById("danceMax").disabled = false;
+        document.getElementById("tempoMin").disabled = false;
+        document.getElementById("tempoMax").disabled = false;
+        document.getElementById("loudMin").disabled = false;
+        document.getElementById("loudMax").disabled = false;
+        document.getElementById("energyMin").disabled = false;
+        document.getElementById("energyMax").disabled = false;
+        document.getElementById("instruMin").disabled = false;
+        document.getElementById("instruMax").disabled = false;
+        document.getElementById("valenceMin").disabled = false;
+        document.getElementById("valenceMax").disabled = false;
+        document.getElementById("popMin").disabled = false;
+        document.getElementById("popMax").disabled = false;
+        document.getElementById("acoustMin").disabled = false;
+        document.getElementById("acoustMax").disabled = false;
+        document.getElementById("minMonthSaved").disabled = false;
+        document.getElementById("minYearSaved").disabled = false;
+        document.getElementById("maxMonthSaved").disabled = false;
+        document.getElementById("maxYearSaved").disabled = false;
+        document.getElementById("minMonthCreated").disabled = false;
+        document.getElementById("minYearCreated").disabled = false;
+        document.getElementById("maxMonthCreated").disabled = false;
+        document.getElementById("maxYearCreated").disabled = false;
+        for(let i = 1; i < maxGenres + 1; i++){
+          document.getElementById("genre" + i).disabled = false;
+        }
 
     })
 
