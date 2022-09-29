@@ -102,19 +102,19 @@ export const renderPage = function() {
           </div>
           <div class="column is-one-quarter">
             MIN Date: <input id="minMonthSaved" class="input is-rounded is-normal is-link" min="1" max="12" value="1" type="number">
-            <input id="minYearSaved" class="input is-rounded is-normal is-link" min="1900" max="2022" value="1900" type="number">
+            <input id="minYearSaved" class="input is-rounded is-normal is-link" min="1900" max="${getYear()}" value="1900" type="number">
           </div>
           <div class="column is-one-quarter">
-            MAX Date: <input id="maxMonthSaved" class="input is-rounded is-normal is-link" min="1" max="12" value="12" type="number">
-            <input id="maxYearSaved" class="input is-rounded is-normal is-link" min="1900" max="2022" value="2022" type="number">
+            MAX Date: <input id="maxMonthSaved" class="input is-rounded is-normal is-link" min="1" max="12" value="${getMonth()}" type="number">
+            <input id="maxYearSaved" class="input is-rounded is-normal is-link" min="1900" max="${getYear()}" value="${getYear()}" type="number">
           </div>
           <div class="column is-one-quarter">
             MIN Date: <input id="minMonthCreated" class="input is-rounded is-normal is-link" min="1" max="12" value="1" type="number">
-            <input id="minYearCreated" class="input is-rounded is-normal is-link" min="1900" max="2022" value="1900" type="number">
+            <input id="minYearCreated" class="input is-rounded is-normal is-link" min="1900" max="${getYear()}" value="1900" type="number">
           </div>
           <div class="column is-one-quarter">
-            MAX Date: <input id="maxMonthCreated" class="input is-rounded is-normal is-link" min="1" max="12" value="12" type="number">
-            <input id="maxYearCreated" class="input is-rounded is-normal is-link" min="1900" max="2022" value="2022" type="number">
+            MAX Date: <input id="maxMonthCreated" class="input is-rounded is-normal is-link" min="1" max="12" value="${getMonth()}" type="number">
+            <input id="maxYearCreated" class="input is-rounded is-normal is-link" min="1900" max="${getYear()}" value="${getYear()}" type="number">
           </div>
         </div>
 
@@ -160,6 +160,17 @@ export const renderPage = function() {
   </section>`
   };
 
+  function getMonth(){
+    var today = new Date();
+    var mm = String(today.getMonth() + 1);
+    return mm;
+  }
+
+  function getYear(){
+    let today = new Date();
+    let yyyy = String(today.getFullYear());
+    return yyyy;
+  }
   export const getToken = async () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
