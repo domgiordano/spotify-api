@@ -1,6 +1,15 @@
 # spotify-api
 ## Config
   * Clone Repo
+  * Install node.js
+    * `brew update`
+    * `brew install node@18.9.0`
+  * Install npm
+    * `npm install -g npm@8.19.2`
+  * Install node fetch v3.2.10
+    * `npm install node-fetch@3.2.10`
+  * Install npm dependencies
+    * `npm install`
   * Configure .env file with following vars:
     * Port
       * =8080
