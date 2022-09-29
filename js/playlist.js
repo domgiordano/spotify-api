@@ -307,10 +307,10 @@ export const renderPage = function() {
 
 
       let validDate = false;
-      if( parseInt(month) <= parseInt(filterVals['maxMonthSaved']) && parseInt(month) >= parseInt(filterVals['minMonthSaved']) && parseInt(year) <= parseInt(filterVals['maxYearSaved']) && parseInt(year) >= parseInt(filterVals['minYearSaved'])){
-        if(parseInt(releaseYear) <= parseInt(filterVals['maxYearCreated']) && parseInt(releaseYear) >= parseInt(filterVals['minYearCreated'])){
+      if( month <= filterVals['maxMonthSaved'] && month >= filterVals['minMonthSaved'] && year <= filterVals['maxYearSaved'] && year >= filterVals['minYearSaved']){
+        if(releaseYear <= filterVals['maxYearCreated'] && releaseYear >= filterVals['minYearCreated']){
           if(releaseMonth != ""){
-            if(parseInt(releaseMonth) <= parseInt(filterVals['maxMonthCreated']) && parseInt(releaseMonth) >= parseInt(filterVals['minMonthCreated'])){
+            if(releaseMonth <= filterVals['maxMonthCreated'] && releaseMonth >= filterVals['minMonthCreated']){
               validDate = true;
             }
           }
@@ -875,14 +875,14 @@ export const renderPage = function() {
                 popMax: parseFloat(document.getElementById('popMax').value),
                 acoustMin: parseFloat(document.getElementById('acoustMin').value),
                 acoustMax: parseFloat(document.getElementById('acoustMax').value),
-                minMonthSaved: document.getElementById('minMonthSaved').value,
-                minYearSaved: document.getElementById('minYearSaved').value,
-                maxMonthSaved: document.getElementById('maxMonthSaved').value,
-                maxYearSaved: document.getElementById('maxYearSaved').value,
-                minMonthCreated: document.getElementById('minMonthCreated').value,
-                minYearCreated: document.getElementById('minYearCreated').value,
-                maxMonthCreated: document.getElementById('maxMonthCreated').value,
-                maxYearCreated: document.getElementById('maxYearCreated').value,
+                minMonthSaved: parseInt(document.getElementById('minMonthSaved').value),
+                minYearSaved: parseInt(document.getElementById('minYearSaved').value),
+                maxMonthSaved: parseInt(document.getElementById('maxMonthSaved').value),
+                maxYearSaved: parseInt(document.getElementById('maxYearSaved').value),
+                minMonthCreated: parseInt(document.getElementById('minMonthCreated').value),
+                minYearCreated: parseInt(document.getElementById('minYearCreated').value),
+                maxMonthCreated: parseInt(document.getElementById('maxMonthCreated').value),
+                maxYearCreated: parseInt(document.getElementById('maxYearCreated').value),
             };
 
             console.log(filterVals)
