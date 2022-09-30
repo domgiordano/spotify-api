@@ -2,7 +2,9 @@ let access_token = "";
 let refresh_token = "";
 let songJson = {};
 let songAttrJson = {};
+let totalSongCount = 0;
 const maxGenres = 25;
+let songsRemoved = 0;
 
 export const renderPage = function() {
     return `<section class="hero is-success is-fullheight">
@@ -303,6 +305,7 @@ export const renderPage = function() {
         songInfo+='<th id="pTablePop" class="has-text-centered"><abbr title="Popularity">POP</abbr></th>';
         songInfo+='<th id="pTableDate" class="has-text-centered">Date Added</th>';
         songInfo+='<th id="pTableReleaseDate" class="has-text-centered">Date Released</th>';
+        songInfo+='<th id="pTableRemove" class="has-text-centered">Remove Song</th>';
         songInfo+='</tr></thead>';
         songInfo+='<tbody id="playlistTableBody">'
     }
@@ -404,6 +407,7 @@ export const renderPage = function() {
             dateCreated += '/' + tempSongJson[songIds[i-1]].track.album.release_date.slice(0,4);
 
             if(trackCount <= maxSongs){
+              songInfo+='<span id="song' + trackCount + '">';
               songInfo+='<tr><th>' + trackCount + '</th>';
               songInfo+='<td><img src="' + songImage + '" height="100" width="100"></td>';
               songInfo+='<td>' + songName + '</td>';
@@ -418,7 +422,9 @@ export const renderPage = function() {
               songInfo+='<td>' + tempSongJson[songIds[i-1]].track.popularity + '</td>';
               songInfo+='<td>' + monthSaved + '/' + daySaved + '/' + yearSaved + '</td>';
               songInfo+='<td>' + dateCreated + '</td>';
-              songInfo+='</tr>';
+              songInfo+='<td><button id="removeBtn'+ songIds[i-1] + '" class="button is-danger is-light is-small is-outlined is-rounded" >Toss dis shit</button></td>';
+              songInfo+='</tr></span>';
+
             }
 
             //update songData
@@ -459,6 +465,8 @@ export const renderPage = function() {
 
     $('#main').append(songNumberInfo);
     $('#main').append(songInfo);
+
+
 
     //reset buttons
     document.getElementById("playlistBtn").classList.remove('is-loading')
@@ -503,6 +511,19 @@ export const renderPage = function() {
 
     songJson = tempSongJson;
     songAttrJson = tempSongAttrJson;
+    totalSongCount = trackCount;
+
+    //set up remove song button listeners
+    for(let id in songJson){
+      $(document).on('click', '#removeBtn'+ id, function(){
+        delete songJson[id];
+        delete songAttrJson[id];
+        document.getElementById('removeBtn' + id).removeEventListener('click', this);
+        sortPlaylist(songJson, songAttrJson, 'none', 'ASC')
+      });
+    }
+
+
 
     if(Object.keys(songJson).length > 50){document.getElementById("page2").classList.remove('is-disabled');}
     if(Object.keys(songJson).length > 100){document.getElementById("page3").classList.remove('is-disabled');}
@@ -521,51 +542,56 @@ export const renderPage = function() {
     let tempVals = Object.values(songAttrs);
     let tempKeys = Object.keys(songAttrs);
     let sortValCount = {};
+    let valueSorted = {};
 
-    //makes obj with Key: SongID - Value: SortVal
-    for(let i = 0; i < tempVals.length; i++){
-      let key = tempKeys[i]
-      sortValCount[key] = (tempVals[i])[sortVal];
-    }
+    if(sortVal != 'none'){
+      //makes obj with Key: SongID - Value: SortVal
+      for(let i = 0; i < tempVals.length; i++){
+        let key = tempKeys[i]
+        sortValCount[key] = (tempVals[i])[sortVal];
+      }
 
-    let sortable = [];
-    for(var id in sortValCount){
-        if(sortVal == 'added_at' || sortVal == 'release_date'){
-          sortable.push([id, new Date(sortValCount[id])]);
+      let sortable = [];
+      for(var id in sortValCount){
+          if(sortVal == 'added_at' || sortVal == 'release_date'){
+            sortable.push([id, new Date(sortValCount[id])]);
+          }
+          else{
+            sortable.push([id, sortValCount[id]])
+          }
+
+      }
+
+      if(isASC){
+        if(sortVal == 'name' || sortVal == 'artist'){
+          sortable.sort((a,b) => a[1].localeCompare(b[1]));
         }
         else{
-          sortable.push([id, sortValCount[id]])
+          sortable.sort(function(a, b) {
+            return a[1] - b[1];
+          });
         }
+      }
+      if(!isASC){
+        if(sortVal == 'name' || sortVal == 'artist'){
+          sortable.sort((a,b) => b[1].localeCompare(a[1]));
+        }
+        else{
+          sortable.sort(function(a, b) {
+            return b[1] - a[1];
+          });
+        }
+      }
 
+
+
+      sortable.forEach(function(item){
+        valueSorted[item[0]]=item[1]
+      });
     }
-
-    if(isASC){
-      if(sortVal == 'name' || sortVal == 'artist'){
-        sortable.sort((a,b) => a[1].localeCompare(b[1]));
-      }
-      else{
-        sortable.sort(function(a, b) {
-          return a[1] - b[1];
-        });
-      }
+    else{
+      valueSorted = songs;
     }
-    if(!isASC){
-      if(sortVal == 'name' || sortVal == 'artist'){
-        sortable.sort((a,b) => b[1].localeCompare(a[1]));
-      }
-      else{
-        sortable.sort(function(a, b) {
-          return b[1] - a[1];
-        });
-      }
-    }
-
-
-    let valueSorted = {};
-    sortable.forEach(function(item){
-      valueSorted[item[0]]=item[1]
-    });
-
     //Reload data sorted
     $('#resetBtn').trigger('click');
     document.getElementById("downloadBtn").disabled = false;
@@ -589,6 +615,7 @@ export const renderPage = function() {
     songInfo+='<th id="pTablePop" class="has-text-centered"><abbr title="Popularity">POP</abbr></th>';
     songInfo+='<th id="pTableDate" class="has-text-centered">Date Added</th>';
     songInfo+='<th id="pTableReleaseDate" class="has-text-centered">Date Released</th>';
+    songInfo+='<th id="pTableRemove" class="has-text-centered">Remove Song</th>';
     songInfo+='</tr></thead>';
     songInfo+='<tbody id="playlistTableBody">'
 
@@ -627,7 +654,7 @@ export const renderPage = function() {
         dateCreated += '/' + song.album.release_date.slice(0,4);
 
 
-
+        songInfo+='<span id="song' + playlistSongCount + '">';
         songInfo+='<tr><th>' + playlistSongCount + '</th>';
         songInfo+='<td><img src="' + songImage + '" height="100" width="100"></td>';
         songInfo+='<td>' + songName + '</td>';
@@ -642,7 +669,8 @@ export const renderPage = function() {
         songInfo+='<td>' + song.popularity + '</td>';
         songInfo+='<td>' + month + '/' + day + '/' + year + '</td>';
         songInfo+='<td>' + dateCreated + '</td>';
-        songInfo+='</tr>';
+        songInfo+='<td><button id="removeBtn'+ id + '" class="button is-danger is-light is-small is-outlined is-rounded" >Toss dis shit</button></td>';
+        songInfo+='</tr></span>';
         //if(playlistSongCount >= maxSongs){break;};
       }
       sortedPlaylist[id] = songJson[id];
@@ -655,7 +683,7 @@ export const renderPage = function() {
     let resetButton = document.getElementById("resetBtn");
 
     let songNumberInfo ='<div id="pName" class="field"><label style="margin:1em" id="playlistLabel" class="label">Playlist Title:</label><div class="control"><input id="pNameInput" class="input" type="text" placeholder="myPlaylistByDom"></div></div>';
-    songNumberInfo +='<div id="pTotal"><br><p class="title is-3">Number of Songs Selected: ' + playlistSongCount + '</p><br>';
+    songNumberInfo +='<div id="pTotal"><br><p class="title is-3">Number of Songs Selected: ' + Object.keys(sortedPlaylist).length + '</p><br>';
 
     songInfo+='</table>';
     $('#main').append(songNumberInfo);
@@ -664,6 +692,17 @@ export const renderPage = function() {
 
     songJson = sortedPlaylist;
     songAttrJson = sortedPlaylistAttr;
+    totalSongCount = playlistSongCount;
+
+    //set up remove song button listeners
+    for(let id in songJson){
+      $(document).on('click', '#removeBtn'+ id, function(){
+        delete songJson[id];
+        delete songAttrJson[id];
+        document.getElementById('removeBtn' + id).removeEventListener('click', this);
+        sortPlaylist(songJson, songAttrJson, 'none', 'ASC')
+      });
+    }
 
     return;
 
@@ -750,6 +789,7 @@ export const renderPage = function() {
     songInfo+='<th id="pTablePop" class="has-text-centered"><abbr title="Popularity">POP</abbr></th>';
     songInfo+='<th id="pTableDate" class="has-text-centered">Date Added</th>';
     songInfo+='<th id="pTableReleaseDate" class="has-text-centered">Date Released</th>';
+    songInfo+='<th id="pTableRemove" class="has-text-centered">Remove Song</th>';
     songInfo+='</tr></thead>';
     songInfo+='<tbody id="playlistTableBody">'
 
@@ -788,7 +828,7 @@ export const renderPage = function() {
         dateCreated += '/' + song.album.release_date.slice(0,4);
 
 
-
+        songInfo+='<span id="song' + playlistSongCount + '">';
         songInfo+='<tr><th>' + playlistSongCount + '</th>';
         songInfo+='<td><img src="' + songImage + '" height="100" width="100"></td>';
         songInfo+='<td>' + songName + '</td>';
@@ -803,7 +843,10 @@ export const renderPage = function() {
         songInfo+='<td>' + song.popularity + '</td>';
         songInfo+='<td>' + month + '/' + day + '/' + year + '</td>';
         songInfo+='<td>' + dateCreated + '</td>';
-        songInfo+='</tr>';
+        songInfo+='<td><button id="removeBtn'+ id + '" class="button is-danger is-light is-small is-outlined is-rounded" >Toss dis shit</button></td>';
+        songInfo+='</tr></span>';
+
+
         if(playlistSongCount >= maxSongs *(offset + 1)){break;};
       }
       playlistSongCount++;
@@ -1157,7 +1200,6 @@ export const renderPage = function() {
       let currPage = parseInt(document.getElementsByClassName('is-current')[0].getAttribute('aria-label')) + 1;
       $('#page' + currPage).trigger('click');
     });
-
   };
 
 
