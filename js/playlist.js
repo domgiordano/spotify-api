@@ -384,6 +384,14 @@ export const renderPage = function() {
         const songResponse = await fetch(songURL, { headers });
         const songData = await songResponse.json();
 
+        /* if(songData.energy < filterVals['energyMin'] || songData.energy > filterVals['energyMax']){console.log('energy failed');}
+        if(songData.danceability < filterVals['danceMin'] || songData.danceability > filterVals['danceMax']){console.log('dance failed');}
+        if(songData.danceability < filterVals['tempoMin'] || songData.danceability > filterVals['tempoMax']){console.log('tempo failed');}
+        if(songData.danceability < filterVals['loudMin'] || songData.danceability > filterVals['loudMax']){console.log('loud failed');}
+        if(songData.danceability < filterVals['instruMin'] || songData.danceability > filterVals['instruMax']){console.log('instru failed');}
+        if(songData.danceability < filterVals['valenceMin'] || songData.danceability > filterVals['valenceMax']){console.log('valence failed');}
+        if(songData.danceability < filterVals['acoustMin'] || songData.danceability > filterVals['acoustMax']){console.log('acoust failed');}
+        if(songData.danceability < filterVals['popMin'] || songData.danceability > filterVals['popMax']){console.log('pop failed');} */
 
         if (songData.energy >= filterVals['energyMin'] && songData.energy <= filterVals['energyMax'] &&
                 songData.danceability >= filterVals['danceMin'] && songData.danceability <= filterVals['danceMax'] &&
