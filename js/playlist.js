@@ -50,8 +50,8 @@ export const renderPage = function() {
           <div id="card_2" class="column" style="width: 12.5%">
             <div class="card-content" style="text-align: center">
               <p class="subtitle is-5" style="text-align: center"><span class="hovertext" data-hover="LOUDNESS">dB</span></p>
-              MIN <input id="loudMin" class="input is-rounded is-normal is-link" step="1" min="-60" max="60" value="-60" type="number">
-              MAX <input id="loudMax" class="input is-rounded is-normal is-link" step="1" min="-60" max="60" value="60" type="number">
+              MIN: <input id="loudMin" class="input is-rounded is-normal is-link" step="1" min="-60" max="60" value="-60" type="number">
+              MAX: <input id="loudMax" class="input is-rounded is-normal is-link" step="1" min="-60" max="60" value="60" type="number">
             </div>
           </div>
           <div id="card_3" class="column is-one-quarter" style="width: 12.5%">
@@ -64,8 +64,8 @@ export const renderPage = function() {
           <div id="card_4" class="column is-one-quarter" style="width: 12.5%">
             <div class="card-content" style="text-align: center">
               <p class="subtitle is-5" style="text-align: center"><span class="hovertext" data-hover="ENERGY">ENRG</span></p>
-              MIN <input id="energyMin" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="0" type="number">
-              MAX <input id="energyMax" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="1.00" type="number">
+              MIN: <input id="energyMin" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="0" type="number">
+              MAX: <input id="energyMax" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="1.00" type="number">
             </div>
           </div>
           <div id="card_5" class="column is-one-quarter" style="width: 12.5%">
@@ -96,28 +96,56 @@ export const renderPage = function() {
               MAX: <input id="popMax" class="input is-rounded is-normal is-link" step="1" min="0" max="100" value="100" type="number">
             </div>
           </div>
-          <div class="column is-half">
+          <div id="card_9" class="column is-one-quarter" style="width: 16.5%">
+            <div class="card-content" style="text-align: center">
+              <p class="subtitle is-5" style="text-align: center"><span class="hovertext" data-hover="SPEECHINESS">SPCH</span></p>
+              MIN: <input id="speechMin" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="0" type="number">
+              MAX: <input id="speechMax" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="1.00" type="number">
+            </div>
+          </div>
+          <div class="column is-4">
             <p class="subtitle is-4" style="text-align: center">Saved to Library Date:</p>
+            <div id="songSaved" class="columns is-multiline" style="margin: 0; padding: 0">
+              <div class="column is-half">
+                MIN Month: <input id="minMonthSaved" class="input is-rounded is-normal is-link" min="1" max="12" value="1" type="number">
+                MIN Year: <input id="minYearSaved" class="input is-rounded is-normal is-link" min="1900" max="${getYear()}" value="1900" type="number">
+              </div>
+              <div class="column is-half">
+                MAX Month: <input id="maxMonthSaved" class="input is-rounded is-normal is-link" min="1" max="12" value="${getMonth()}" type="number">
+                MAX Year: <input id="maxYearSaved" class="input is-rounded is-normal is-link" min="1900" max="${getYear()}" value="${getYear()}" type="number">
+              </div>
+            </div>
           </div>
-          <div class="column is-half">
+          <div class="column is-4">
             <p class="subtitle is-4" style="text-align: center">Song Creation Date:</p>
+            <div id="songCreate" class="columns is-multiline" style="margin: 0; padding: 0">
+              <div class="column is-half">
+                MIN Month: <input id="minMonthCreated" class="input is-rounded is-normal is-link" min="1" max="12" value="1" type="number">
+                MIN Year: <input id="minYearCreated" class="input is-rounded is-normal is-link" min="1900" max="${getYear()}" value="1900" type="number">
+              </div>
+              <div class="column is-half">
+                MAX Month: <input id="maxMonthCreated" class="input is-rounded is-normal is-link" min="1" max="12" value="${getMonth()}" type="number">
+                MAX Year: <input id="maxYearCreated" class="input is-rounded is-normal is-link" min="1900" max="${getYear()}" value="${getYear()}" type="number">
+              </div>
+            </div>
           </div>
-          <div class="column is-one-quarter">
-            MIN Date: <input id="minMonthSaved" class="input is-rounded is-normal is-link" min="1" max="12" value="1" type="number">
-            <input id="minYearSaved" class="input is-rounded is-normal is-link" min="1900" max="${getYear()}" value="1900" type="number">
+          <div id="card_10" class="column is-one-quarter" style="width: 16.5%">
+            <div class="card-content" style="text-align: center">
+              <p class="subtitle is-5" style="text-align: center"><span class="hovertext" data-hover="LIVENESS">LIV</span></p>
+              MIN: <input id="liveMin" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="0.00" type="number">
+              MAX: <input id="liveMax" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="1.00" type="number">
+            </div>
           </div>
-          <div class="column is-one-quarter">
-            MAX Date: <input id="maxMonthSaved" class="input is-rounded is-normal is-link" min="1" max="12" value="${getMonth()}" type="number">
-            <input id="maxYearSaved" class="input is-rounded is-normal is-link" min="1900" max="${getYear()}" value="${getYear()}" type="number">
+          <div class="column is-full">
+            <p class="subtitle is-4" style="text-align: center">Pre-Set Mood Filters:</p>
           </div>
-          <div class="column is-one-quarter">
-            MIN Date: <input id="minMonthCreated" class="input is-rounded is-normal is-link" min="1" max="12" value="1" type="number">
-            <input id="minYearCreated" class="input is-rounded is-normal is-link" min="1900" max="${getYear()}" value="1900" type="number">
+          <div class="column is-full">
+            <button id="hypeBtn" class="button is-link is-light is-medium is-outlined is-rounded"> Hype </button>
+            <button id="chillBtn" class="button is-link is-light is-medium is-outlined is-rounded"> Chill </button>
+            <button id="happyBtn" class="button is-link is-light is-medium is-outlined is-rounded"> Happy </button>
+            <button id="sadBtn" class="button is-link is-light is-medium is-outlined is-rounded"> Sad </button>
           </div>
-          <div class="column is-one-quarter">
-            MAX Date: <input id="maxMonthCreated" class="input is-rounded is-normal is-link" min="1" max="12" value="${getMonth()}" type="number">
-            <input id="maxYearCreated" class="input is-rounded is-normal is-link" min="1900" max="${getYear()}" value="${getYear()}" type="number">
-          </div>
+
         </div>
 
             <div id="genreCheckBoxes" class="column is-full">
@@ -257,7 +285,23 @@ export const renderPage = function() {
       alert("Invalid Popularity Values. Try again.")
       document.getElementById("playlistBtn").classList.remove('is-loading')
       document.getElementById("resetBtn").disabled = false;
-      $('#resetBtn' + currPage).trigger('click');
+      $('#resetBtn').trigger('click');
+      return;
+    }
+
+    if(filterVals['speechMin'] >= filterVals['speechMax']){
+      alert("Invalid Speechiness Values. Try again.")
+      document.getElementById("playlistBtn").classList.remove('is-loading')
+      document.getElementById("resetBtn").disabled = false;
+      $('#resetBtn').trigger('click');
+      return;
+    }
+
+    if(filterVals['liveMin'] >= filterVals['liveMax']){
+      alert("Invalid Liveness Values. Try again.")
+      document.getElementById("playlistBtn").classList.remove('is-loading')
+      document.getElementById("resetBtn").disabled = false;
+      $('#resetBtn').trigger('click');
       return;
     }
 
@@ -303,6 +347,8 @@ export const renderPage = function() {
         songInfo+='<th id="pTableEnergy" class="has-text-centered"><abbr title="Energy">ENG</abbr></th>';
         songInfo+='<th id="pTableValence" class="has-text-centered"><abbr title="Valence">VAL</abbr></th>';
         songInfo+='<th id="pTablePop" class="has-text-centered"><abbr title="Popularity">POP</abbr></th>';
+        songInfo+='<th id="pTableSpeech" class="has-text-centered"><abbr title="Speechiness">SPCH</abbr></th>';
+        songInfo+='<th id="pTableLive" class="has-text-centered"><abbr title="Liveness">LIV</abbr></th>';
         songInfo+='<th id="pTableDate" class="has-text-centered">Date Added</th>';
         songInfo+='<th id="pTableReleaseDate" class="has-text-centered">Date Released</th>';
         songInfo+='<th id="pTableRemove" class="has-text-centered">Remove Song</th>';
@@ -400,6 +446,8 @@ export const renderPage = function() {
                 songData.instrumentalness >= filterVals['instruMin'] && songData.instrumentalness <= filterVals['instruMax'] &&
                 songData.valence >= filterVals['valenceMin'] && songData.valence <= filterVals['valenceMax'] &&
                 songData.acousticness >= filterVals['acoustMin'] && songData.acousticness <= filterVals['acoustMax'] &&
+                songData.speechiness >= filterVals['speechMin'] && songData.speechiness <= filterVals['speechMax'] &&
+                songData.liveness >= filterVals['liveMin'] && songData.liveness <= filterVals['liveMax'] &&
                 tempSongJson[songIds[i-1]].track.popularity >= filterVals['popMin'] && tempSongJson[songIds[i-1]].track.popularity <= filterVals['popMax']){
 
             playlistSongCount++;
@@ -428,6 +476,8 @@ export const renderPage = function() {
               songInfo+='<td>' + songData.energy + '</td>';
               songInfo+='<td>' + songData.valence + '</td>';
               songInfo+='<td>' + tempSongJson[songIds[i-1]].track.popularity + '</td>';
+              songInfo+='<td>' + songData.speechiness + '</td>';
+              songInfo+='<td>' + songData.liveness + '</td>';
               songInfo+='<td>' + monthSaved + '/' + daySaved + '/' + yearSaved + '</td>';
               songInfo+='<td>' + dateCreated + '</td>';
               songInfo+='<td><button id="removeBtn'+ songIds[i-1] + '" class="button is-danger is-light is-small is-outlined is-rounded" >Toss dis shit</button></td>';
@@ -498,6 +548,10 @@ export const renderPage = function() {
      document.getElementById("popMax").disabled = false;
      document.getElementById("acoustMin").disabled = false;
      document.getElementById("acoustMax").disabled = false;
+     document.getElementById("speechMin").disabled = false;
+     document.getElementById("speechMax").disabled = false;
+     document.getElementById("liveMin").disabled = false;
+     document.getElementById("liveMax").disabled = false;
      document.getElementById("minMonthSaved").disabled = false;
      document.getElementById("minYearSaved").disabled = false;
      document.getElementById("maxMonthSaved").disabled = false;
@@ -621,6 +675,8 @@ export const renderPage = function() {
     songInfo+='<th id="pTableEnergy" class="has-text-centered"><abbr title="Energy">ENG</abbr></th>';
     songInfo+='<th id="pTableValence" class="has-text-centered"><abbr title="Valence">VAL</abbr></th>';
     songInfo+='<th id="pTablePop" class="has-text-centered"><abbr title="Popularity">POP</abbr></th>';
+    songInfo+='<th id="pTableSpeech" class="has-text-centered"><abbr title="Speechiness">SPCH</abbr></th>';
+    songInfo+='<th id="pTableLive" class="has-text-centered"><abbr title="Liveness">LIV</abbr></th>';
     songInfo+='<th id="pTableDate" class="has-text-centered">Date Added</th>';
     songInfo+='<th id="pTableReleaseDate" class="has-text-centered">Date Released</th>';
     songInfo+='<th id="pTableRemove" class="has-text-centered">Remove Song</th>';
@@ -675,6 +731,8 @@ export const renderPage = function() {
         songInfo+='<td>' + songAttr.energy + '</td>';
         songInfo+='<td>' + songAttr.valence + '</td>';
         songInfo+='<td>' + song.popularity + '</td>';
+        songInfo+='<td>' + songAttr.speechiness + '</td>';
+        songInfo+='<td>' + songAttr.liveness + '</td>';
         songInfo+='<td>' + month + '/' + day + '/' + year + '</td>';
         songInfo+='<td>' + dateCreated + '</td>';
         songInfo+='<td><button id="removeBtn'+ id + '" class="button is-danger is-light is-small is-outlined is-rounded" >Toss dis shit</button></td>';
@@ -795,6 +853,8 @@ export const renderPage = function() {
     songInfo+='<th id="pTableEnergy" class="has-text-centered"><abbr title="Energy">ENG</abbr></th>';
     songInfo+='<th id="pTableValence" class="has-text-centered"><abbr title="Valence">VAL</abbr></th>';
     songInfo+='<th id="pTablePop" class="has-text-centered"><abbr title="Popularity">POP</abbr></th>';
+    songInfo+='<th id="pTableSpeech" class="has-text-centered"><abbr title="Speechiness">SPCH</abbr></th>';
+    songInfo+='<th id="pTableLive" class="has-text-centered"><abbr title="Liveness">LIV</abbr></th>';
     songInfo+='<th id="pTableDate" class="has-text-centered">Date Added</th>';
     songInfo+='<th id="pTableReleaseDate" class="has-text-centered">Date Released</th>';
     songInfo+='<th id="pTableRemove" class="has-text-centered">Remove Song</th>';
@@ -849,6 +909,8 @@ export const renderPage = function() {
         songInfo+='<td>' + songAttr.energy + '</td>';
         songInfo+='<td>' + songAttr.valence + '</td>';
         songInfo+='<td>' + song.popularity + '</td>';
+        songInfo+='<td>' + songAttr.speechiness + '</td>';
+        songInfo+='<td>' + songAttr.liveness + '</td>';
         songInfo+='<td>' + month + '/' + day + '/' + year + '</td>';
         songInfo+='<td>' + dateCreated + '</td>';
         songInfo+='<td><button id="removeBtn'+ id + '" class="button is-danger is-light is-small is-outlined is-rounded" >Toss dis shit</button></td>';
@@ -901,6 +963,10 @@ export const renderPage = function() {
             document.getElementById("popMax").disabled = true;
             document.getElementById("acoustMin").disabled = true;
             document.getElementById("acoustMax").disabled = true;
+            document.getElementById("speechMin").disabled = true;
+            document.getElementById("speechMax").disabled = true;
+            document.getElementById("liveMin").disabled = true;
+            document.getElementById("liveMax").disabled = true;
             document.getElementById("minMonthSaved").disabled = true;
             document.getElementById("minYearSaved").disabled = true;
             document.getElementById("maxMonthSaved").disabled = true;
@@ -937,6 +1003,10 @@ export const renderPage = function() {
                 popMax: parseFloat(document.getElementById('popMax').value),
                 acoustMin: parseFloat(document.getElementById('acoustMin').value),
                 acoustMax: parseFloat(document.getElementById('acoustMax').value),
+                speechMin: parseFloat(document.getElementById('speechMin').value),
+                speechMax: parseFloat(document.getElementById('speechMax').value),
+                liveMin: parseFloat(document.getElementById('liveMin').value),
+                liveMax: parseFloat(document.getElementById('liveMax').value),
                 minMonthSaved: parseInt(document.getElementById('minMonthSaved').value),
                 minYearSaved: parseInt(document.getElementById('minYearSaved').value),
                 maxMonthSaved: parseInt(document.getElementById('maxMonthSaved').value),
@@ -1022,6 +1092,10 @@ export const renderPage = function() {
         document.getElementById("popMax").disabled = false;
         document.getElementById("acoustMin").disabled = false;
         document.getElementById("acoustMax").disabled = false;
+        document.getElementById("speechMin").disabled = false;
+        document.getElementById("speechMax").disabled = false;
+        document.getElementById("liveMin").disabled = false;
+        document.getElementById("liveMax").disabled = false;
         document.getElementById("minMonthSaved").disabled = false;
         document.getElementById("minYearSaved").disabled = false;
         document.getElementById("maxMonthSaved").disabled = false;
@@ -1054,6 +1128,8 @@ export const renderPage = function() {
     let pTableReleaseDate = true;
     let pTablePop = true;
     let pTableAcoust = true;
+    let pTableSpeech = true;
+    let pTableLive = true;
 
 
     $(document).on("click", "#pTableSong", function(){
@@ -1116,6 +1192,20 @@ export const renderPage = function() {
       console.log(pTablePop)
       sortPlaylist(songJson, songAttrJson, "popularity", pTablePop)
       pTablePop = !pTablePop;
+    });
+
+    $(document).on("click", "#pTableSpeech", function(){
+      console.log("click table speech");
+      console.log(pTableSpeech)
+      sortPlaylist(songJson, songAttrJson, "speechiness", pTableSpeech)
+      pTableSpeech = !pTableSpeech;
+    });
+
+    $(document).on("click", "#pTableLive", function(){
+      console.log("click table live");
+      console.log(pTableLive)
+      sortPlaylist(songJson, songAttrJson, "liveness", pTableLive)
+      pTableLive = !pTableLive;
     });
 
     $(document).on("click", "#pTableReleaseDate", function(){
