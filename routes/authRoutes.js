@@ -70,10 +70,12 @@ router.get('/login', async (req, res) => {
   });
 
   router.get('/logged', async (req, res) => {
+    let scope = "user-read-playback-state user-modify-playback-state user-read-currently-playing streaming playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-follow-modify user-follow-read user-read-playback-position user-top-read user-read-recently-played user-library-modify user-library-read user-read-email user-read-private"
     const body = {
       grant_type: 'authorization_code',
       code: req.query.code,
       redirect_uri: process.env.REDIRECTURI,
+      scope: scope,
       client_id: process.env.CLIENT_ID,
       client_secret: process.env.CLIENT_SECRET,
     }
