@@ -64,28 +64,28 @@ export const renderPage = function() {
           <div id="card_4" class="column is-one-quarter" style="width: 12.5%">
             <div class="card-content" style="text-align: center">
               <p class="subtitle is-5" style="text-align: center"><span class="hovertext" data-hover="ENERGY">ENRG</span></p>
-              MIN: <input id="energyMin" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="0" type="number">
+              MIN: <input id="energyMin" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="0.00" type="number">
               MAX: <input id="energyMax" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="1.00" type="number">
             </div>
           </div>
           <div id="card_5" class="column is-one-quarter" style="width: 12.5%">
             <div class="card-content" style="text-align: center">
               <p class="subtitle is-5" style="text-align: center"><span class="hovertext" data-hover="INSTRUMENTALNESS">INSTRU</span></p>
-              MIN: <input id="instruMin" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="0" type="number">
+              MIN: <input id="instruMin" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="0.00" type="number">
               MAX: <input id="instruMax" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="1.00" type="number">
             </div>
           </div>
           <div id="card_6" class="column is-one-quarter" style="width: 12.5%">
             <div class="card-content" style="text-align: center">
               <p class="subtitle is-5" style="text-align: center"><span class="hovertext" data-hover="VALENCE">VAL</span></p>
-              MIN: <input id="valenceMin" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="0" type="number">
+              MIN: <input id="valenceMin" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="0.00" type="number">
               MAX: <input id="valenceMax" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="1.00" type="number">
             </div>
           </div>
           <div id="card_7" class="column is-one-quarter" style="width: 12.5%">
             <div class="card-content" style="text-align: center">
               <p class="subtitle is-5" style="text-align: center"><span class="hovertext" data-hover="ACOUSTICNESS">ACST</span></p>
-              MIN: <input id="acoustMin" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="0" type="number">
+              MIN: <input id="acoustMin" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="0.00" type="number">
               MAX: <input id="acoustMax" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="1.00" type="number">
             </div>
           </div>
@@ -99,7 +99,7 @@ export const renderPage = function() {
           <div id="card_9" class="column is-one-quarter" style="width: 16.5%">
             <div class="card-content" style="text-align: center">
               <p class="subtitle is-5" style="text-align: center"><span class="hovertext" data-hover="SPEECHINESS">SPCH</span></p>
-              MIN: <input id="speechMin" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="0" type="number">
+              MIN: <input id="speechMin" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="0.00" type="number">
               MAX: <input id="speechMax" class="input is-rounded is-normal is-link" step=".01" min="0.00" max="1.00" value="1.00" type="number">
             </div>
           </div>
@@ -937,6 +937,29 @@ export const renderPage = function() {
     return;
   }
 
+  function resetFilterValues(){
+    document.getElementById("danceMin").value = '0.00';
+    document.getElementById("danceMax").value = '1.00';
+    document.getElementById("tempoMin").value = '0';
+    document.getElementById("tempoMax").value = '250';
+    document.getElementById("loudMin").value = '-60';
+    document.getElementById("loudMax").value = '60';
+    document.getElementById("energyMin").value = '0.00';
+    document.getElementById("energyMax").value = '1.00';
+    document.getElementById("instruMin").value = '0.00';
+    document.getElementById("instruMax").value = '1.00';
+    document.getElementById("valenceMin").value = '0.00';
+    document.getElementById("valenceMax").value = '1.00';
+    document.getElementById("popMin").value = '0';
+    document.getElementById("popMax").value = '100';
+    document.getElementById("acoustMin").value = '0.00';
+    document.getElementById("acoustMax").value = '1.00';
+    document.getElementById("speechMin").value = '0.00';
+    document.getElementById("speechMax").value = '1.00';
+    document.getElementById("liveMin").value = '0.00';
+    document.getElementById("liveMax").value = '1.00';
+  }
+
   export const loadPage = function() {
 
     const $root = $('#root');
@@ -1066,6 +1089,47 @@ export const renderPage = function() {
       }
 
 
+
+    $(document).on("click", "#hypeBtn", function(){
+      resetFilterValues();
+      document.getElementById('danceMin').value = '.6';
+      document.getElementById('danceMax').value = '1.00';
+      document.getElementById('loudMin').value = '-20';
+      document.getElementById('loudMax').value = '60';
+      document.getElementById('tempoMin').value = '115';
+      document.getElementById('tempoMax').value = '250';
+      document.getElementById('energyMin').value = '.6';
+      document.getElementById('energyMax').value = '1.00';
+    });
+    $(document).on("click", "#chillBtn", function(){
+      resetFilterValues();
+      document.getElementById('danceMin').value = '0.00';
+      document.getElementById('danceMax').value = '.75';
+      document.getElementById('loudMin').value = '-60';
+      document.getElementById('loudMax').value = '0';
+      document.getElementById('tempoMin').value = '0';
+      document.getElementById('tempoMax').value = '125';
+      document.getElementById('energyMin').value = '0.00';
+      document.getElementById('energyMax').value = '.75';
+    });
+    $(document).on("click", "#happyBtn", function(){
+      resetFilterValues();
+      document.getElementById('danceMin').value = '.5';
+      document.getElementById('danceMax').value = '1.00';
+      document.getElementById('energyMin').value = '.5';
+      document.getElementById('energyMax').value = '1.00';
+      document.getElementById('valenceMin').value = '.45';
+      document.getElementById('valenceMax').value = '1.00';
+    });
+    $(document).on("click", "#sadBtn", function(){
+      resetFilterValues();
+      document.getElementById('danceMin').value = '0.00';
+      document.getElementById('danceMax').value = '.75';
+      document.getElementById('energyMin').value = '0.00';
+      document.getElementById('energyMax').value = '.75';
+      document.getElementById('valenceMin').value = '0.00';
+      document.getElementById('valenceMax').value = '.6';
+    });
 
     $(document).on("click", "#resetBtn", function(){
         console.log('click')
