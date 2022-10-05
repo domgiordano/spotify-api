@@ -334,26 +334,7 @@ export const renderPage = function() {
     let songInfo = '';
     if(offset == 0) {
         //ongInfo+='<div id="cardGroup" class="columns is-multiline" style="margin-left: 0.025%">';
-        songInfo+= '<table id="playlistTable" class="table is-hoverable">';
-        songInfo+= '<thead><tr><th><abbr title="Number">Num</abbr></th>';
-        songInfo+='<th class="has-text-centered"> Cover Art </th>'
-        songInfo+= '<th id= "pTableSong" class="has-text-centered">Song Title</th>';
-        songInfo+='<th id="pTableArtist" class="has-text-centered">Artist</th>';
-        songInfo+='<th id="pTableDance" class="has-text-centered"><abbr title="Danceability">DNC</abbr></th>';
-        songInfo+='<th id="pTableTempo" class="has-text-centered"><abbr title="Tempo">BPM</abbr></th>';
-        songInfo+='<th id="pTableInstru" class="has-text-centered"><abbr title="Instrumentalness">INSTRU</abbr></th>';
-        songInfo+='<th id="pTableAcoust" class="has-text-centered"><abbr title="Acousticness">ACOUST</abbr></th>';
-        songInfo+='<th id="pTableLoud" class="has-text-centered"><abbr title="Loudness">db</abbr></th>';
-        songInfo+='<th id="pTableEnergy" class="has-text-centered"><abbr title="Energy">ENG</abbr></th>';
-        songInfo+='<th id="pTableValence" class="has-text-centered"><abbr title="Valence">VAL</abbr></th>';
-        songInfo+='<th id="pTablePop" class="has-text-centered"><abbr title="Popularity">POP</abbr></th>';
-        songInfo+='<th id="pTableSpeech" class="has-text-centered"><abbr title="Speechiness">SPCH</abbr></th>';
-        songInfo+='<th id="pTableLive" class="has-text-centered"><abbr title="Liveness">LIV</abbr></th>';
-        songInfo+='<th id="pTableDate" class="has-text-centered">Date Added</th>';
-        songInfo+='<th id="pTableReleaseDate" class="has-text-centered">Date Released</th>';
-        songInfo+='<th id="pTableRemove" class="has-text-centered">Remove Song</th>';
-        songInfo+='</tr></thead>';
-        songInfo+='<tbody id="playlistTableBody">'
+        songInfo+= constructTableHeader();
     }
     let songIds = [];
     let tempSongJson = {};
@@ -460,29 +441,11 @@ export const renderPage = function() {
               dateCreated += '/' + tempSongJson[songIds[i-1]].track.album.release_date.slice(8,10);
             }
 
+            dateSaved = monthSaved + '/' + daySaved + '/' + yearSaved;
             dateCreated += '/' + tempSongJson[songIds[i-1]].track.album.release_date.slice(0,4);
 
             if(trackCount <= maxSongs){
-              songInfo+='<span id="song' + trackCount + '">';
-              songInfo+='<tr><th>' + trackCount + '</th>';
-              songInfo+='<td><img src="' + songImage + '" height="100" width="100"></td>';
-              songInfo+='<td>' + songName + '</td>';
-              songInfo+='<td>' + songArtists + '</td>';
-              songInfo+='<td>' + songData.danceability + '</td>';
-              songInfo+='<td>' + songData.tempo + '</td>';
-              songInfo+='<td>' + songData.instrumentalness + '</td>';
-              songInfo+='<td>' + songData.acousticness + '</td>';
-              songInfo+='<td>' + songData.loudness + '</td>';
-              songInfo+='<td>' + songData.energy + '</td>';
-              songInfo+='<td>' + songData.valence + '</td>';
-              songInfo+='<td>' + tempSongJson[songIds[i-1]].track.popularity + '</td>';
-              songInfo+='<td>' + songData.speechiness + '</td>';
-              songInfo+='<td>' + songData.liveness + '</td>';
-              songInfo+='<td>' + monthSaved + '/' + daySaved + '/' + yearSaved + '</td>';
-              songInfo+='<td>' + dateCreated + '</td>';
-              songInfo+='<td><button id="removeBtn'+ songIds[i-1] + '" class="button is-danger is-light is-small is-outlined is-rounded" >Toss dis shit</button></td>';
-              songInfo+='</tr></span>';
-
+              songInfo+= constructTableRow(trackCount, songImage, songName, songArtists, songData, tempSongJson[songIds[i-1]].track, dateSaved, dateCreated, songIds[i-1]);
             }
 
             //update songData
@@ -532,34 +495,7 @@ export const renderPage = function() {
     document.getElementById("resetBtn").disabled = false;
 
      //enable all filter value fields
-     document.getElementById("danceMin").disabled = false;
-     document.getElementById("danceMax").disabled = false;
-     document.getElementById("tempoMin").disabled = false;
-     document.getElementById("tempoMax").disabled = false;
-     document.getElementById("loudMin").disabled = false;
-     document.getElementById("loudMax").disabled = false;
-     document.getElementById("energyMin").disabled = false;
-     document.getElementById("energyMax").disabled = false;
-     document.getElementById("instruMin").disabled = false;
-     document.getElementById("instruMax").disabled = false;
-     document.getElementById("valenceMin").disabled = false;
-     document.getElementById("valenceMax").disabled = false;
-     document.getElementById("popMin").disabled = false;
-     document.getElementById("popMax").disabled = false;
-     document.getElementById("acoustMin").disabled = false;
-     document.getElementById("acoustMax").disabled = false;
-     document.getElementById("speechMin").disabled = false;
-     document.getElementById("speechMax").disabled = false;
-     document.getElementById("liveMin").disabled = false;
-     document.getElementById("liveMax").disabled = false;
-     document.getElementById("minMonthSaved").disabled = false;
-     document.getElementById("minYearSaved").disabled = false;
-     document.getElementById("maxMonthSaved").disabled = false;
-     document.getElementById("maxYearSaved").disabled = false;
-     document.getElementById("minMonthCreated").disabled = false;
-     document.getElementById("minYearCreated").disabled = false;
-     document.getElementById("maxMonthCreated").disabled = false;
-     document.getElementById("maxYearCreated").disabled = false;
+     toggleFilterActive(false);
 
      //enable check box filters
      for(let i = 1; i < maxGenres + 1; i++){
@@ -662,26 +598,7 @@ export const renderPage = function() {
 
     //Construct Table Header
     let songInfo = '';
-    songInfo+= '<table id="playlistTable" class="table is-hoverable">';
-    songInfo+= '<thead><tr><th><abbr title="Number">Num</abbr></th>';
-    songInfo+='<th class="has-text-centered"> Cover Art </th>'
-    songInfo+= '<th id= "pTableSong" class="has-text-centered">Song Title</th>';
-    songInfo+='<th id="pTableArtist" class="has-text-centered">Artist</th>';
-    songInfo+='<th id="pTableDance" class="has-text-centered"><abbr title="Danceability">DNC</abbr></th>';
-    songInfo+='<th id="pTableTempo" class="has-text-centered"><abbr title="Tempo">BPM</abbr></th>';
-    songInfo+='<th id="pTableInstru" class="has-text-centered"><abbr title="Instrumentalness">INSTRU</abbr></th>';
-    songInfo+='<th id="pTableAcoust" class="has-text-centered"><abbr title="Acousticness">ACOUST</abbr></th>';
-    songInfo+='<th id="pTableLoud" class="has-text-centered"><abbr title="Loudness">db</abbr></th>';
-    songInfo+='<th id="pTableEnergy" class="has-text-centered"><abbr title="Energy">ENG</abbr></th>';
-    songInfo+='<th id="pTableValence" class="has-text-centered"><abbr title="Valence">VAL</abbr></th>';
-    songInfo+='<th id="pTablePop" class="has-text-centered"><abbr title="Popularity">POP</abbr></th>';
-    songInfo+='<th id="pTableSpeech" class="has-text-centered"><abbr title="Speechiness">SPCH</abbr></th>';
-    songInfo+='<th id="pTableLive" class="has-text-centered"><abbr title="Liveness">LIV</abbr></th>';
-    songInfo+='<th id="pTableDate" class="has-text-centered">Date Added</th>';
-    songInfo+='<th id="pTableReleaseDate" class="has-text-centered">Date Released</th>';
-    songInfo+='<th id="pTableRemove" class="has-text-centered">Remove Song</th>';
-    songInfo+='</tr></thead>';
-    songInfo+='<tbody id="playlistTableBody">'
+    songInfo+= constructTableHeader();
 
     //Construct Table Rows
     let sortedPlaylist = {};
@@ -715,28 +632,10 @@ export const renderPage = function() {
           dateCreated += '/' + song.album.release_date.slice(8,10);
         }
 
+        dateSaved = month + '/' + day + '/' + year;
         dateCreated += '/' + song.album.release_date.slice(0,4);
 
-
-        songInfo+='<span id="song' + playlistSongCount + '">';
-        songInfo+='<tr><th>' + playlistSongCount + '</th>';
-        songInfo+='<td><img src="' + songImage + '" height="100" width="100"></td>';
-        songInfo+='<td>' + songName + '</td>';
-        songInfo+='<td>' + songArtists + '</td>';
-        songInfo+='<td>' + songAttr.danceability + '</td>';
-        songInfo+='<td>' + songAttr.tempo + '</td>';
-        songInfo+='<td>' + songAttr.instrumentalness + '</td>';
-        songInfo+='<td>' + songAttr.acousticness + '</td>';
-        songInfo+='<td>' + songAttr.loudness + '</td>';
-        songInfo+='<td>' + songAttr.energy + '</td>';
-        songInfo+='<td>' + songAttr.valence + '</td>';
-        songInfo+='<td>' + song.popularity + '</td>';
-        songInfo+='<td>' + songAttr.speechiness + '</td>';
-        songInfo+='<td>' + songAttr.liveness + '</td>';
-        songInfo+='<td>' + month + '/' + day + '/' + year + '</td>';
-        songInfo+='<td>' + dateCreated + '</td>';
-        songInfo+='<td><button id="removeBtn'+ id + '" class="button is-danger is-light is-small is-outlined is-rounded" >Toss dis shit</button></td>';
-        songInfo+='</tr></span>';
+        songInfo += constructTableRow(playlistSongCount, songImage, songName, songArtists, songAttr, song, dateSaved, dateCreated, id);
         //if(playlistSongCount >= maxSongs){break;};
       }
       sortedPlaylist[id] = songJson[id];
@@ -840,28 +739,7 @@ export const renderPage = function() {
 
     //Construct Table Header
     let songInfo = '';
-    songInfo+= '<table id="playlistTable" class="table is-hoverable">';
-    songInfo+= '<thead><tr><th><abbr title="Number">Num</abbr></th>';
-    songInfo+='<th class="has-text-centered"> Cover Art </th>'
-    songInfo+= '<th id= "pTableSong" class="has-text-centered">Song Title</th>';
-    songInfo+='<th id="pTableArtist" class="has-text-centered">Artist</th>';
-    songInfo+='<th id="pTableDance" class="has-text-centered"><abbr title="Danceability">DNC</abbr></th>';
-    songInfo+='<th id="pTableTempo" class="has-text-centered"><abbr title="Tempo">BPM</abbr></th>';
-    songInfo+='<th id="pTableInstru" class="has-text-centered"><abbr title="Instrumentalness">INSTRU</abbr></th>';
-    songInfo+='<th id="pTableAcoust" class="has-text-centered"><abbr title="Acousticness">ACOUST</abbr></th>';
-    songInfo+='<th id="pTableLoud" class="has-text-centered"><abbr title="Loudness">db</abbr></th>';
-    songInfo+='<th id="pTableEnergy" class="has-text-centered"><abbr title="Energy">ENG</abbr></th>';
-    songInfo+='<th id="pTableValence" class="has-text-centered"><abbr title="Valence">VAL</abbr></th>';
-    songInfo+='<th id="pTablePop" class="has-text-centered"><abbr title="Popularity">POP</abbr></th>';
-    songInfo+='<th id="pTableSpeech" class="has-text-centered"><abbr title="Speechiness">SPCH</abbr></th>';
-    songInfo+='<th id="pTableLive" class="has-text-centered"><abbr title="Liveness">LIV</abbr></th>';
-    songInfo+='<th id="pTableDate" class="has-text-centered">Date Added</th>';
-    songInfo+='<th id="pTableReleaseDate" class="has-text-centered">Date Released</th>';
-    songInfo+='<th id="pTableRemove" class="has-text-centered">Remove Song</th>';
-    songInfo+='</tr></thead>';
-    songInfo+='<tbody id="playlistTableBody">'
-
-
+    songInfo+= constructTableHeader();
 
     //Construct Table Rows
     for(var id in songs){
@@ -893,29 +771,10 @@ export const renderPage = function() {
           dateCreated += '/' + song.album.release_date.slice(8,10);
         }
 
+        dateSaved = month + '/' + day + '/' + year;
         dateCreated += '/' + song.album.release_date.slice(0,4);
 
-
-        songInfo+='<span id="song' + playlistSongCount + '">';
-        songInfo+='<tr><th>' + playlistSongCount + '</th>';
-        songInfo+='<td><img src="' + songImage + '" height="100" width="100"></td>';
-        songInfo+='<td>' + songName + '</td>';
-        songInfo+='<td>' + songArtists + '</td>';
-        songInfo+='<td>' + songAttr.danceability + '</td>';
-        songInfo+='<td>' + songAttr.tempo + '</td>';
-        songInfo+='<td>' + songAttr.instrumentalness + '</td>';
-        songInfo+='<td>' + songAttr.acousticness + '</td>';
-        songInfo+='<td>' + songAttr.loudness + '</td>';
-        songInfo+='<td>' + songAttr.energy + '</td>';
-        songInfo+='<td>' + songAttr.valence + '</td>';
-        songInfo+='<td>' + song.popularity + '</td>';
-        songInfo+='<td>' + songAttr.speechiness + '</td>';
-        songInfo+='<td>' + songAttr.liveness + '</td>';
-        songInfo+='<td>' + month + '/' + day + '/' + year + '</td>';
-        songInfo+='<td>' + dateCreated + '</td>';
-        songInfo+='<td><button id="removeBtn'+ id + '" class="button is-danger is-light is-small is-outlined is-rounded" >Toss dis shit</button></td>';
-        songInfo+='</tr></span>';
-
+        songInfo+= constructTableRow(playlistSongCount, songImage, songName, songArtists, songAttr, song, dateSaved, dateCreated, id);
 
         if(playlistSongCount >= maxSongs *(offset + 1)){break;};
       }
@@ -935,6 +794,86 @@ export const renderPage = function() {
     document.getElementById("playlistBtn").classList.remove('is-loading')
 
     return;
+  }
+
+  function toggleFilterActive(status){
+    document.getElementById("danceMin").disabled = status;
+    document.getElementById("danceMax").disabled = status;
+    document.getElementById("tempoMin").disabled = status;
+    document.getElementById("tempoMax").disabled = status;
+    document.getElementById("loudMin").disabled = status;
+    document.getElementById("loudMax").disabled = status;
+    document.getElementById("energyMin").disabled = status;
+    document.getElementById("energyMax").disabled = status;
+    document.getElementById("instruMin").disabled = status;
+    document.getElementById("instruMax").disabled = status;
+    document.getElementById("valenceMin").disabled = status;
+    document.getElementById("valenceMax").disabled = status;
+    document.getElementById("popMin").disabled = status;
+    document.getElementById("popMax").disabled = status;
+    document.getElementById("acoustMin").disabled = status;
+    document.getElementById("acoustMax").disabled = status;
+    document.getElementById("speechMin").disabled = status;
+    document.getElementById("speechMax").disabled = status;
+    document.getElementById("liveMin").disabled = status;
+    document.getElementById("liveMax").disabled = status;
+    document.getElementById("minMonthSaved").disabled = status;
+    document.getElementById("minYearSaved").disabled = status;
+    document.getElementById("maxMonthSaved").disabled = status;
+    document.getElementById("maxYearSaved").disabled = status;
+    document.getElementById("minMonthCreated").disabled = status;
+    document.getElementById("minYearCreated").disabled = status;
+    document.getElementById("maxMonthCreated").disabled = status;
+    document.getElementById("maxYearCreated").disabled = status;
+  }
+
+  function constructTableHeader(){
+    let songInfo = '';
+    songInfo+= '<table id="playlistTable" class="table is-hoverable">';
+    songInfo+= '<thead><tr><th><abbr title="Number">Num</abbr></th>';
+    songInfo+='<th class="has-text-centered"> Cover Art </th>'
+    songInfo+= '<th id= "pTableSong" class="has-text-centered">Song Title</th>';
+    songInfo+='<th id="pTableArtist" class="has-text-centered">Artist</th>';
+    songInfo+='<th id="pTableDance" class="has-text-centered"><abbr title="Danceability">DNC</abbr></th>';
+    songInfo+='<th id="pTableTempo" class="has-text-centered"><abbr title="Tempo">BPM</abbr></th>';
+    songInfo+='<th id="pTableInstru" class="has-text-centered"><abbr title="Instrumentalness">INSTRU</abbr></th>';
+    songInfo+='<th id="pTableAcoust" class="has-text-centered"><abbr title="Acousticness">ACOUST</abbr></th>';
+    songInfo+='<th id="pTableLoud" class="has-text-centered"><abbr title="Loudness">db</abbr></th>';
+    songInfo+='<th id="pTableEnergy" class="has-text-centered"><abbr title="Energy">ENG</abbr></th>';
+    songInfo+='<th id="pTableValence" class="has-text-centered"><abbr title="Valence">VAL</abbr></th>';
+    songInfo+='<th id="pTablePop" class="has-text-centered"><abbr title="Popularity">POP</abbr></th>';
+    songInfo+='<th id="pTableSpeech" class="has-text-centered"><abbr title="Speechiness">SPCH</abbr></th>';
+    songInfo+='<th id="pTableLive" class="has-text-centered"><abbr title="Liveness">LIV</abbr></th>';
+    songInfo+='<th id="pTableDate" class="has-text-centered">Date Added</th>';
+    songInfo+='<th id="pTableReleaseDate" class="has-text-centered">Date Released</th>';
+    songInfo+='<th id="pTableRemove" class="has-text-centered">Remove Song</th>';
+    songInfo+='</tr></thead>';
+    songInfo+='<tbody id="playlistTableBody">'
+    return songInfo;
+  }
+
+  function constructTableRow(count, songImage, songName, songArtists, songAttr, song, dateSaved, dateCreated, id){
+    let songInfo = '';
+    songInfo+='<span id="song' + count + '">';
+    songInfo+='<tr><th>' + count + '</th>';
+    songInfo+='<td><img src="' + songImage + '" height="100" width="100"></td>';
+    songInfo+='<td>' + songName + '</td>';
+    songInfo+='<td>' + songArtists + '</td>';
+    songInfo+='<td>' + songAttr.danceability + '</td>';
+    songInfo+='<td>' + songAttr.tempo + '</td>';
+    songInfo+='<td>' + songAttr.instrumentalness + '</td>';
+    songInfo+='<td>' + songAttr.acousticness + '</td>';
+    songInfo+='<td>' + songAttr.loudness + '</td>';
+    songInfo+='<td>' + songAttr.energy + '</td>';
+    songInfo+='<td>' + songAttr.valence + '</td>';
+    songInfo+='<td>' + song.popularity + '</td>';
+    songInfo+='<td>' + songAttr.speechiness + '</td>';
+    songInfo+='<td>' + songAttr.liveness + '</td>';
+    songInfo+='<td>' + dateSaved + '</td>';
+    songInfo+='<td>' + dateCreated + '</td>';
+    songInfo+='<td><button id="removeBtn'+ id + '" class="button is-danger is-light is-small is-outlined is-rounded" >Toss dis shit</button></td>';
+    songInfo+='</tr></span>';
+    return songInfo;
   }
 
   function resetFilterValues(){
@@ -969,35 +908,8 @@ export const renderPage = function() {
     $(document).ready(function() {
         $("#playlistBtn").click(function(){
             document.getElementById("playlistBtn").classList.add('is-loading');
+            toggleFilterActive(true);
 
-            document.getElementById("danceMin").disabled = true;
-            document.getElementById("danceMax").disabled = true;
-            document.getElementById("tempoMin").disabled = true;
-            document.getElementById("tempoMax").disabled = true;
-            document.getElementById("loudMin").disabled = true;
-            document.getElementById("loudMax").disabled = true;
-            document.getElementById("energyMin").disabled = true;
-            document.getElementById("energyMax").disabled = true;
-            document.getElementById("instruMin").disabled = true;
-            document.getElementById("instruMax").disabled = true;
-            document.getElementById("valenceMin").disabled = true;
-            document.getElementById("valenceMax").disabled = true;
-            document.getElementById("popMin").disabled = true;
-            document.getElementById("popMax").disabled = true;
-            document.getElementById("acoustMin").disabled = true;
-            document.getElementById("acoustMax").disabled = true;
-            document.getElementById("speechMin").disabled = true;
-            document.getElementById("speechMax").disabled = true;
-            document.getElementById("liveMin").disabled = true;
-            document.getElementById("liveMax").disabled = true;
-            document.getElementById("minMonthSaved").disabled = true;
-            document.getElementById("minYearSaved").disabled = true;
-            document.getElementById("maxMonthSaved").disabled = true;
-            document.getElementById("maxYearSaved").disabled = true;
-            document.getElementById("minMonthCreated").disabled = true;
-            document.getElementById("minYearCreated").disabled = true;
-            document.getElementById("maxMonthCreated").disabled = true;
-            document.getElementById("maxYearCreated").disabled = true;
             //disable check box filters
             for(let i = 1; i < maxGenres + 1; i++){
               document.getElementById("genre" + i).disabled = true;
@@ -1140,34 +1052,7 @@ export const renderPage = function() {
         document.getElementById("resetBtn").disabled = true;
 
         //enable all filter value fields
-        document.getElementById("danceMin").disabled = false;
-        document.getElementById("danceMax").disabled = false;
-        document.getElementById("tempoMin").disabled = false;
-        document.getElementById("tempoMax").disabled = false;
-        document.getElementById("loudMin").disabled = false;
-        document.getElementById("loudMax").disabled = false;
-        document.getElementById("energyMin").disabled = false;
-        document.getElementById("energyMax").disabled = false;
-        document.getElementById("instruMin").disabled = false;
-        document.getElementById("instruMax").disabled = false;
-        document.getElementById("valenceMin").disabled = false;
-        document.getElementById("valenceMax").disabled = false;
-        document.getElementById("popMin").disabled = false;
-        document.getElementById("popMax").disabled = false;
-        document.getElementById("acoustMin").disabled = false;
-        document.getElementById("acoustMax").disabled = false;
-        document.getElementById("speechMin").disabled = false;
-        document.getElementById("speechMax").disabled = false;
-        document.getElementById("liveMin").disabled = false;
-        document.getElementById("liveMax").disabled = false;
-        document.getElementById("minMonthSaved").disabled = false;
-        document.getElementById("minYearSaved").disabled = false;
-        document.getElementById("maxMonthSaved").disabled = false;
-        document.getElementById("maxYearSaved").disabled = false;
-        document.getElementById("minMonthCreated").disabled = false;
-        document.getElementById("minYearCreated").disabled = false;
-        document.getElementById("maxMonthCreated").disabled = false;
-        document.getElementById("maxYearCreated").disabled = false;
+        toggleFilterActive(false);
         for(let i = 1; i < maxGenres + 1; i++){
           document.getElementById("genre" + i).disabled = false;
         }
