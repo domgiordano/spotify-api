@@ -441,7 +441,7 @@ export const renderPage = function() {
               dateCreated += '/' + tempSongJson[songIds[i-1]].track.album.release_date.slice(8,10);
             }
 
-            dateSaved = monthSaved + '/' + daySaved + '/' + yearSaved;
+            let dateSaved = monthSaved + '/' + daySaved + '/' + yearSaved;
             dateCreated += '/' + tempSongJson[songIds[i-1]].track.album.release_date.slice(0,4);
 
             if(trackCount <= maxSongs){
@@ -632,7 +632,7 @@ export const renderPage = function() {
           dateCreated += '/' + song.album.release_date.slice(8,10);
         }
 
-        dateSaved = month + '/' + day + '/' + year;
+        let dateSaved = month + '/' + day + '/' + year;
         dateCreated += '/' + song.album.release_date.slice(0,4);
 
         songInfo += constructTableRow(playlistSongCount, songImage, songName, songArtists, songAttr, song, dateSaved, dateCreated, id);
@@ -771,7 +771,7 @@ export const renderPage = function() {
           dateCreated += '/' + song.album.release_date.slice(8,10);
         }
 
-        dateSaved = month + '/' + day + '/' + year;
+        let dateSaved = month + '/' + day + '/' + year;
         dateCreated += '/' + song.album.release_date.slice(0,4);
 
         songInfo+= constructTableRow(playlistSongCount, songImage, songName, songArtists, songAttr, song, dateSaved, dateCreated, id);
