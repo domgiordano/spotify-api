@@ -3,7 +3,7 @@ let refresh_token = "";
 let songJson = {};
 let songAttrJson = {};
 let totalSongCount = 0;
-const maxGenres = 25;
+const maxGenres = 30;
 let songsRemoved = 0;
 
 export const renderPage = function() {
@@ -685,7 +685,7 @@ export const renderPage = function() {
 
     const settings = {
       method: 'POST',
-      body: JSON.stringify({name: playlistName, description: "Prolly the best playlist you got - made by dom", public: true}),
+      body: JSON.stringify({name: playlistName, description: "Prolly the best playlist you got - made by dom - https://github.com/domjgiordano/spotify-api", public: true}),
       headers: {
         Authorization: 'Bearer ' + access_token
       }
@@ -981,7 +981,7 @@ export const renderPage = function() {
         for(let i = 1; i < maxGenres + 1; i++){
           checkBoxInfo+='<input type="checkbox" id="genre' + i + '" name="filterGenre" value="'+ localStorage.getItem("genre" + i) +'">';
           checkBoxInfo+='<label for="'+ localStorage.getItem("genre" + i) +'"> '+ localStorage.getItem("genre" + i).toUpperCase() +' </label><br>';
-          if(i % 5 == 0){
+          if(i % (maxGenres / 5) == 0){
             checkBoxInfo+='</fieldset>';
             checkBoxInfo+='</form>';
             checkBoxInfo+='</div>';
