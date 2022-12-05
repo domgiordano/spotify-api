@@ -224,7 +224,7 @@ export const renderPage = function() {
         genreFilter.push(genres.toLowerCase());
       }
       count++;
-      if(count == 26){break;}
+      if(count == 31){break;}
     }
 
     console.log(genreFilter.length)
