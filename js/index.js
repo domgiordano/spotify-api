@@ -22,6 +22,9 @@ export const renderPage = function() {
             <a class="navbar-item">
               Playlist Generator
             </a>
+            <a class="navbar-item">
+              Wrapped
+            </a>
           </div>
         </div>
       </div>

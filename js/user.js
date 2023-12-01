@@ -24,6 +24,9 @@ export const renderPage = function() {
               <a class="navbar-item" onclick="location.href='http://localhost:8080/api/playlist?access_token=${access_token}&refresh_token=${refresh_token}'">
                 Playlist Generator
               </a>
+              <a class="navbar-item" onclick="location.href='http://localhost:8080/api/wrapped?access_token=${access_token}&refresh_token=${refresh_token}'">
+                Wrapped
+              </a>
             </div>
           </div>
         </div>
@@ -46,24 +49,14 @@ export const renderPage = function() {
   </section>`
   };
 
-  async function getUser() {
+  async function getUser(user) {
     let userInfo = '<p class="title" style="text-align: center"> SPOTIFY USER INFO: </p>'
-    const url = 'https://api.spotify.com/v1/me';
-    const headers = {
-      Authorization: 'Bearer ' + access_token
-    }
-
-
-
-    const response = await fetch(url, { headers });
-
-    const data = await response.json();
-    userInfo+= '<div><img src="' + data.images[0].url + '" width="300" height="300" alt="Placeholder image"></div>'
-    userInfo+= '<p class="subtitle style="text-align: center"> Username: ' + data.display_name + ' </p>';
-    userInfo+= '<p class="subtitle style="text-align: center"> Id: ' + data.id + ' </p>';
-    userInfo+= '<p class="subtitle style="text-align: center"> Followers: ' + data.followers.total + ' </p>';
+    userInfo+= '<div><img src="' + user.images[0].url + '" width="300" height="300" alt="Placeholder image"></div>'
+    userInfo+= '<p class="subtitle style="text-align: center"> Username: ' + user.display_name + ' </p>';
+    userInfo+= '<p class="subtitle style="text-align: center"> Id: ' + user.id + ' </p>';
+    userInfo+= '<p class="subtitle style="text-align: center"> Followers: ' + user.followers.total + ' </p>';
     console.log(userInfo)
-    localStorage.setItem("userID", data.id);
+    localStorage.setItem("userID", user.id);
     $('#main').append(userInfo);
   }
 
@@ -90,5 +83,7 @@ export const renderPage = function() {
   $(function() {
     getToken();
     loadPage();
-    getUser();
+    localforage.getItem('user').then(function(user){
+      getUser(user);
+    })
   });

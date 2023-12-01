@@ -29,6 +29,9 @@ export const renderPage = function() {
             <a class="navbar-item is-active" onclick="location.href='http://localhost:8080/api/playlist?access_token=${access_token}&refresh_token=${refresh_token}'">
               Playlist Generator
             </a>
+            <a class="navbar-item" onclick="location.href='http://localhost:8080/api/wrapped?access_token=${access_token}&refresh_token=${refresh_token}'">
+              Wrapped
+            </a>
           </div>
           </div>
         </div>

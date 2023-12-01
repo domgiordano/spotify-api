@@ -26,6 +26,9 @@ export const renderPage = function() {
               <a class="navbar-item">
                 Playlist Generator
               </a>
+              <a class="navbar-item">
+                Wrapped
+              </a>
             </div>
           </div>
         </div>
@@ -426,6 +429,18 @@ export const renderPage = function() {
     console.log("Playlist done")
     return;
   }
+  async function loadUser(){
+    const url = 'https://api.spotify.com/v1/me';
+    const headers = {
+      Authorization: 'Bearer ' + access_token
+    }
+    const response = await fetch(url, { headers });
+
+    const data = await response.json();
+    localforage.setItem("user", data);
+    console.log("User Done.")
+    return;
+  }
 
   export const getToken = function(){
     const queryString = window.location.search;
@@ -451,10 +466,10 @@ export const renderPage = function() {
   $(function() {
     getToken();
     loadPage();
-    //loadUser();
     loadSongs();
     loadArtists();
     loadGenres(25,0);
     loadPlaylist();
+    loadUser();
     //$(document).on("click", "#loadBtn", window.open('http://localhost:8080/api/user', '_self'));
   });
