@@ -65,6 +65,7 @@ export const renderPage = function() {
     //span elements
     let titleSpan = document.getElementById('loadTitle')
     let dotCount = 0;
+    let lastRun = false;
 
     //Get all users save songs
     do{
@@ -78,11 +79,15 @@ export const renderPage = function() {
       const data = await response.json();
 
 
-      //If response is empty break the loop
-      if(data.items.length === 0){
-        console.log("no more songs");
+      if('items' in data){
+        if(data.items.length < 50){
+          lastRun = true
+        }
+      }
+      else if('error' in data){
         break;
       }
+
 
       // For every song called (50)
       for(let i = 1; i < maxSongs + 1; i++){
@@ -116,7 +121,7 @@ export const renderPage = function() {
       }
 
       offset++;
-    }while(true);
+    }while(!lastRun);
     //for every group of 50 IDs in array
     //limit of 50 a time in call
     // have to increment by 50
@@ -375,6 +380,7 @@ export const renderPage = function() {
     let offset = 0;
     let songIds = [];
     let tempSongJson = {};
+    let lastRun = false;
     do{
       const url = 'https://api.spotify.com/v1/me/tracks?limit='+ maxSongs + '&offset=' + (offset * maxSongs);
       const headers = {
@@ -384,11 +390,15 @@ export const renderPage = function() {
       const response = await fetch(url, { headers });
 
       const data = await response.json();
-
-      if(data.items.length === 0){
-        console.log("no more songs");
+      if('items' in data){
+        if(data.items.length < 50){
+          lastRun = true
+        }
+      }
+      else if('error' in data){
         break;
       }
+
 
       for(let i = 1; i < maxSongs + 1; i++){
         //problemo
@@ -417,7 +427,7 @@ export const renderPage = function() {
       }
 
       offset++;
-    }while(true);
+    }while(!lastRun);
     console.log(Object.keys(tempSongJson).length)
     let songString = JSON.stringify(tempSongJson);
 
