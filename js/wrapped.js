@@ -82,27 +82,43 @@ export const renderPage = function() {
     }
 
     // Call API to get all users playlists
-    const playlistsURL = 'https://api.spotify.com/v1/users/'+ userID +'/playlists?limit=50'
-    const playlistResponse = await fetch(playlistsURL, { headers });
-    const playlistData = await playlistResponse.json();
+    let offset = 0
+    let lastRun = false;
+    let playlists = [];
+    do {
+      const playlistsURL = 'https://api.spotify.com/v1/users/'+ userID +'/playlists?offset=' + (50 * offset) + '&limit=50';
+      const playlistResponse = await fetch(playlistsURL, { headers });
+      const playlistData = await playlistResponse.json();
+      if('items' in playlistData){
+        if(playlistData.items.length < 50){
+          lastRun = true
+        }
+        playlists = playlists.concat(playlistData.items);
+      }
+      else if('error' in playlistD){
+        break;
+      }
 
+      offset++;
+    }while(!lastRun)
+
+    console.log(playlists)
     // Grab Playlist IDs for Current Year and last years spotify wrapped
     let currentWrapped = null;
     let lastWrapped = null;
-    let playlists = playlistData.items
     for(let i in playlists){
       if(playlists[i].name == "Your Top Songs 2023"){
         currentWrapped = playlists[i];
-        continue;
       }
       else if(playlists[i].name == "Your Top Songs 2022"){
         lastWrapped = playlists[i];
-        continue;
       }
       if(currentWrapped != null && lastWrapped != null){
         break;
       }
     }
+    console.log(currentWrapped)
+    console.log(lastWrapped)
     // Call Playlist info api for Current Year and Last Years Spotify Wrapped
     const currentWrappedResponse = await fetch('https://api.spotify.com/v1/playlists/'+ currentWrapped.id +'/tracks', { headers });
     const lastWrappedResponse = await fetch('https://api.spotify.com/v1/playlists/'+ lastWrapped.id +'/tracks', { headers });
@@ -135,8 +151,6 @@ export const renderPage = function() {
     for(let cwTrackIndex in currentWrappedData.items){
       for(let lwTrackIndex in lastWrappedData.items){
         if(currentWrappedData.items[cwTrackIndex].track.id == lastWrappedData.items[lwTrackIndex].track.id){
-          console.log("yo")
-          console.log(currentWrappedData.items[cwTrackIndex])
           duplicateTracks.push({
             "id": currentWrappedData.items[cwTrackIndex].track.id,
             "name": currentWrappedData.items[cwTrackIndex].track.name,
@@ -327,7 +341,7 @@ export const renderPage = function() {
       document.getElementById('duplicateTable').remove();
     }
     // Build Display
-    console.log(currentTerm)
+    console.log(wrappedData)
     let cwAudioFeatureData = wrappedData["cwAudioFeatureData"];
     let lwAudioFeatureData = wrappedData["lwAudioFeatureData"];
     let currentWrappedPop = wrappedData["currentWrappedPop"];
