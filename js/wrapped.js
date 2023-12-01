@@ -37,7 +37,8 @@ export const renderPage = function() {
     <!-- Hero content: will be in the middle -->
     <div class="hero-body">
       <div id="main" class="container has-text-centered">
-        <p id="artistsHeader" class="title" style="text-align: center"> SPOTIFY WRAPPED: 2023 v. 2022 </p>
+        <p id="wrappedHeader" class="title is-1" style="text-align: center"> SPOTIFY WRAPPED: 2022 v. 2023 </p></br></br>
+        <p id="wrappedTitle" class="title is-2" style="text-align: center"> <span id="wrappedTitle"> Wrapped Metrics Comparison: </span></p>
         <div class="tabs is-medium is-centered is-toggle is-toggle-rounded">
           <ul>
             <li id="top10" class="is-active"><a>Top 10</a></li>
@@ -102,7 +103,6 @@ export const renderPage = function() {
       offset++;
     }while(!lastRun)
 
-    console.log(playlists)
     // Grab Playlist IDs for Current Year and last years spotify wrapped
     let currentWrapped = null;
     let lastWrapped = null;
@@ -117,8 +117,7 @@ export const renderPage = function() {
         break;
       }
     }
-    console.log(currentWrapped)
-    console.log(lastWrapped)
+
     // Call Playlist info api for Current Year and Last Years Spotify Wrapped
     const currentWrappedResponse = await fetch('https://api.spotify.com/v1/playlists/'+ currentWrapped.id +'/tracks', { headers });
     const lastWrappedResponse = await fetch('https://api.spotify.com/v1/playlists/'+ lastWrapped.id +'/tracks', { headers });
@@ -347,8 +346,7 @@ export const renderPage = function() {
     let currentWrappedPop = wrappedData["currentWrappedPop"];
     let lastWrappedPop = wrappedData["lastWrappedPop"];
 
-    let wrappedInfo = '<p id="wrappedTitle" class="title" style="text-align: center"> <span id="wrappedTitle"> Wrapped Metrics Comparison: </span></p>';
-    wrappedInfo+='<table id="wrappedTable" class="table is-fullwidth is-hoverable">';
+    let wrappedInfo ='<table id="wrappedTable" class="table is-fullwidth is-hoverable">';
     wrappedInfo+= '<thead><tr><th class="has-text-left">Metric</th>';
     wrappedInfo+='<th class="has-text-centered"> 2022 </th>'
     wrappedInfo+='<th class="has-text-centered"> 2023 </th>'
@@ -383,7 +381,7 @@ export const renderPage = function() {
     // Duplicates Table
     let duplicateTracks = wrappedData['duplicateTracks'];
 
-    wrappedInfo+= '<p id="duplicateTitle" class="title" style="text-align: center"> <span id="duplicateTitle"> Wrapped Duplicate Tracks: </span></p>';
+    wrappedInfo+= '</br><p id="duplicateTitle" class="title is-2" style="text-align: center"> <span id="duplicateTitle"> Wrapped Duplicate Tracks: </span></p>';
     wrappedInfo+= '<table id="duplicateTable" class="table is-fullwidth is-hoverable">';
     wrappedInfo+= '<thead><tr><th class="has-text-left">Cover</th>';
     wrappedInfo+='<th class="has-text-centered"> Track </th>'
@@ -398,13 +396,27 @@ export const renderPage = function() {
       wrappedInfo+='<tr><th><img src="' + duplicateTracks[track].cover + '" alt="Placeholder image" width="100" height="100"></img></th>';
       wrappedInfo+='<td>' + duplicateTracks[track].name + '</td>';
       wrappedInfo+='<td>' + duplicateTracks[track].artist + '</td>';
-      wrappedInfo+='<td>' + duplicateTracks[track].prevRank + '</td>';
-      wrappedInfo+='<td>' + duplicateTracks[track].currRank + '</td>';
+      wrappedInfo+='<td>' + (parseInt(duplicateTracks[track].prevRank) + 1) + '</td>';
+      wrappedInfo+='<td>' + (parseInt(duplicateTracks[track].currRank) +1 )+ '</td>';
       wrappedInfo+='<td>' + (duplicateTracks[track].prevRank - duplicateTracks[track].currRank) + '</td>';
       wrappedInfo+='</tr>';
     }
     wrappedInfo+='</tbody>';
     wrappedInfo+='</table>';
+
+    // Add Basic Bitch playlist gen
+    wrappedInfo+= '</br><div id="main" class="container has-text-centered" >';
+    wrappedInfo+= '<p class="title is-2">Wrapped Playlist Generator:</p>';
+    wrappedInfo+= '<div id="filterValues" class="columns is-multiline" style="margin: 0; padding: 0">';
+    wrappedInfo+= '<div class="column is-full">';
+    wrappedInfo+= '<p class="subtitle is-4" style="text-align: center">Choose how basic of a bitch playlist you want.</p></div>';
+    wrappedInfo+= '<div class="column is-full">';
+    wrappedInfo+= '<button id="moderateBtn" class="button is-success is-light is-medium is-outlined is-rounded">Moderately</button>';
+    wrappedInfo+= '<button id="prettyBtn" class="button is-link is-light is-medium is-outlined is-rounded">Pretttyyyy</button>';
+    wrappedInfo+= '<button id="veryBtn" class="button is-warning is-light is-medium is-outlined is-rounded">Very</button>';
+    wrappedInfo+= '<button id="uberBtn" class="button is-danger is-light is-medium is-outlined is-rounded">Uber</button></div>';
+    wrappedInfo+= '<div class="column is-full">';
+    wrappedInfo+= '<button id="genBtn" class="button is-info is-info is-medium is-rounded">Make dat thing.</button></div></div>';
     //Append html to main
     $('#main').append(wrappedInfo);
   }
