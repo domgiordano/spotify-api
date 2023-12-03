@@ -106,6 +106,8 @@ export const renderPage = function() {
     // Grab Playlist IDs for Current Year and last years spotify wrapped
     let currentWrapped = null;
     let lastWrapped = null;
+    let wrapped2021 = null;
+    let wrapped2020 = null;
     for(let i in playlists){
       if(playlists[i].name == "Your Top Songs 2023"){
         currentWrapped = playlists[i];
@@ -113,16 +115,38 @@ export const renderPage = function() {
       else if(playlists[i].name == "Your Top Songs 2022"){
         lastWrapped = playlists[i];
       }
-      if(currentWrapped != null && lastWrapped != null){
+      else if(playlists[i].name == "Your Top Songs 2021"){
+        wrapped2021 = playlists[i];
+      }
+      else if(playlists[i].name == "Your Top Songs 2020"){
+        wrapped2020 = playlists[i];
+      }
+      if(currentWrapped != null && lastWrapped != null && wrapped2021 != null && wrapped2020 != null){
         break;
       }
     }
 
     // Call Playlist info api for Current Year and Last Years Spotify Wrapped
+    let wrappedSongs = [];
     const currentWrappedResponse = await fetch('https://api.spotify.com/v1/playlists/'+ currentWrapped.id +'/tracks', { headers });
     const lastWrappedResponse = await fetch('https://api.spotify.com/v1/playlists/'+ lastWrapped.id +'/tracks', { headers });
+    if(wrapped2021 != null){
+      const wrapped2021Response = await fetch('https://api.spotify.com/v1/playlists/'+ wrapped2021.id +'/tracks', { headers });
+      const wrapped2021Data = await wrapped2021Response.json();
+      wrappedSongs = wrappedSongs.concat(wrapped2021Data.items);
+    }
+    if(wrapped2020 != null){
+      const wrapped2020Response = await fetch('https://api.spotify.com/v1/playlists/'+ wrapped2020.id +'/tracks', { headers });
+      const wrapped2020Data = await wrapped2020Response.json();
+      wrappedSongs = wrappedSongs.concat(wrapped2020Data.items);
+    }
     const currentWrappedData = await currentWrappedResponse.json();
     const lastWrappedData = await lastWrappedResponse.json();
+
+    wrappedSongs = wrappedSongs.concat(currentWrappedData.items);
+    wrappedSongs = wrappedSongs.concat(lastWrappedData.items);
+    localforage.setItem("wrappedSongs", wrappedSongs);
+    console.log(currentWrappedData.items)
 
     // Gather Data from playlists:
     //    - Find duplicate tracks
@@ -411,14 +435,67 @@ export const renderPage = function() {
     wrappedInfo+= '<div class="column is-full">';
     wrappedInfo+= '<p class="subtitle is-4" style="text-align: center">Choose how basic of a bitch playlist you want.</p></div>';
     wrappedInfo+= '<div class="column is-full">';
-    wrappedInfo+= '<button id="moderateBtn" class="button is-success is-light is-medium is-outlined is-rounded">Moderately</button>';
-    wrappedInfo+= '<button id="prettyBtn" class="button is-link is-light is-medium is-outlined is-rounded">Pretttyyyy</button>';
-    wrappedInfo+= '<button id="veryBtn" class="button is-warning is-light is-medium is-outlined is-rounded">Very</button>';
-    wrappedInfo+= '<button id="uberBtn" class="button is-danger is-light is-medium is-outlined is-rounded">Uber</button></div>';
+    wrappedInfo+= '<div class="tabs is-medium is-centered is-toggle is-toggle-rounded">';
+    wrappedInfo+= '<ul><li id="somewhat" class="is-active"><a>somewhat</a></li>';
+    wrappedInfo+= '<li id="pretty" ><a>pretty</a></li>';
+    wrappedInfo+= '<li id="very" ><a>veryyy</a></li>';
+    wrappedInfo+= '<li id="uber" ><a>uber</a></li></ul></div></div>';
     wrappedInfo+= '<div class="column is-full">';
-    wrappedInfo+= '<button id="genBtn" class="button is-info is-info is-medium is-rounded">Make dat thing.</button></div></div>';
+    wrappedInfo+= '<button id="genBtn" class="button is-danger is-medium is-rounded">Make dat shiii.</button></div></div>';
     //Append html to main
     $('#main').append(wrappedInfo);
+  }
+
+  async function downloadPlaylist(userID, wrappedSongs, popThreshold, popDesc, songs){
+
+    let playlistName = "Ur Wrapped Basic Bitch generator";
+    let playlistDesc = "Prolly the best playlist you got - this one is " + popDesc + " basic. - made by dom - https://github.com/domjgiordano/spotify-api";
+
+    const playlistSettings = {
+      method: 'POST',
+      body: JSON.stringify({name: playlistName, description: playlistDesc, public: true}),
+      headers: {
+        Authorization: 'Bearer ' + access_token
+      }
+    };
+
+    const playlistUrl = `https://api.spotify.com/v1/users/${userID}/playlists`;
+    console.log(playlistUrl)
+    console.log(playlistSettings)
+    const response = await fetch(playlistUrl, playlistSettings);
+    const data = await response.json();
+
+    console.log(data)
+    let playlistID = data.id;
+
+    //get song ids into string
+    let songIds = '';
+    console.log(wrappedSongs);
+
+    for(let trackID in wrappedSongs){
+      if(wrappedSongs[trackID].track.popularity >= popThreshold){
+        songIds+= wrappedSongs[trackID].track.uri + ',';
+      }
+    }
+
+    console.log(songIds)
+    //add songs to playlist
+    const trackSettings = {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + access_token
+      }
+    };
+
+    const trackUrl = `https://api.spotify.com/v1/playlists/${playlistID}/tracks?uris=` + songIds.slice(0,-1) ;
+    const trackResponse = await fetch(trackUrl, trackSettings);
+    const trackData = await trackResponse.json();
+
+    console.log(trackData)
+    console.log(popDesc)
+
+    alert("Playlist '" + playlistName + "' created and downloaded. Check spotify ya filthy animal")
+    return;
   }
 
   export const loadPage = function() {
@@ -469,6 +546,40 @@ export const renderPage = function() {
       currentTerm ="top100";
       $('#page1').trigger('click');
     });
+    let popDesc = "somewhat";
+    let popThreshold = 50;
+    $(document).on("click", "#somewhat", function(){
+      document.getElementById("somewhat").classList.add('is-active');
+      document.getElementById("pretty").classList.remove('is-active');
+      document.getElementById("very").classList.remove('is-active');
+      document.getElementById("uber").classList.remove('is-active');
+      popDesc = "somewhat";
+      popThreshold = 50;
+    });
+    $(document).on("click", "#pretty", function(){
+      document.getElementById("somewhat").classList.remove('is-active');
+      document.getElementById("pretty").classList.add('is-active');
+      document.getElementById("very").classList.remove('is-active');
+      document.getElementById("uber").classList.remove('is-active');
+      popDesc = "pretty";
+      popThreshold = 60;
+    });
+    $(document).on("click", "#very", function(){
+      document.getElementById("somewhat").classList.remove('is-active');
+      document.getElementById("pretty").classList.remove('is-active');
+      document.getElementById("very").classList.add('is-active');
+      document.getElementById("uber").classList.remove('is-active');
+      popDesc = "veryyy";
+      popThreshold = 70;
+    });
+    $(document).on("click", "#uber", function(){
+      document.getElementById("somewhat").classList.remove('is-active');
+      document.getElementById("pretty").classList.remove('is-active');
+      document.getElementById("very").classList.remove('is-active');
+      document.getElementById("uber").classList.add('is-active');
+      popDesc = "uber";
+      popThreshold = 80;
+    });
 
     $(document).on("click", "#page1", function(){
       document.getElementById("prevPage").classList.add('is-disabled');
@@ -479,6 +590,16 @@ export const renderPage = function() {
       });
 
     });
+
+    $(document).on("click", "#genBtn", function(){
+      getToken();
+      localforage.getItem('user').then(function(user) {
+        localforage.getItem('wrappedSongs').then(function(wrappedSongs){
+          downloadPlaylist(user.id, wrappedSongs, popThreshold, popDesc);
+        });
+      });
+
+    })
 
   });
 

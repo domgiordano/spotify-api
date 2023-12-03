@@ -1065,7 +1065,7 @@ export const renderPage = function() {
     $(document).on("click", "#downloadBtn", function(){
       downloadPlaylist(songJson);
 
-  })
+    })
 
 
     let pTableSong= true;
