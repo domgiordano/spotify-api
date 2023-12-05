@@ -3,7 +3,8 @@ let access_token = "";
 let refresh_token = "";
 let topGenres = {};
 
-export const renderPage = function() {
+
+const renderPage = function() {
     return `<section class="hero is-success is-fullheight">
     <!-- Hero head: will stick at the top -->
     <div class="hero-head has-background-black-bis">
@@ -447,12 +448,28 @@ export const renderPage = function() {
     const response = await fetch(url, { headers });
 
     const data = await response.json();
+
+    const userData = JSON.stringify(data);
+    const writeFS = require('./app.js');
+
+    try {
+      // reading a JSON file synchronously
+      writeFS("../json/users.json", userData);
+    } catch (error) {
+      // logging the error
+      console.error(error);
+
+      throw error;
+    }
+
+    // logging the outcome
+    console.log("users.json written correctly");
     localforage.setItem("user", data);
     console.log("User Done.")
     return;
   }
 
-  export const getToken = function(){
+  const getToken = function(){
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     access_token = urlParams.get('access_token');
@@ -460,7 +477,7 @@ export const renderPage = function() {
     console.log(access_token + " : " + refresh_token)
   }
 
-  export const loadPage = function() {
+  const loadPage = function() {
 
     const $root = $('#root');
 

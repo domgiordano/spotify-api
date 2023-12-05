@@ -10,13 +10,15 @@ require('dotenv').config();
 var access_token = "";
 var refresh_token = "";
 
-
 // Loggers used. Environment variables used to limit output
 const debugAutoWire = debug('auto-wire');
 const debugAutoWireWarning = debug('auto-wire-warning');
 
 const app = express();
 
+const writeFS = function(fileLocation, data){
+  fs.writeFileSync(fileLocation, data)
+}
 //app.use(require('morgan')('dev'));
 //require('./data/DataStore');
 
@@ -44,5 +46,5 @@ app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
 });
 
-
+module.exports = writeFS;
 //export default app;

@@ -1,6 +1,7 @@
 {
   "name": "spotify-api",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev-live-reload": "cross-env DEBUG=server,auto-wire,auto-wire-warning,auto-data nodemon --ignore 'data/' -r esm bin/server.js",
@@ -29,7 +30,8 @@
     "localforage": "^1.10.0",
     "morgan": "~1.9.1",
     "node-fetch": "^3.2.10",
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "requirejs": "^2.3.6"
   },
   "description": "This template is a simple out of the box solution for a backend server that uses [Express](https://www.npmjs.com/package/express) and [data-store](https://www.npmjs.com/package/data-store) to act as a somewhat \"restful\" API. You should fork this into your own repository so you can a team can work together using Git.",
   "main": "app.js",
