@@ -16,9 +16,6 @@ const debugAutoWireWarning = debug('auto-wire-warning');
 
 const app = express();
 
-const writeFS = function(fileLocation, data){
-  fs.writeFileSync(fileLocation, data)
-}
 //app.use(require('morgan')('dev'));
 //require('./data/DataStore');
 
@@ -46,5 +43,4 @@ app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
 });
 
-module.exports = writeFS;
 //export default app;
