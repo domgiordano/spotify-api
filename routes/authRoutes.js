@@ -48,6 +48,9 @@ router.get('/genres', async (req, res) => {
 router.get('/playlist', async (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'html', 'playlist.html'));
 });
+router.get('/wrapped', async (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'html', 'wrapped.html'));
+});
 router.get('/login', async (req, res) => {
     const scope =
       `user-modify-playback-state

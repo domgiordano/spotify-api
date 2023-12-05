@@ -26,6 +26,9 @@ export const renderPage = function() {
               <a class="navbar-item">
                 Playlist Generator
               </a>
+              <a class="navbar-item">
+                Wrapped
+              </a>
             </div>
           </div>
         </div>
@@ -62,6 +65,7 @@ export const renderPage = function() {
     //span elements
     let titleSpan = document.getElementById('loadTitle')
     let dotCount = 0;
+    let lastRun = false;
 
     //Get all users save songs
     do{
@@ -75,11 +79,15 @@ export const renderPage = function() {
       const data = await response.json();
 
 
-      //If response is empty break the loop
-      if(data.items.length === 0){
-        console.log("no more songs");
+      if('items' in data){
+        if(data.items.length < 50){
+          lastRun = true
+        }
+      }
+      else if('error' in data){
         break;
       }
+
 
       // For every song called (50)
       for(let i = 1; i < maxSongs + 1; i++){
@@ -113,7 +121,7 @@ export const renderPage = function() {
       }
 
       offset++;
-    }while(true);
+    }while(!lastRun);
     //for every group of 50 IDs in array
     //limit of 50 a time in call
     // have to increment by 50
@@ -372,6 +380,7 @@ export const renderPage = function() {
     let offset = 0;
     let songIds = [];
     let tempSongJson = {};
+    let lastRun = false;
     do{
       const url = 'https://api.spotify.com/v1/me/tracks?limit='+ maxSongs + '&offset=' + (offset * maxSongs);
       const headers = {
@@ -381,11 +390,15 @@ export const renderPage = function() {
       const response = await fetch(url, { headers });
 
       const data = await response.json();
-
-      if(data.items.length === 0){
-        console.log("no more songs");
+      if('items' in data){
+        if(data.items.length < 50){
+          lastRun = true
+        }
+      }
+      else if('error' in data){
         break;
       }
+
 
       for(let i = 1; i < maxSongs + 1; i++){
         //problemo
@@ -414,7 +427,7 @@ export const renderPage = function() {
       }
 
       offset++;
-    }while(true);
+    }while(!lastRun);
     console.log(Object.keys(tempSongJson).length)
     let songString = JSON.stringify(tempSongJson);
 
@@ -424,6 +437,18 @@ export const renderPage = function() {
     //songAttrJson = tempSongAttrJson;
 
     console.log("Playlist done")
+    return;
+  }
+  async function loadUser(){
+    const url = 'https://api.spotify.com/v1/me';
+    const headers = {
+      Authorization: 'Bearer ' + access_token
+    }
+    const response = await fetch(url, { headers });
+
+    const data = await response.json();
+    localforage.setItem("user", data);
+    console.log("User Done.")
     return;
   }
 
@@ -451,10 +476,10 @@ export const renderPage = function() {
   $(function() {
     getToken();
     loadPage();
-    //loadUser();
     loadSongs();
     loadArtists();
     loadGenres(25,0);
     loadPlaylist();
+    loadUser();
     //$(document).on("click", "#loadBtn", window.open('http://localhost:8080/api/user', '_self'));
   });
