@@ -1,8 +1,9 @@
+//const $ = require('jquery');
 let access_token = "";
 let refresh_token = "";
 let topGenres = {};
 
-export const renderPage = function() {
+const renderPage = function() {
     return `<section class="hero is-success is-fullheight">
     <!-- Hero head: will stick at the top -->
     <div class="hero-head has-background-black-bis">
@@ -66,7 +67,7 @@ export const renderPage = function() {
   };
 
   //Get token to use for auth from URL
-  export const getToken = async () => {
+  const getToken = async () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     access_token = urlParams.get('access_token');
@@ -498,7 +499,7 @@ export const renderPage = function() {
     return;
   }
 
-  export const loadPage = function() {
+  const loadPage = function() {
 
     const $root = $('#root');
 
@@ -506,7 +507,7 @@ export const renderPage = function() {
   };
 
 
-  $(function() {
+  $(document).ready(function() {
     getToken();
     loadPage();
     localforage.getItem('user').then(function(user) {

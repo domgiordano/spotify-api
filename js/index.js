@@ -1,5 +1,6 @@
+//onst $ = require('jquery');
 
-export const renderPage = function() {
+const renderPage = function() {
   console.log("render")
   return `<section class="hero is-success is-fullheight">
   <div class="hero-head has-background-black-bis">
@@ -48,7 +49,7 @@ export const renderPage = function() {
 </section>`;
 };
 
-export const loadPage = function() {
+const loadPage = function() {
 
   console.log("load")
   const $root = $('#root');
@@ -57,7 +58,7 @@ export const loadPage = function() {
   $root.append(renderPage());
 };
 
-export function loginSpotify() {
+function loginSpotify() {
   console.log('click')
   window.open('http://localhost:8080/api/login', '_self')
   /* router.get('/api', function(req, res) {
@@ -66,7 +67,7 @@ export function loginSpotify() {
 }
 
 
-$(function() {
+$(document).ready(function() {
   console.log("function");
   loadPage();
   $(document).on("click", "#loginBtn", loginSpotify);

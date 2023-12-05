@@ -1,3 +1,4 @@
+//const $ = require('jquery');
 let access_token = "";
 let refresh_token = "";
 let songJson = {};
@@ -6,7 +7,7 @@ let totalSongCount = 0;
 const maxGenres = 30;
 let songsRemoved = 0;
 
-export const renderPage = function() {
+const renderPage = function() {
     return `<section class="hero is-success is-fullheight">
     <!-- Hero head: will stick at the top -->
     <div class="hero-head has-background-black-bis">
@@ -204,7 +205,7 @@ export const renderPage = function() {
     let yyyy = String(today.getFullYear());
     return yyyy;
   }
-  export const getToken = async () => {
+  const getToken = async () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     access_token = urlParams.get('access_token');
@@ -902,7 +903,7 @@ export const renderPage = function() {
     document.getElementById("liveMax").value = '1.00';
   }
 
-  export const loadPage = function() {
+  const loadPage = function() {
 
     const $root = $('#root');
 
@@ -1253,7 +1254,7 @@ export const renderPage = function() {
   };
 
 
-  $(function() {
+  $(document).ready(function() {
     getToken();
     loadPage();
 
